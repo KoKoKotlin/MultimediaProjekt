@@ -3,7 +3,7 @@ CC = gcc
 LIBS = -lm
 FLAGS = -Wall -Wextra -Wunused -Iinclude/
 
-OBJECTS = main.o obj.o bitmap.o
+OBJECTS = main.o obj.o bitmap.o glad.o render.o
 TARGET = tetris.out
 
 all: FLAGS += -O3
@@ -28,6 +28,7 @@ $(TARGET) : $(OBJECTS)
 main.o : include/log.h include/obj.h
 obj.o : include/obj.h
 bitmap.c : include/bitmap.h
+render.o: include/render.h
 
 %.o : %.c
 	$(CC) -c $(FLAGS) $<
