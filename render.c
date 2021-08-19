@@ -447,7 +447,6 @@ static void init_vertex_data(user_data_t* user_data)
 static void init_model(user_data_t* user_data)
 {
     user_data->last_frame_time = glfwGetTime();
-    user_data->angle_y = 0;
 }
 
 void check_error(int condition, const char* error_text)

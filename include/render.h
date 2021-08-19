@@ -7,10 +7,7 @@
 // Include the GLFW library (should be the same for all OS):
 #include <GLFW/glfw3.h>
 
-#define ROTATE_NONE  0
-#define ROTATE_RIGHT 1
-#define ROTATE_LEFT  2
-
+#include "engine.h"
 
 typedef struct
 {
@@ -35,7 +32,7 @@ typedef struct
 
     // The model:
     double last_frame_time;
-    GLfloat angle_y;
+    struct GameData gameData;
 
 } user_data_t;
 
