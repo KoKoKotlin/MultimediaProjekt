@@ -1,9 +1,9 @@
 SHELL = /bin/sh
 CC = gcc
 LIBS = -lm
-FLAGS = -Wall -Wextra -Wunused
+FLAGS = -Wall -Wextra -Wunused -Iinclude/
 
-OBJECTS = main.o
+OBJECTS = main.o obj.o bitmap.o
 TARGET = tetris.out
 
 all: FLAGS += -O3
@@ -24,6 +24,10 @@ valgrind:
 
 $(TARGET) : $(OBJECTS)
 	$(CC) -o $(TARGET) $(OBJECTS) $(LIBS)
+
+main.o : include/log.h include/obj.h
+obj.o : include/obj.h
+bitmap.c : include/bitmap.h
 
 %.o : %.c
 	$(CC) -c $(FLAGS) $<
