@@ -1,6 +1,6 @@
 SHELL = /bin/sh
 CC = gcc
-LIBS = -lm
+LIBS = -lm -lglfw -ldl
 FLAGS = -Wall -Wextra -Wunused -Iinclude/
 
 OBJECTS = main.o obj.o bitmap.o glad.o render.o
