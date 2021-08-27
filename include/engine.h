@@ -3,7 +3,15 @@
 
 #include <inttypes.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
+#define ARENA_WIDTH  10
+#define ARENA_HEIGHT 20
+
+#define START_POSITION_X 5 // FIXME: center piece
+#define START_POSITION_Y 0
+
+#define COORDS_TO_ARENA_INDEX(x, y) (coords_to_array_index((x), (y), ARENA_WIDTH))
 
 enum GameState {
     PAUSE, PLAYING, GAME_OVER
@@ -59,14 +67,16 @@ enum Direction {
 struct GameData init_gamedata(uint32_t);
 void free_gamedata(struct GameData*);
 
-void array_index_to_coords(size_t, size_t, size_t*);
+void array_index_to_coords(size_t, size_t, size_t*, size_t*);
 size_t coords_to_array_index(size_t, size_t, size_t);
 
 uint8_t* generate_next_piece();
-uint8_t* rotate_piece(uint8_t*, enum Direction);
+void rotate_piece(uint8_t*, enum Direction);
 
-uint8_t check_collision(struct GameData*);
-void move(struct GameData*);
+bool check_collision_side(const struct GameData*);
+bool check_collision_arena_pices(const struct GameData*);
+
+void move(struct GameData*, enum Direction dir);
 void drop(struct GameData*);
 
 #endif
