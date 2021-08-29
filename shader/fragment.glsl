@@ -6,14 +6,17 @@ in vec2 f_tex_coords;
 in vec3 f_pos;
 in vec3 f_normal;
 
+
 out vec4 out_color;
 
 uniform sampler2D tex;
-uniform sampler2D tex2;
-uniform float tex_inter;
+
+flat in int block_id;
 
 void main()
 {
+    if (block_id == 0) discard;
+
     // Normalize the normal vector.
     // We cannot do that in the vertex shader (as we did earlier)
     // because the interpolation based on three normalized vectors
@@ -35,8 +38,8 @@ void main()
     vec3 i_diff = max(vec3(0.4) * dot(normal, light_dir), 0.1);
 
     // Specular:
-    vec3 i_spec = vec3(1.0) * pow(max(dot(reflect_dir, view_dir), 0.0), 32);
+    vec3 i_spec = vec3(0.0) * pow(max(dot(reflect_dir, view_dir), 0.0), 32);
 
     // Combine everything:
-    out_color = mix(texture(tex, f_tex_coords), texture(tex2, f_tex_coords), tex_inter) * f_color * vec4(i_amb + i_diff + i_spec, 1.0);
+    out_color = f_color * vec4(i_amb + i_diff + i_spec, 1.0);
 }

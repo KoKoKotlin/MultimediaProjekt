@@ -20,24 +20,24 @@ enum GameState {
 struct GameData {
     enum GameState gameState;
 
-    uint8_t *current_piece;           // current piece, no fixed size
-    uint8_t *next_piece;              // save the next piece for the display
-    uint8_t *arena;                   // width: 10, height: 20 -> 200 uints
+    int *current_piece;           // current piece, no fixed size
+    int *next_piece;                // save the next piece for the display
+    int *arena;                     // width: 10, height: 20 -> 200 uints
 
-    uint8_t position_x;               // position of the current piece inside the arena
-    uint8_t position_y;
+    int position_x;                 // position of the current piece inside the arena
+    int position_y;
 
-    uint8_t fast_drop;                // flag that determines whether the pieces move slow or fast downwards
-                                      // enabled when player presses the down button
+    bool fast_drop;                 // flag that determines whether the pieces move slow or fast downwards
+                                    // enabled when player presses the down button
 
     uint32_t score;
-    uint32_t level;                   // level for piece velocity
+    uint32_t level;                 // level for piece velocity
 
-    uint32_t *piece_count;            // saves the number of times the piece have shown up
+    int *piece_count;               // saves the number of times the piece have shown up
 
-    double accumulated_time;          // current playing time
+    double accumulated_time;        // current playing time
 
-    uint32_t seed;                         // for playing a certain game
+    uint32_t seed;                  // for playing a certain game
 };
 
 // List of Pieces:
@@ -70,13 +70,15 @@ void free_gamedata(struct GameData*);
 void array_index_to_coords(size_t, size_t, size_t*, size_t*);
 size_t coords_to_array_index(size_t, size_t, size_t);
 
-uint8_t* generate_next_piece();
-void rotate_piece(uint8_t*, enum Direction);
+int* generate_next_piece();
+void rotate_piece(int*, enum Direction);
 
 bool check_collision_side(const struct GameData*);
 bool check_collision_arena_pices(const struct GameData*);
 
 void move(struct GameData*, enum Direction dir);
 void drop(struct GameData*);
+
+void generate_block_positions(struct GameData*, int*);
 
 #endif

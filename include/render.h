@@ -18,9 +18,6 @@ typedef struct
     // The current shader program:
     GLuint shader_program;
 
-    // The uniform locations:
-    GLint angle_y_loc;
-
     // The vertex array object (blackbox ...):
     GLuint vao;
 
@@ -34,6 +31,8 @@ typedef struct
     double last_frame_time;
     struct GameData gameData;
 
+    // unniform for instanced rendering
+    GLuint block_positions;
 } user_data_t;
 
 typedef struct

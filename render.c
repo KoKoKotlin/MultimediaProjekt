@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <time.h>
 
 #include "render.h"
 #include "bitmap.h"
@@ -271,34 +272,23 @@ static void init_texture(user_data_t* user_data)
 }
 */
 
-/*
+
 static void init_uniforms(user_data_t* user_data)
 {
-    // Y angle:
-    user_data->angle_y_loc = glGetUniformLocation(user_data->shader_program, "angle_y");
-    user_data->rotate = ROTATE_NONE;
-
-    gl_check_error("glGetUniformLocation [angle_y]");
-    check_error(user_data->angle_y_loc >= 0, "Failed to obtain uniform location for angle_y.");
-
-    // Texture:
-    GLint tex_loc =   glGetUniformLocation(user_data->shader_program, "tex");
-    GLint tex_loc2 =  glGetUniformLocation(user_data->shader_program, "tex2");
-    GLint tex_inter = glGetUniformLocation(user_data->shader_program, "tex_inter");
-
-    gl_check_error("glGetUniformLocation [tex]");
-    check_error(tex_loc >= 0, "Failed to obtain uniform location for tex.");
+    user_data->block_positions = glGetUniformLocation(user_data->shader_program, "block_positions");
+    gl_check_error("glGetUniformLocation [block_position]");
 
     // Associate the sampler "tex" with texture unit 0:
-    glUniform1i(tex_loc, 0);
-    glUniform1i(tex_loc2, 1);
-    glUniform1f(tex_inter, 0.0f);
-    gl_check_error("glUniform1i [tex]");
 
-    user_data->tex_inter_loc = tex_inter;
-    user_data->tex_inter = 0.0f;
+    GLint initial_positions[200] = { 0 };
+
+    // TODO: remove (only for debugging)
+    /*srand(time(0));
+    for (size_t i = 0; i < 200; i++) {
+        initial_positions[i] = random() % 10000;
+    }*/
+    gl_check_error("glUniform1iv [block_positions]");
 }
-*/
 
 
 static void init_vertex_data(user_data_t* user_data)
@@ -447,6 +437,7 @@ static void init_vertex_data(user_data_t* user_data)
 static void init_model(user_data_t* user_data)
 {
     user_data->last_frame_time = glfwGetTime();
+    user_data->gameData = init_gamedata(0);
 }
 
 void check_error(int condition, const char* error_text)
@@ -479,14 +470,14 @@ void init_gl(GLFWwindow* window)
     // Initialize our texture:
     // init_texture(user_data);
 
+    // Initialize our model:
+    init_model(user_data);
+
     // Initialize our uniforms:
-    // init_uniforms(user_data);
+    init_uniforms(user_data);
 
     // Initialize our vertex data:
     init_vertex_data(user_data);
-
-    // Initialize our model:
-    init_model(user_data);
 
     // Obtain the internal size of the framebuffer:
     int fb_width, fb_height;
@@ -527,9 +518,13 @@ void draw_gl(GLFWwindow* window)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     gl_check_error("glClear");
 
+    int block_positions[200] = { 0 };
+    generate_block_positions(&user_data->gameData, block_positions);
+    glUniform1iv(user_data->block_positions, 200, block_positions);
+
     // Parameters: primitive type, start index, count
-    glDrawArrays(GL_TRIANGLES, 0, user_data->vertex_data_count);
-    gl_check_error("glDrawArrays");
+    glDrawArraysInstanced(GL_TRIANGLES, 0, user_data->vertex_data_count, 200); //(GL_TRIANGLES, 0, user_data->vertex_data_count);
+    gl_check_error("glDrawArraysInstanced");
 }
 
 void teardown_gl(GLFWwindow* window)

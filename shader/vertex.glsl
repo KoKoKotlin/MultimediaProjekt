@@ -10,20 +10,25 @@ out vec2 f_tex_coords;
 out vec3 f_pos;
 out vec3 f_normal;
 
-// Uniforms:
-uniform float angle_y;
+// determines position and color of blocks
+uniform int block_positions[200];
 
-void main()
-{
-    // Useful parameters for the teapot:
+flat out int block_id;
+
+#define PI 3.1415
+#define scaling_factor .1
+#define ARENA_WIDTH 10
+#define starting_x -5 * scaling_factor
+#define starting_y 10 * scaling_factor
+
+mat4 generate_frustum() {
     float near = 1.0;
     float far = 12.0;
-    float left = -1.0;
-    float right = 1.0;
-    float top = 1.0;
-    float bottom = -1.0;
+    float left = -1;
+    float right = 1;
+    float top = 9.0 / 16.0;
+    float bottom = -9.0 / 16.0;
 
-    // mat4() works column-wise!
     mat4 frustum = mat4(
         2.0 * near / (right - left),        0.0,                                0.0,                                0.0,
         0.0,                                2.0 * near / (top - bottom),        0.0,                                0.0,
@@ -31,12 +36,46 @@ void main()
         0.0,                                0.0,                                -2.0 * near * far / (far - near),   0.0
     );
 
-    vec4 trans = vec4(-10.0, -10.0, -10.0, 0.0);
-    vec3 pos = (v_position + trans).xyz; // Swizzle!
+    return frustum;
+}
+
+// source: https://stackoverflow.com/questions/15095909/from-rgb-to-hsv-in-opengl-glsl
+vec3 hsv2rgb(vec3 c)
+{
+    vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+    vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+    return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+}
+
+void main()
+{
+    block_id = block_positions[gl_InstanceID];
+    int x = gl_InstanceID % ARENA_WIDTH;
+    int y = gl_InstanceID / ARENA_WIDTH;
+
+    vec4 trans = vec4(starting_x + x * scaling_factor, starting_y - y * scaling_factor, -2.0, 0.0);
+
+    mat4 frustum = generate_frustum();
+
+    mat4 rot_x = mat4(
+        1, 0, 0, 0,
+        0, -cos(PI / 2), sin(PI / 2), 0,
+        0, -sin(PI / 2), -cos(PI / 2), 0,
+        0, 0, 0, 1
+    );
+
+    mat4 scale = mat4(
+        scaling_factor, 0, 0, 0,
+        0, scaling_factor, 0, 0,
+        0, 0, scaling_factor, 0,
+        0, 0, 0, 1
+    );
+
+    vec3 pos = ((rot_x * scale * v_position) + trans).xyz;
 
     gl_Position = frustum * vec4(pos, 1.0);
 
-    f_color = v_color;
+    f_color = vec4(hsv2rgb(vec3(block_id / 10000.0 * 2.0 * PI, 1, 1)), 1.0);
     f_tex_coords = v_tex_coords;
     f_pos = pos;
     f_normal = v_normal.xyz;
