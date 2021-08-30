@@ -1,14 +1,19 @@
 #include <time.h>
 #include <memory.h>
 #include <stdio.h>
+#include <errno.h>
 
 #include "engine.h"
-
 
 struct GameData init_gamedata(uint32_t initial_seed)
 {
     int* arena = (int*)calloc(sizeof(int), 10 * 20);
     int* piece_count = (int*)calloc(sizeof(int), 7);
+
+    if (arena == NULL || piece_count == NULL) {
+        dprintf(2, "Couldn't allocate memory for the arena or the piece counter! Exiting...");
+        exit(ENOMEM);
+    }
 
     struct GameData gameData = {
         .gameState = PLAYING,
@@ -41,15 +46,37 @@ void free_gamedata(struct GameData *game_data)
     free(game_data->piece_count);
 }
 
+/*
+    Helper funtions for getting the width of the matrix of a piece depending on its shape.
+*/
+int get_piece_size(const int* piece)
+{
+    switch(piece[0]) {
+        case PIECE_O:
+            return 2;
+        case PIECE_L:
+        case PIECE_S:
+        case PIECE_T:
+        case PIECE_Z:
+        case PIECE_J:
+            return 3;
+        case PIECE_I:
+            return 4;
+        default:
+            dprintf(2, "Piece with unknown piece ID: %d!\n", piece[0]);
+            exit(-1);
+    };
+}
+
 int* generate_next_piece()
 {
     int* new_piece;
-//    srand(time(NULL));
 
     switch (((uint32_t)(rand())) % 7)
     {
         case PIECE_O: {
             new_piece = (int*)calloc(1 + 4, sizeof(int));
+            if (new_piece == NULL) goto ERROR_GEN_PIECE;
 
             new_piece[0] = PIECE_O;
             new_piece[1] = 1;
@@ -62,6 +89,7 @@ int* generate_next_piece()
 
         case PIECE_L: {
             new_piece = (int*)calloc(1 + 9, sizeof(int));
+            if (new_piece == NULL) goto ERROR_GEN_PIECE;
 
             new_piece[0] = PIECE_L;
             new_piece[1] = 0;
@@ -79,6 +107,7 @@ int* generate_next_piece()
 
         case PIECE_J: {
             new_piece = (int*)calloc(1 + 9, sizeof(int));
+            if (new_piece == NULL) goto ERROR_GEN_PIECE;
 
             new_piece[0] = PIECE_J;
             new_piece[1] = 0;
@@ -96,6 +125,7 @@ int* generate_next_piece()
 
         case PIECE_T: {
             new_piece = (int*)calloc(1 + 9, sizeof(int));
+            if (new_piece == NULL) goto ERROR_GEN_PIECE;
 
             new_piece[0] = PIECE_T;
             new_piece[1] = 0;
@@ -113,6 +143,7 @@ int* generate_next_piece()
 
         case PIECE_I: {
             new_piece = (int*)calloc(1 + 16, sizeof(int));
+            if (new_piece == NULL) goto ERROR_GEN_PIECE;
 
             new_piece[0] = PIECE_I;
             new_piece[1] = 0;
@@ -137,6 +168,7 @@ int* generate_next_piece()
 
         case PIECE_Z: {
             new_piece = (int*)calloc(1 + 9, sizeof(int));
+            if (new_piece == NULL) goto ERROR_GEN_PIECE;
 
             new_piece[0] = PIECE_Z;
             new_piece[1] = 0;
@@ -153,6 +185,7 @@ int* generate_next_piece()
 
         case PIECE_S: {
             new_piece = (int*)calloc(1 + 9, sizeof(int));
+            if (new_piece == NULL) goto ERROR_GEN_PIECE;
 
             new_piece[0] = PIECE_S;
             new_piece[1] = 0;
@@ -168,22 +201,30 @@ int* generate_next_piece()
         }
 
         default:
-            exit(-100);
+            exit(-1);
     }
 
     return new_piece;
+
+ERROR_GEN_PIECE:
+    dprintf(2, "Couldn't allocate memory for the next tetris piece! Exiting...");
+    exit(ENOMEM);
 }
 
-void rotate_piece_left(int* piece)
+/*
+    Helper function for rotation a piece right once.
+    This is done by first transposing the matrix of the piece and then reversing the rows.
+*/
+void rotate_piece_right(int* piece)
 {
+    // the O piece does not change when rotated by 90 degrees
     if (piece[0] == PIECE_O) return;
 
-    size_t size;
-    if (piece[0] == PIECE_I) size = 4;
-    else size = 3;
+    size_t size = get_piece_size(piece);
 
-    // index == y * w + x
+    // buffer for the rotated piece
     int* buffer = (int*)calloc(sizeof(int), 1 + size * size);
+
     buffer[0] = piece[0];
     for (size_t j = 0; j < size; j++) {
         for (size_t i = 0; i < size; i++) {
@@ -201,17 +242,19 @@ void rotate_piece_left(int* piece)
 }
 
 void rotate_piece(int* piece, enum Direction dir) {
-    if (dir == LEFT) {
-        rotate_piece_left(piece);
-    } else if (dir == RIGHT) {
-        rotate_piece_left(piece);       // cool trick to save some code
-        rotate_piece_left(piece);       // 3 left rotation == 1 right rotation
-        rotate_piece_left(piece);       // look group theory
+    if (dir == RIGHT) {
+        rotate_piece_right(piece);
+    } else if (dir == LEFT) {
+        rotate_piece_right(piece);       // cool trick to save some code
+        rotate_piece_right(piece);       // 3 right rotations == 1 left rotation
+        rotate_piece_right(piece);       // look group theory
     }
 }
 
 void array_index_to_coords(size_t index, size_t width, size_t* x, size_t* y)
 {
+    if (x == NULL || y == NULL) return;
+
     *x = index / width;
     *y = index % width;
 }
@@ -221,27 +264,10 @@ size_t coords_to_array_index(size_t x, size_t y, size_t width)
     return y * width + x;
 }
 
-int get_piece_size(const int* piece)
-{
-    switch(piece[0]) {
-        case PIECE_O:
-            return 2;
-        case PIECE_L:
-        case PIECE_S:
-        case PIECE_T:
-        case PIECE_Z:
-        case PIECE_J:
-            return 3;
-        case PIECE_I:
-            return 4;
-        default:
-            dprintf(2, "Piece with unknown piece ID: %d!\n", piece[0]);
-            exit(-1);
-    };
-}
-
 bool check_collision_arena_wall(const struct GameData* game_data)
 {
+
+    // find the left most non zero entry in the matrix
     int size = get_piece_size(game_data->current_piece);
     int non_zero_index_left = 0;
     for (int x = 0; x < size; x++) {
@@ -254,6 +280,7 @@ bool check_collision_arena_wall(const struct GameData* game_data)
     }
 LOOP_END1:;
 
+    // find the right most non zero entry in the matrix
     int non_zero_index_right = 0;
     for (int x = size - 1; x >= 0; x--) {
         for (int y = 0; y < size; y++) {
@@ -265,6 +292,7 @@ LOOP_END1:;
     }
 LOOP_END2:;
 
+    // check if the left most and right most entries are in bounds of the arena
     return non_zero_index_left + game_data->position_x < 0 || non_zero_index_right + game_data->position_x >= ARENA_WIDTH;
 }
 
@@ -283,6 +311,7 @@ bool check_collision_arena_pices(const struct GameData* game_data)
 
 bool check_collision_side(const struct GameData* game_data)
 {
+    // combine checks for piece and arena collision when moving side-to-side
     return check_collision_arena_wall(game_data) || check_collision_arena_pices(game_data);
 }
 
@@ -296,6 +325,9 @@ void spawn_new_piece(struct GameData* game_data)
     game_data->position_y = START_POSITION_Y;
 }
 
+/*
+    Helper functions that writes the current piece to the correct spot into the arena.
+*/
 void write_piece_to_arena(struct GameData* game_data)
 {
     int size = get_piece_size(game_data->current_piece);
@@ -305,9 +337,14 @@ void write_piece_to_arena(struct GameData* game_data)
                 = game_data->current_piece[coords_to_array_index(x, y, size) + 1];
 }
 
+/*
+    Helper functions that checks for filled rows, deletes them and adds to the score
+    depending on the number of simultanious rows cleared and the current level.
+*/
 void check_filled_rows(struct GameData* game_data)
 {
-    int row_buffer[4] = { 0xFF, 0xFF, 0xFF, 0xFF }; //max filled rows at the same time == 4
+    // find the indecies of filled rows (which can be at most 4) from bottom to top
+    int row_buffer[4] = { 0xFF, 0xFF, 0xFF, 0xFF };
     size_t buffer_index = 0;
     for (int row = ARENA_HEIGHT - 1; row <= 0; row--) {
         for (int x = 0; x < ARENA_WIDTH; x++) {
@@ -321,7 +358,7 @@ void check_filled_rows(struct GameData* game_data)
     // triple:  300 pts
     // tetris: 1200 pts
     switch (buffer_index) {
-        case 0: return; //no points
+        case 0: return; // no rows cleared
         case 1: game_data->score += 40 * game_data->level;
                 break;
         case 2: game_data->score += 100 * game_data->level;
@@ -332,7 +369,7 @@ void check_filled_rows(struct GameData* game_data)
                 break;
     }
 
-    // move rows down
+    // copy the not cleared rows into an arena buffer skipping the cleared ones
     int* new_arena = (int*)calloc(sizeof(int), ARENA_WIDTH * ARENA_HEIGHT);
     size_t current_row_index = 0;
     buffer_index = 0;
@@ -346,6 +383,7 @@ void check_filled_rows(struct GameData* game_data)
         current_row_index++;
     }
 
+    // swap the buffers and free the old arena
     free(game_data->arena);
     game_data->arena = new_arena;
 }
@@ -370,14 +408,19 @@ void drop(struct GameData* game_data)
 
 void generate_block_positions(struct GameData* game_data, int* block_positions)
 {
+    if (block_positions == NULL) return;
+
+    // copy in the arena pieces
     memcpy(block_positions, game_data->arena, ARENA_WIDTH * ARENA_HEIGHT);
 
     int size = get_piece_size(game_data->current_piece);
 
+    // place the current piece into the buffer at the correct location
+    // this has to be done with the plus operation so that no other pieces are
+    // overwritten by the zeros in the piece matrix
     for (int y = 0; y < size; y++)
         for (int x = 0; x < size; x++) {
             block_positions[COORDS_TO_ARENA_INDEX(game_data->position_x + x, game_data->position_y + y)] =
             block_positions[COORDS_TO_ARENA_INDEX(game_data->position_x + x, game_data->position_y + y)] + game_data->current_piece[coords_to_array_index(x, y, size) + 1];
-            //printf("%d\n", game_data->current_piece[coords_to_array_index(x, y, size) + 1]);
         }
 }
