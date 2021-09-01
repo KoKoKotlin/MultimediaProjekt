@@ -6,6 +6,7 @@
 #include "render.h"
 #include "bitmap.h"
 #include "obj.h"
+#include "engine.h"
 
 #define MODEL_PATH "models/Block_basic.obj"
 // #define TEX_PATH   "models/logo.bmp"
@@ -280,13 +281,6 @@ static void init_uniforms(user_data_t* user_data)
 
     // Associate the sampler "tex" with texture unit 0:
 
-    GLint initial_positions[200] = { 0 };
-
-    // TODO: remove (only for debugging)
-    /*srand(time(0));
-    for (size_t i = 0; i < 200; i++) {
-        initial_positions[i] = random() % 10000;
-    }*/
     gl_check_error("glUniform1iv [block_positions]");
 }
 
@@ -437,6 +431,7 @@ static void init_vertex_data(user_data_t* user_data)
 static void init_model(user_data_t* user_data)
 {
     user_data->last_frame_time = glfwGetTime();
+    user_data->time_since_last_drop = 0.0;
     user_data->gameData = init_gamedata(0);
 }
 
@@ -506,6 +501,23 @@ void update_gl(GLFWwindow* window)
     // Calculate the frame delta time and update the timestamp:
     double frame_time = glfwGetTime();
     double delta_time = frame_time - user_data->last_frame_time;
+
+    // accumulate delta time
+    user_data->time_since_last_drop += delta_time;
+
+    if (user_data->time_since_last_drop >= calc_drop_time(&user_data->gameData)) {
+        drop(&user_data->gameData);
+        user_data->time_since_last_drop = 0.0;
+    }
+
+    // int block_positions[200] = { 0 };
+    // generate_block_positions(&user_data->gameData, block_positions);
+
+    // printf("\n\n");
+    // for (size_t y = 0; y < 20*10; y++) {
+    //     printf("%d ", block_positions[y]);
+    //     if (y % 10 == 9) printf("\n");
+    // }
 
     user_data->last_frame_time = frame_time;
 }

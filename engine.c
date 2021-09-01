@@ -1,8 +1,3 @@
-#include <time.h>
-#include <memory.h>
-#include <stdio.h>
-#include <errno.h>
-
 #include "engine.h"
 
 struct GameData init_gamedata(uint32_t initial_seed)
@@ -93,14 +88,14 @@ int* generate_next_piece()
 
             new_piece[0] = PIECE_L;
             new_piece[1] = 0;
-            new_piece[2] = 1;
+            new_piece[2] = 2;
             new_piece[3] = 0;
             new_piece[4] = 0;
-            new_piece[5] = 1;
+            new_piece[5] = 2;
             new_piece[6] = 0;
             new_piece[7] = 0;
-            new_piece[8] = 1;
-            new_piece[9] = 1;
+            new_piece[8] = 2;
+            new_piece[9] = 2;
 
             break;
         }
@@ -111,13 +106,13 @@ int* generate_next_piece()
 
             new_piece[0] = PIECE_J;
             new_piece[1] = 0;
-            new_piece[2] = 1;
+            new_piece[2] = 3;
             new_piece[3] = 0;
             new_piece[4] = 0;
-            new_piece[5] = 1;
+            new_piece[5] = 3;
             new_piece[6] = 0;
-            new_piece[7] = 1;
-            new_piece[8] = 1;
+            new_piece[7] = 3;
+            new_piece[8] = 3;
             new_piece[9] = 0;
 
             break;
@@ -131,11 +126,11 @@ int* generate_next_piece()
             new_piece[1] = 0;
             new_piece[2] = 0;
             new_piece[3] = 0;
-            new_piece[4] = 1;
-            new_piece[5] = 1;
-            new_piece[6] = 1;
+            new_piece[4] = 4;
+            new_piece[5] = 4;
+            new_piece[6] = 4;
             new_piece[7] = 0;
-            new_piece[8] = 1;
+            new_piece[8] = 4;
             new_piece[9] = 0;
 
             break;
@@ -148,19 +143,19 @@ int* generate_next_piece()
             new_piece[0] = PIECE_I;
             new_piece[1] = 0;
             new_piece[2] = 0;
-            new_piece[3] = 1;
+            new_piece[3] = 5;
             new_piece[4] = 0;
             new_piece[5] = 0;
             new_piece[6] = 0;
-            new_piece[7] = 1;
+            new_piece[7] = 5;
             new_piece[8] = 0;
             new_piece[9] = 0;
             new_piece[10] = 0;
-            new_piece[11] = 1;
+            new_piece[11] = 5;
             new_piece[12] = 0;
             new_piece[13] = 0;
             new_piece[14] = 0;
-            new_piece[15] = 1;
+            new_piece[15] = 5;
             new_piece[16] = 0;
 
             break;
@@ -174,12 +169,12 @@ int* generate_next_piece()
             new_piece[1] = 0;
             new_piece[2] = 0;
             new_piece[3] = 0;
-            new_piece[4] = 1;
-            new_piece[5] = 1;
+            new_piece[4] = 6;
+            new_piece[5] = 6;
             new_piece[6] = 0;
             new_piece[7] = 0;
-            new_piece[8] = 1;
-            new_piece[9] = 1;
+            new_piece[8] = 6;
+            new_piece[9] = 6;
             break;
         }
 
@@ -192,10 +187,10 @@ int* generate_next_piece()
             new_piece[2] = 0;
             new_piece[3] = 0;
             new_piece[4] = 0;
-            new_piece[5] = 1;
-            new_piece[6] = 1;
-            new_piece[7] = 1;
-            new_piece[8] = 1;
+            new_piece[5] = 7;
+            new_piece[6] = 7;
+            new_piece[7] = 7;
+            new_piece[8] = 7;
             new_piece[9] = 0;
             break;
         }
@@ -215,17 +210,17 @@ ERROR_GEN_PIECE:
     Helper function for rotation a piece right once.
     This is done by first transposing the matrix of the piece and then reversing the rows.
 */
-void rotate_piece_right(int* piece)
+void rotate_piece_right(int** piece)
 {
     // the O piece does not change when rotated by 90 degrees
-    if (piece[0] == PIECE_O) return;
+    if ((*piece)[0] == PIECE_O) return;
 
-    size_t size = get_piece_size(piece);
+    size_t size = get_piece_size(*piece);
 
     // buffer for the rotated piece
     int* buffer = (int*)calloc(sizeof(int), 1 + size * size);
 
-    buffer[0] = piece[0];
+    buffer[0] = (*piece)[0];
     for (size_t j = 0; j < size; j++) {
         for (size_t i = 0; i < size; i++) {
             // transpose a_ij => a_ji
@@ -233,15 +228,15 @@ void rotate_piece_right(int* piece)
             // together  a_ij => a_(size-1-j)i
             size_t from_index = coords_to_array_index(i, j, size) + 1;
             size_t to_index   = coords_to_array_index(size - 1 -j, i, size) + 1;
-            buffer[to_index] = piece[from_index];
+            buffer[to_index] = (*piece)[from_index];
         }
     }
 
-    free(piece);
-    piece = buffer;
+    free(*piece);
+    *piece = buffer;
 }
 
-void rotate_piece(int* piece, enum Direction dir) {
+void rotate_piece(int** piece, enum Direction dir) {
     if (dir == RIGHT) {
         rotate_piece_right(piece);
     } else if (dir == LEFT) {
@@ -334,7 +329,7 @@ void write_piece_to_arena(struct GameData* game_data)
     for (int y = 0; y < size; y++)
         for (int x = 0; x < size; x++)
             game_data->arena[COORDS_TO_ARENA_INDEX(game_data->position_x + x, game_data->position_y + y)]
-                = game_data->current_piece[coords_to_array_index(x, y, size) + 1];
+                += game_data->current_piece[coords_to_array_index(x, y, size) + 1];
 }
 
 /*
@@ -346,7 +341,7 @@ void check_filled_rows(struct GameData* game_data)
     // find the indecies of filled rows (which can be at most 4) from bottom to top
     int row_buffer[4] = { 0xFF, 0xFF, 0xFF, 0xFF };
     size_t buffer_index = 0;
-    for (int row = ARENA_HEIGHT - 1; row <= 0; row--) {
+    for (int row = ARENA_HEIGHT - 1; row >= 0; row--) {
         for (int x = 0; x < ARENA_WIDTH; x++) {
             if (game_data->arena[COORDS_TO_ARENA_INDEX(x, row)] == 0) break;
             if (x == ARENA_WIDTH - 1) row_buffer[buffer_index++] = row;
@@ -371,16 +366,16 @@ void check_filled_rows(struct GameData* game_data)
 
     // copy the not cleared rows into an arena buffer skipping the cleared ones
     int* new_arena = (int*)calloc(sizeof(int), ARENA_WIDTH * ARENA_HEIGHT);
-    size_t current_row_index = 0;
+    size_t current_row_index = ARENA_HEIGHT - 1;
     buffer_index = 0;
-    for (int row = ARENA_HEIGHT - 1; row <= 0; row--) {
+    for (int row = ARENA_HEIGHT - 1; row >= 0; row--) {
         if (row == row_buffer[buffer_index]) {
             buffer_index++;
             continue;
         }
 
-        memcpy(new_arena + ARENA_WIDTH * current_row_index, game_data->arena + ARENA_WIDTH * row, ARENA_WIDTH);
-        current_row_index++;
+        memcpy(new_arena + ARENA_WIDTH * current_row_index, game_data->arena + ARENA_WIDTH * row, sizeof(int) * ARENA_WIDTH);
+        current_row_index--;
     }
 
     // swap the buffers and free the old arena
@@ -406,12 +401,12 @@ void drop(struct GameData* game_data)
     }
 }
 
-void generate_block_positions(struct GameData* game_data, int* block_positions)
+void generate_block_positions(const struct GameData* game_data, int* block_positions)
 {
     if (block_positions == NULL) return;
 
     // copy in the arena pieces
-    memcpy(block_positions, game_data->arena, ARENA_WIDTH * ARENA_HEIGHT);
+    memcpy(block_positions, game_data->arena, sizeof(int) * ARENA_WIDTH * ARENA_HEIGHT);
 
     int size = get_piece_size(game_data->current_piece);
 
@@ -420,7 +415,7 @@ void generate_block_positions(struct GameData* game_data, int* block_positions)
     // overwritten by the zeros in the piece matrix
     for (int y = 0; y < size; y++)
         for (int x = 0; x < size; x++) {
-            block_positions[COORDS_TO_ARENA_INDEX(game_data->position_x + x, game_data->position_y + y)] =
-            block_positions[COORDS_TO_ARENA_INDEX(game_data->position_x + x, game_data->position_y + y)] + game_data->current_piece[coords_to_array_index(x, y, size) + 1];
+            block_positions[COORDS_TO_ARENA_INDEX(game_data->position_x + x, game_data->position_y + y)] +=
+                game_data->current_piece[coords_to_array_index(x, y, size) + 1];
         }
 }

@@ -75,7 +75,7 @@ void main()
 
     gl_Position = frustum * vec4(pos, 1.0);
 
-    f_color = vec4(hsv2rgb(vec3(block_id / 10000.0 * 2.0 * PI, 1, 1)), 1.0);
+    f_color = vec4(hsv2rgb(vec3(block_id * 2.0 * PI, 1, 1)), 1.0);
     f_tex_coords = v_tex_coords;
     f_pos = pos;
     f_normal = v_normal.xyz;

@@ -29,6 +29,7 @@ typedef struct
 
     // The model:
     double last_frame_time;
+    double time_since_last_drop;
     struct GameData gameData;
 
     // unniform for instanced rendering

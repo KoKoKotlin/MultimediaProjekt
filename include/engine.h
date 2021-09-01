@@ -4,12 +4,24 @@
 #include <inttypes.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <time.h>
+#include <memory.h>
+#include <stdio.h>
+#include <errno.h>
+#include <math.h>
 
 #define ARENA_WIDTH  10
 #define ARENA_HEIGHT 20
 
 #define START_POSITION_X 5 // FIXME: center piece
 #define START_POSITION_Y 0
+
+#ifdef DEBUG
+    #define BASE_TIME .2
+#else
+    #define BASE_TIME   1.0
+#endif
+#define TIME_OFFSET .05
 
 #define COORDS_TO_ARENA_INDEX(x, y) (coords_to_array_index((x), (y), ARENA_WIDTH))
 
@@ -22,9 +34,9 @@ enum GameState {
 struct GameData {
     enum GameState gameState;
 
-    int *current_piece;             // current piece, no fixed size
-    int *next_piece;                // save the next piece for the display
-    int *arena;                     // width: 10, height: 20 -> 200 uints
+    int* current_piece;             // current piece, no fixed size
+    int* next_piece;                // save the next piece for the display
+    int* arena;                     // width: 10, height: 20 -> 200 uints
 
     int position_x;                 // position of the current piece inside the arena
     int position_y;
@@ -35,7 +47,7 @@ struct GameData {
     uint32_t score;
     uint32_t level;                 // level for piece velocity
 
-    int *piece_count;               // saves the number of times the piece have shown up
+    int* piece_count;               // saves the number of times the piece have shown up
 
     double accumulated_time;        // current playing time
 
@@ -112,7 +124,7 @@ int* generate_next_piece();
     dir == LEFT  => rotate counter-clockwise
     dir == RIGHT => rotate clockwise
 */
-void rotate_piece(int* piece, enum Direction dir);
+void rotate_piece(int** piece, enum Direction dir);
 
 /*
     Checks if the current piece collides with the wall of the arena or if out of bounds of the arena.
@@ -147,6 +159,11 @@ void drop(struct GameData* game_data);
 
     The values will be written into the provided pointer. It should have size 200 or the program might crash.
 */
-void generate_block_positions(struct GameData* game_data, int* block_positions);
+void generate_block_positions(const struct GameData* game_data, int* block_positions);
+
+static inline double calc_drop_time(const struct GameData* game_data)
+{
+    return BASE_TIME - log((game_data->level + 1)) * TIME_OFFSET;
+}
 
 #endif

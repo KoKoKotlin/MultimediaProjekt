@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "render.h"
+#include "engine.h"
 
 void error_callback(int error, const char* description)
 {
@@ -27,6 +28,15 @@ void window_size_callback(GLFWwindow* window, int width, int height)
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	user_data_t* user_data = glfwGetWindowUserPointer(window);
+
+    if (action == GLFW_PRESS) {
+        if (key == GLFW_KEY_A)          move(&user_data->gameData, LEFT);
+        else if (key == GLFW_KEY_D)     move(&user_data->gameData, RIGHT);
+        else if (key == GLFW_KEY_RIGHT) rotate_piece(&user_data->gameData.current_piece, RIGHT);
+        else if (key == GLFW_KEY_LEFT)  rotate_piece(&user_data->gameData.current_piece, LEFT);
+    } else if (action == GLFW_RELEASE) {
+
+    }
 }
 
 
