@@ -8,7 +8,9 @@
 #include "obj.h"
 #include "engine.h"
 
-#define MODEL_PATH "models/Block_basic.obj"
+#define MODEL_PATH_BLOCK "models/Block_basic.obj"
+#define MODEL_PATH_ARENA "models/arena.obj"
+#define MODEL_PATH_BACKGROUND "models/background_arena.obj"
 // #define TEX_PATH   "models/logo.bmp"
 #define Y_ANGULAR_VELOCITY 2
 
@@ -285,32 +287,23 @@ static void init_uniforms(user_data_t* user_data)
 }
 
 
-static void init_vertex_data(user_data_t* user_data)
+static void load_model(char* model_path, GLuint vao, GLuint vbo, int* vertex_data_count)
 {
-    // Blackbox! Create a VAO.
-    GLuint vao;
-
-    glGenVertexArrays(1, &vao);
-    gl_check_error("glGenVertexArrays");
-
     glBindVertexArray(vao);
     gl_check_error("glBindVertexArray");
-
-    // Store the VAO inside our user data:
-    user_data->vao = vao;
-
-    // Generate and bind a vertex buffer object:
-    GLuint vbo;
-
-    glGenBuffers(1, &vbo);
-    gl_check_error("glGenBuffers");
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     gl_check_error("glBindBuffer");
 
     // Open the obj file:
-    FILE* obj = fopen(MODEL_PATH, "r");
-    check_error(obj != NULL, "Failed to open obj file at \"" MODEL_PATH "\".");
+    FILE* obj = fopen(model_path, "r");
+
+    //check for load error
+    char* error_msg_start = "Failed to open obj file at: ";
+    char* error_msg = calloc(sizeof(char), strlen(error_msg_start) + strlen(model_path) + 1);
+    strcat(error_msg, error_msg_start);
+    strcat(error_msg, model_path);
+    check_error(obj != NULL, error_msg);
 
     // Count the entries:
     int vertex_count = 0;
@@ -321,7 +314,7 @@ static void init_vertex_data(user_data_t* user_data)
 
     obj_count_entries(obj, &vertex_count, &tex_coords_count, &normal_count, &face_count, &mtl_lib_count);
 
-    printf("Parsed obj file \"%s\":\n", MODEL_PATH);
+    printf("Parsed obj file \"%s\":\n", MODEL_PATH_BLOCK);
     printf("\tVertices: %d\n", vertex_count);
     printf("\tTexture coordinates: %d\n", tex_coords_count);
     printf("\tNormals: %d\n", normal_count);
@@ -375,7 +368,7 @@ static void init_vertex_data(user_data_t* user_data)
                     vertex_data[vertex_data_index++] = (vertex_data_t)
                     {
                         .position = { vertex->x, vertex->y, vertex->z },
-                        .color = { 0x80, 0x80, 0x80 },
+                        .color = { 0xFF, 0xFF, 0xFF },
                         .normal = { normal->x, normal->y, normal->z },
                         .tex_coords = { tex_coord->u, tex_coord->v }
                     };
@@ -386,10 +379,10 @@ static void init_vertex_data(user_data_t* user_data)
             default: break;
         }
     }
-    user_data->vertex_data_count = face_count * 3;
+    *vertex_data_count = face_count * 3;
 
     // Upload the data to the GPU:
-    glBufferData(GL_ARRAY_BUFFER, user_data->vertex_data_count * sizeof(vertex_data_t), (const GLvoid*)vertex_data, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, *vertex_data_count * sizeof(vertex_data_t), (const GLvoid*)vertex_data, GL_STATIC_DRAW);
 
     fclose(obj);
     free(vertices);
@@ -423,9 +416,6 @@ static void init_vertex_data(user_data_t* user_data)
 
     glEnableVertexAttribArray(ATTRIB_TEX_COORDS);
     gl_check_error("glEnableVertexAttribArray [tex coords]");
-
-    // Store the VBO inside our user data:
-    user_data->vbo = vbo;
 }
 
 static void init_model(user_data_t* user_data)
@@ -472,7 +462,13 @@ void init_gl(GLFWwindow* window)
     init_uniforms(user_data);
 
     // Initialize our vertex data:
-    init_vertex_data(user_data);
+    // init_vertex_data(user_data);
+
+    glGenVertexArrays(3, user_data->vao);
+    glGenBuffers(3, user_data->vbo);
+    load_model(MODEL_PATH_BLOCK,      user_data->vao[0], user_data->vbo[0], user_data->vertex_data_count + 0);
+    load_model(MODEL_PATH_ARENA,      user_data->vao[1], user_data->vbo[1], user_data->vertex_data_count + 1);
+    load_model(MODEL_PATH_BACKGROUND, user_data->vao[2], user_data->vbo[2], user_data->vertex_data_count + 2);
 
     // Obtain the internal size of the framebuffer:
     int fb_width, fb_height;
@@ -530,12 +526,22 @@ void draw_gl(GLFWwindow* window)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     gl_check_error("glClear");
 
+    for (size_t i = 1; i < 3; i++) {
+        glBindVertexArray(user_data->vao[i]);
+        glBindBuffer(GL_ARRAY_BUFFER, user_data->vbo[i]);
+
+        glDrawArrays(GL_TRIANGLES, 0, user_data->vertex_data_count[i]);
+    }
+
+    glBindVertexArray(user_data->vao[0]);
+    glBindBuffer(GL_ARRAY_BUFFER, user_data->vbo[0]);
+
     int block_positions[200] = { 0 };
     generate_block_positions(&user_data->gameData, block_positions);
     glUniform1iv(user_data->block_positions, 200, block_positions);
 
     // Parameters: primitive type, start index, count
-    glDrawArraysInstanced(GL_TRIANGLES, 0, user_data->vertex_data_count, 200); //(GL_TRIANGLES, 0, user_data->vertex_data_count);
+    glDrawArraysInstanced(GL_TRIANGLES, 0, user_data->vertex_data_count[0], 200);
     gl_check_error("glDrawArraysInstanced");
 }
 
@@ -549,17 +555,14 @@ void teardown_gl(GLFWwindow* window)
     gl_check_error("glDeleteProgram");
 
     // Delete the VAO:
-    glDeleteVertexArrays(1, &user_data->vao);
+    glDeleteVertexArrays(3, user_data->vao);
     gl_check_error("glDeleteVertexArrays");
 
     // Delete the VBO:
-    glDeleteBuffers(1, &user_data->vbo);
+    glDeleteBuffers(3, user_data->vbo);
     gl_check_error("glDeleteBuffers");
 
     // Delete the texture:
     // glDeleteTextures(1, &user_data->tex);
-    // gl_check_error("glDeleteTextures");
-
-    // glDeleteTextures(1, &user_data->tex2);
     // gl_check_error("glDeleteTextures");
 }

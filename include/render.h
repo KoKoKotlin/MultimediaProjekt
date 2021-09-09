@@ -19,13 +19,13 @@ typedef struct
     GLuint shader_program;
 
     // The vertex array object (blackbox ...):
-    GLuint vao;
+    GLuint vao[3];
 
     // The vertex buffer object (GPU mem for the vertex data):
-    GLuint vbo;
+    GLuint vbo[3];
 
     // The number of vertices to render:
-    int vertex_data_count;
+    int vertex_data_count[3];
 
     // The model:
     double last_frame_time;
