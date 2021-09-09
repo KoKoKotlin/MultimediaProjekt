@@ -124,7 +124,7 @@ int* generate_next_piece();
     dir == LEFT  => rotate counter-clockwise
     dir == RIGHT => rotate clockwise
 */
-void rotate_piece(int** piece, enum Direction dir);
+void rotate_piece(struct GameData* game_data, enum Direction dir);
 
 /*
     Checks if the current piece collides with the wall of the arena or if out of bounds of the arena.

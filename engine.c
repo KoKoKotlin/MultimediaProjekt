@@ -230,46 +230,6 @@ ERROR_GEN_PIECE:
     exit(ENOMEM);
 }
 
-/*
-    Helper function for rotation a piece right once.
-    This is done by first transposing the matrix of the piece and then reversing the rows.
-*/
-void rotate_piece_right(int** piece)
-{
-    // the O piece does not change when rotated by 90 degrees
-    if ((*piece)[0] == PIECE_O) return;
-
-    size_t size = get_piece_size(*piece);
-
-    // buffer for the rotated piece
-    int* buffer = (int*)calloc(sizeof(int), 1 + size * size);
-
-    buffer[0] = (*piece)[0];
-    for (size_t j = 0; j < size; j++) {
-        for (size_t i = 0; i < size; i++) {
-            // transpose a_ij => a_ji
-            // rev rows  a_ij => a_(size-1-i)j
-            // together  a_ij => a_(size-1-j)i
-            size_t from_index = coords_to_array_index(i, j, size) + 1;
-            size_t to_index   = coords_to_array_index(size - 1 -j, i, size) + 1;
-            buffer[to_index] = (*piece)[from_index];
-        }
-    }
-
-    free(*piece);
-    *piece = buffer;
-}
-
-void rotate_piece(int** piece, enum Direction dir) {
-    if (dir == RIGHT) {
-        rotate_piece_right(piece);
-    } else if (dir == LEFT) {
-        rotate_piece_right(piece);       // cool trick to save some code
-        rotate_piece_right(piece);       // 3 right rotations == 1 left rotation
-        rotate_piece_right(piece);       // look group theory
-    }
-}
-
 void array_index_to_coords(size_t index, size_t width, size_t* x, size_t* y)
 {
     if (x == NULL || y == NULL) return;
@@ -285,7 +245,6 @@ size_t coords_to_array_index(size_t x, size_t y, size_t width)
 
 bool check_collision_arena_wall(const struct GameData* game_data)
 {
-
     // find the left most non zero entry in the matrix
     int size = get_piece_size(game_data->current_piece);
     int non_zero_index_left = 0;
@@ -332,6 +291,53 @@ bool check_collision_side(const struct GameData* game_data)
 {
     // combine checks for piece and arena collision when moving side-to-side
     return check_collision_arena_wall(game_data) || check_collision_arena_pices(game_data);
+}
+
+/*
+    Helper function for rotation a piece right once.
+    This is done by first transposing the matrix of the piece and then reversing the rows.
+*/
+void rotate_piece_right(int** piece)
+{
+    // the O piece does not change when rotated by 90 degrees
+    if ((*piece)[0] == PIECE_O) return;
+
+    size_t size = get_piece_size(*piece);
+
+    // buffer for the rotated piece
+    int* buffer = (int*)calloc(sizeof(int), 1 + size * size);
+
+    buffer[0] = (*piece)[0];
+    for (size_t j = 0; j < size; j++) {
+        for (size_t i = 0; i < size; i++) {
+            // transpose a_ij => a_ji
+            // rev rows  a_ij => a_(size-1-i)j
+            // together  a_ij => a_(size-1-j)i
+            size_t from_index = coords_to_array_index(i, j, size) + 1;
+            size_t to_index   = coords_to_array_index(size - 1 -j, i, size) + 1;
+            buffer[to_index] = (*piece)[from_index];
+        }
+    }
+
+    free(*piece);
+    *piece = buffer;
+}
+
+void rotate_piece_left(int** piece) {
+    rotate_piece_right(piece);       // cool trick to save some code
+    rotate_piece_right(piece);       // 3 right rotations == 1 left rotation
+    rotate_piece_right(piece);       // look group theory
+}
+
+void rotate_piece(struct GameData* game_data, enum Direction dir) {
+    if (dir == RIGHT)     rotate_piece_right(&game_data->current_piece);
+    else if (dir == LEFT) rotate_piece_left(&game_data->current_piece);
+
+    // if a collision occurs rotate back
+    if (check_collision_arena_pices(game_data) || check_collision_arena_wall(game_data)) {
+        if (dir == LEFT)     rotate_piece_right(&game_data->current_piece);
+        else if (dir == RIGHT) rotate_piece_left(&game_data->current_piece);
+    }
 }
 
 void spawn_new_piece(struct GameData* game_data)
