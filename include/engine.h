@@ -13,7 +13,7 @@
 #define ARENA_WIDTH  10
 #define ARENA_HEIGHT 20
 
-#define START_POSITION_X 5 // FIXME: center piece
+#define START_POSITION_X 4 // FIXME: center piece
 #define START_POSITION_Y 0
 
 #ifdef DEBUG

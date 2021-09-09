@@ -1,45 +1,5 @@
 #include "engine.h"
-
-struct GameData init_gamedata(uint32_t initial_seed)
-{
-    int* arena = (int*)calloc(sizeof(int), 10 * 20);
-    int* piece_count = (int*)calloc(sizeof(int), 7);
-
-    if (arena == NULL || piece_count == NULL) {
-        dprintf(2, "Couldn't allocate memory for the arena or the piece counter! Exiting...");
-        exit(ENOMEM);
-    }
-
-    struct GameData gameData = {
-        .gameState = PLAYING,
-        .current_piece = NULL,
-        .next_piece = NULL,
-        .arena = arena,
-        .position_x = 0,
-        .position_y = 0,
-        .fast_drop = false,
-        .score = 0,
-        .level = 0,
-        .piece_count = piece_count,
-        .accumulated_time = 0.0,
-        .seed = (initial_seed == 0) ? time(NULL) : initial_seed,    // <--- trailing comma from rust
-    };
-
-    srand(gameData.seed);
-
-    gameData.current_piece = generate_next_piece();
-    gameData.next_piece = generate_next_piece();
-
-    return gameData;
-}
-
-void free_gamedata(struct GameData *game_data)
-{
-    free(game_data->arena);
-    free(game_data->current_piece);
-    free(game_data->next_piece);
-    free(game_data->piece_count);
-}
+#include "helper.h"
 
 /*
     Helper funtions for getting the width of the matrix of a piece depending on its shape.
@@ -61,6 +21,70 @@ int get_piece_size(const int* piece)
             dprintf(2, "Piece with unknown piece ID: %d!\n", piece[0]);
             exit(-1);
     };
+}
+
+void align_y(struct GameData* game_data) {
+    int size = get_piece_size(game_data->current_piece);
+    for (int y = 0; y < size; y++) {
+        for (int x = 0; x < size; x++) {
+            if (game_data->current_piece[coords_to_array_index(x, y, size) + 1] != 0) return;
+        }
+        game_data->position_y = game_data->position_y - 1;
+    }
+}
+
+void align_x(struct GameData* game_data) {
+    int size = get_piece_size(game_data->current_piece);
+    for (int x = 0; x < size; x++) {
+        for (int y = 0; y < size; y++) {
+            if (game_data->current_piece[coords_to_array_index(x, y, size) + 1] != 0) return;
+        }
+        game_data->position_x = game_data->position_x - 1;
+    }
+}
+
+struct GameData init_gamedata(uint32_t initial_seed)
+{
+    int* arena = (int*)calloc(sizeof(int), 10 * 20);
+    int* piece_count = (int*)calloc(sizeof(int), 7);
+
+    if (arena == NULL || piece_count == NULL) {
+        dprintf(2, "Couldn't allocate memory for the arena or the piece counter! Exiting...");
+        exit(ENOMEM);
+    }
+
+    struct GameData gameData = {
+        .gameState = PLAYING,
+        .current_piece = NULL,
+        .next_piece = NULL,
+        .arena = arena,
+        .position_x = START_POSITION_X,
+        .position_y = START_POSITION_Y,
+        .fast_drop = false,
+        .score = 0,
+        .level = 0,
+        .piece_count = piece_count,
+        .accumulated_time = 0.0,
+        .seed = (initial_seed == 0) ? time(NULL) : initial_seed,    // <--- trailing comma from rust
+    };
+
+    srand(gameData.seed);
+
+    gameData.current_piece = generate_next_piece();
+    gameData.next_piece = generate_next_piece();
+
+    align_x(&gameData);
+    align_y(&gameData);
+
+    return gameData;
+}
+
+void free_gamedata(struct GameData *game_data)
+{
+    free(game_data->arena);
+    free(game_data->current_piece);
+    free(game_data->next_piece);
+    free(game_data->piece_count);
 }
 
 int* generate_next_piece()
@@ -318,6 +342,9 @@ void spawn_new_piece(struct GameData* game_data)
 
     game_data->position_x = START_POSITION_X;
     game_data->position_y = START_POSITION_Y;
+
+    align_y(game_data);
+    align_x(game_data);
 }
 
 /*
