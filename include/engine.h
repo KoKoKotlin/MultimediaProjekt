@@ -13,8 +13,10 @@
 #define ARENA_WIDTH  10
 #define ARENA_HEIGHT 20
 
-#define START_POSITION_X 4 // FIXME: center piece
+#define START_POSITION_X 4
 #define START_POSITION_Y 0
+
+#define FAST_DROP_TIME 0.05
 
 #ifdef DEBUG
     #define BASE_TIME .2
@@ -50,6 +52,8 @@ struct GameData {
     int* piece_count;               // saves the number of times the piece have shown up
 
     double accumulated_time;        // current playing time
+
+    bool is_defeat;                 // detemins wheter the player has lost
 
     uint32_t seed;                  // for playing a certain game
 };
@@ -160,6 +164,8 @@ size_t drop(struct GameData* game_data);
     The values will be written into the provided pointer. It should have size 200 or the program might crash.
 */
 void generate_block_positions(const struct GameData* game_data, int* block_positions);
+
+void check_defeat(struct GameData* game_data);
 
 static inline double calc_drop_time(const struct GameData* game_data)
 {

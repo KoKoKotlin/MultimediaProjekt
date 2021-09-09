@@ -65,6 +65,7 @@ struct GameData init_gamedata(uint32_t initial_seed)
         .level = 0,
         .piece_count = piece_count,
         .accumulated_time = 0.0,
+        .is_defeat = false,
         .seed = (initial_seed == 0) ? time(NULL) : initial_seed,    // <--- trailing comma from rust
     };
 
@@ -351,6 +352,8 @@ void spawn_new_piece(struct GameData* game_data)
 
     align_y(game_data);
     align_x(game_data);
+
+    if (check_collision_arena_pices(game_data)) game_data->is_defeat = true;
 }
 
 /*

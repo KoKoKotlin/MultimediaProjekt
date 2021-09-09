@@ -41,8 +41,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         else if (key == GLFW_KEY_D)     move(&user_data->gameData, RIGHT);
         else if (key == GLFW_KEY_RIGHT) rotate_piece(&user_data->gameData, RIGHT);
         else if (key == GLFW_KEY_LEFT)  rotate_piece(&user_data->gameData, LEFT);
+        else if (key == GLFW_KEY_S)     user_data->gameData.fast_drop = true;
     } else if (action == GLFW_RELEASE) {
-
+        if (key == GLFW_KEY_S)     user_data->gameData.fast_drop = false;
     }
 }
 
