@@ -29,6 +29,8 @@ typedef struct
     // The number of vertices to render:
     int vertex_data_count[3];
 
+    GLuint textures[1];
+
     // The model:
     double last_frame_time;
     double time_since_last_drop;
@@ -36,6 +38,7 @@ typedef struct
 
     // unniform for instanced rendering
     GLuint block_positions;
+    GLuint background_sampler_uniform;
 
     // for sound
     SDL_AudioDeviceID background_device;

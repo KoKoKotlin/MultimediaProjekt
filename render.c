@@ -13,6 +13,8 @@
 #define MODEL_PATH_ARENA "models/arena.obj"
 #define MODEL_PATH_BACKGROUND "models/background_arena.obj"
 
+#define TEX_BACKGROUND_GRID "textures/grid.bmp"
+
 // #define TEX_PATH   "models/logo.bmp"
 #define Y_ANGULAR_VELOCITY 2
 
@@ -183,22 +185,15 @@ static void create_shader_program(GLuint* shader_handle, GLuint vertex_shader, G
     exit(EXIT_FAILURE);
 }
 
-/*
-static void init_texture(user_data_t* user_data)
+
+static void init_texture(GLuint* tex, const char* tex_path)
 {
     // Activate the first texture unit:
     glActiveTexture(GL_TEXTURE0);
     gl_check_error("glActiveTexture");
 
-    // Generate a new texture object:
-    GLuint tex;
-    GLuint tex2;
-
-    glGenTextures(1, &tex);
-    gl_check_error("glGenTextures");
-
     // Bind it to the 2D binding point *of texture unit 0*:
-    glBindTexture(GL_TEXTURE_2D, tex);
+    glBindTexture(GL_TEXTURE_2D, *tex);
     gl_check_error("glBindTexture");
 
     // Specify wrapping (uv <=> st):
@@ -219,39 +214,7 @@ static void init_texture(user_data_t* user_data)
     bitmap_pixel_rgb_t* pixels;
     uint32_t width, height;
 
-    bitmap_error_t err = bitmapReadPixels(TEX_PATH, (bitmap_pixel_t**)&pixels, &width, &height, BITMAP_COLOR_SPACE_RGB);
-    check_error(err == BITMAP_ERROR_SUCCESS, "Failed to load texture bitmap.");
-
-    // Upload the texture pixels to the GPU:
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, (GLsizei)width, (GLsizei)height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
-    gl_check_error("glTexImage2D");
-
-    glGenTextures(1, &tex2);
-    gl_check_error("glGenTextures");
-
-    free(pixels);
-
-    glActiveTexture(GL_TEXTURE1);
-
-    // Bind it to the 2D binding point *of texture unit 0*:
-    glBindTexture(GL_TEXTURE_2D, tex2);
-    gl_check_error("glBindTexture");
-
-    // Specify wrapping (uv <=> st):
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    gl_check_error("glTexParameteri [wrap_u]");
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    gl_check_error("glTexParameteri [wrap_v]");
-
-    // Specify filtering:
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    gl_check_error("glTexParameteri [min_filter]");
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    gl_check_error("glTexParameteri [mag_filter]");
-
-    err = bitmapReadPixels(TEX_PATH2, (bitmap_pixel_t**)&pixels, &width, &height, BITMAP_COLOR_SPACE_RGB);
+    bitmap_error_t err = bitmapReadPixels(tex_path, (bitmap_pixel_t**)&pixels, &width, &height, BITMAP_COLOR_SPACE_RGB);
     check_error(err == BITMAP_ERROR_SUCCESS, "Failed to load texture bitmap.");
 
     // Upload the texture pixels to the GPU:
@@ -259,18 +222,16 @@ static void init_texture(user_data_t* user_data)
     gl_check_error("glTexImage2D");
 
     free(pixels);
-
-    // Free the pixels and store the texture handle:
-    user_data->tex  = tex;
-    user_data->tex2 = tex2;
 }
-*/
+
 
 
 static void init_uniforms(user_data_t* user_data)
 {
     user_data->block_positions = glGetUniformLocation(user_data->shader_program_blocks, "block_positions");
     gl_check_error("glGetUniformLocation [block_position]");
+
+    user_data->background_sampler_uniform = glGetUniformLocation(user_data->shader_program_back, "tex");
 
     // Associate the sampler "tex" with texture unit 0:
 
@@ -454,7 +415,8 @@ void init_gl(GLFWwindow* window)
     );
 
     // Initialize our texture:
-    // init_texture(user_data);
+    glGenTextures(1, &user_data->textures[0]);
+    init_texture(&user_data->textures[0], TEX_BACKGROUND_GRID);
 
     // Initialize our model:
     init_model(user_data);
@@ -523,6 +485,7 @@ void update_gl(GLFWwindow* window)
     }
     user_data->last_frame_time = frame_time;
 
+    SDL_PauseAudioDevice(user_data->background_device, (user_data->gameData.gameState == PAUSE) ? 1 : 0);
     handle_background_sound(user_data);
 }
 
@@ -536,9 +499,16 @@ void draw_gl(GLFWwindow* window)
 
     glUseProgram(user_data->shader_program_back);
     // FIXME draw background plane
-    for (size_t i = 1; i < 2; i++) {
+    for (size_t i = 1; i < 3; i++) {
         glBindVertexArray(user_data->vao[i]);
         glBindBuffer(GL_ARRAY_BUFFER, user_data->vbo[i]);
+
+        // TODO: texture on background
+        if (i == 1) {
+
+        } else if (i == 2) {
+
+        }
 
         glDrawArrays(GL_TRIANGLES, 0, user_data->vertex_data_count[i]);
     }
@@ -576,6 +546,6 @@ void teardown_gl(GLFWwindow* window)
     gl_check_error("glDeleteBuffers");
 
     // Delete the texture:
-    // glDeleteTextures(1, &user_data->tex);
-    // gl_check_error("glDeleteTextures");
+    glDeleteTextures(1, user_data->textures);
+    gl_check_error("glDeleteTextures");
 }

@@ -42,6 +42,11 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         else if (key == GLFW_KEY_RIGHT) rotate_piece(&user_data->gameData, RIGHT);
         else if (key == GLFW_KEY_LEFT)  rotate_piece(&user_data->gameData, LEFT);
         else if (key == GLFW_KEY_S)     user_data->gameData.fast_drop = true;
+        else if (key == GLFW_KEY_P)     {
+            if (user_data->gameData.gameState == GAME_OVER) return;
+
+            user_data->gameData.gameState = (user_data->gameData.gameState == PLAYING) ? PAUSE : PLAYING;
+        }
     } else if (action == GLFW_RELEASE) {
         if (key == GLFW_KEY_S)     user_data->gameData.fast_drop = false;
     }

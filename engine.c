@@ -436,6 +436,7 @@ size_t drop(struct GameData* game_data)
 
     if (check_collision_arena_pices(game_data)) {
         game_data->position_y--;
+
         write_piece_to_arena(game_data);
         rows = check_filled_rows(game_data);
         spawn_new_piece(game_data);

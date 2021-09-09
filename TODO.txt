@@ -1,2 +1,9 @@
 - rotate square sound
-- hold down key
+- hold down key (left/right)
+- grid
+- piece counter
+- show next piece
+- show score
+- defeat screen
+- key map
+- pause mode
