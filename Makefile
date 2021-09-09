@@ -3,14 +3,20 @@ CC = gcc
 LIBS = -lm -lglfw -ldl -lSDL2
 FLAGS = -Wall -Wextra -Wunused -Iinclude/
 
-OBJECTS = main.o obj.o bitmap.o glad.o render.o engine.o helper.o audio.o
+SRC_DIR = src
+SOURCE_FILES = $(wildcard $(SRC_DIR)/*.c)
+
+BUILD_DIR = build
+OBJ_FILES = $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SOURCE_FILES))
 TARGET = tetris.out
 
+target: $(BUILD_DIR) | $(TARGET)
+
 all: FLAGS += -O3
-all: $(TARGET)
+all: target
 
 debug: FLAGS += -g -ggdb
-debug: $(TARGET)
+debug: target
 
 debugOutput: FLAGS += -DDEBUG
 debugOutput: debug
@@ -22,8 +28,11 @@ log:
 valgrind:
 	valgrind ./$(TARGET)
 
-$(TARGET) : $(OBJECTS)
-	$(CC) -o $(TARGET) $(OBJECTS) $(LIBS)
+$(TARGET) : $(OBJ_FILES)
+	$(CC) -o $(TARGET) $(OBJ_FILES) $(LIBS)
+
+$(BUILD_DIR) :
+	mkdir -p $@
 
 main.o : include/log.h include/obj.h
 obj.o : include/obj.h
@@ -33,9 +42,9 @@ engine.o : include/engine.h
 helper.o : include/helper.h
 audio.o : include/audio.h
 
-%.o : %.c
-	$(CC) -c $(FLAGS) $<
+$(BUILD_DIR)/%.o : $(SRC_DIR)/%.c
+	$(CC) -o $@ -c $(FLAGS) $<
 
 .PHONY : clean
 clean :
-	rm -rf $(TARGET) $(OBJECTS) log
+	rm -rf build $(TARGET)
