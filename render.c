@@ -11,6 +11,7 @@
 #define MODEL_PATH_BLOCK "models/Block_basic.obj"
 #define MODEL_PATH_ARENA "models/arena.obj"
 #define MODEL_PATH_BACKGROUND "models/background_arena.obj"
+
 // #define TEX_PATH   "models/logo.bmp"
 #define Y_ANGULAR_VELOCITY 2
 
@@ -104,16 +105,8 @@ static GLuint compile_shader(GLenum type, const char* shader_path, const char* s
     exit(EXIT_FAILURE);
 }
 
-static void init_shader_program(user_data_t* user_data)
+static void create_shader_program(GLuint* shader_handle, GLuint vertex_shader, GLuint fragment_shader)
 {
-    // Create the vertex shader:
-    printf("Compiling vertex shader ...\n");
-    GLuint vertex_shader = compile_shader(GL_VERTEX_SHADER, "shader/vertex.glsl", "Vertex shader");
-
-    // Create the fragment shader:
-    printf("Compiling fragment shader ...\n");
-    GLuint fragment_shader = compile_shader(GL_FRAGMENT_SHADER, "shader/fragment.glsl", "Fragment shader");
-
     // Create an empty shader program:
     printf("Creating shader program ...\n");
 
@@ -154,16 +147,13 @@ static void init_shader_program(user_data_t* user_data)
     if (success)
     {
         // Use the program from now on:
-        glUseProgram(shader_program);
         gl_check_error("glUseProgram");
-
-        // Store it inside our user data struct:
-        user_data->shader_program = shader_program;
 
         // We can now release the shader compiler.
         glReleaseShaderCompiler();
         gl_check_error("glReleaseShaderCompiler");
 
+        *shader_handle = shader_program;
         return;
     }
 
@@ -278,7 +268,7 @@ static void init_texture(user_data_t* user_data)
 
 static void init_uniforms(user_data_t* user_data)
 {
-    user_data->block_positions = glGetUniformLocation(user_data->shader_program, "block_positions");
+    user_data->block_positions = glGetUniformLocation(user_data->shader_program_blocks, "block_positions");
     gl_check_error("glGetUniformLocation [block_position]");
 
     // Associate the sampler "tex" with texture unit 0:
@@ -449,8 +439,18 @@ void init_gl(GLFWwindow* window)
 {
     user_data_t* user_data = glfwGetWindowUserPointer(window);
 
-    // Initialize our shader program:
-    init_shader_program(user_data);
+    // Initialize our shader programs:
+    create_shader_program(
+        &user_data->shader_program_blocks,
+        compile_shader(GL_VERTEX_SHADER, "shader/vertex_blocks.glsl", "Vertex Blocks Shader"),
+        compile_shader(GL_FRAGMENT_SHADER, "shader/fragment_blocks.glsl", "Fragment Blocks Shader")
+    );
+
+    create_shader_program(
+        &user_data->shader_program_back,
+        compile_shader(GL_VERTEX_SHADER, "shader/vertex_back.glsl", "Vertex Backs Shader"),
+        compile_shader(GL_FRAGMENT_SHADER, "shader/fragment_back.glsl", "Fragment Backs Shader")
+    );
 
     // Initialize our texture:
     // init_texture(user_data);
@@ -526,7 +526,9 @@ void draw_gl(GLFWwindow* window)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     gl_check_error("glClear");
 
-    for (size_t i = 1; i < 3; i++) {
+    glUseProgram(user_data->shader_program_back);
+    // FIXME draw background plane
+    for (size_t i = 1; i < 2; i++) {
         glBindVertexArray(user_data->vao[i]);
         glBindBuffer(GL_ARRAY_BUFFER, user_data->vbo[i]);
 
@@ -538,6 +540,8 @@ void draw_gl(GLFWwindow* window)
 
     int block_positions[200] = { 0 };
     generate_block_positions(&user_data->gameData, block_positions);
+
+    glUseProgram(user_data->shader_program_blocks);
     glUniform1iv(user_data->block_positions, 200, block_positions);
 
     // Parameters: primitive type, start index, count
@@ -551,7 +555,8 @@ void teardown_gl(GLFWwindow* window)
     user_data_t* user_data = glfwGetWindowUserPointer(window);
 
     // Delete the shader program:
-    glDeleteProgram(user_data->shader_program);
+    glDeleteProgram(user_data->shader_program_blocks);
+    glDeleteProgram(user_data->shader_program_back);
     gl_check_error("glDeleteProgram");
 
     // Delete the VAO:

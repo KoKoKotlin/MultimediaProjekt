@@ -24,7 +24,7 @@ void main()
     vec3 normal = normalize(f_normal);
 
     // Position of the light source:
-    vec3 light_pos = vec3(0.0, 0.0, 10.0);
+    vec3 light_pos = vec3(0.0, 0.0, 0.0);
 
     // Precalculate all vectors we need:
     vec3 light_dir = normalize(light_pos - f_pos);
