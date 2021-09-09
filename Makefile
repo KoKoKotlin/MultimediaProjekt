@@ -1,9 +1,9 @@
 SHELL = /bin/sh
 CC = gcc
-LIBS = -lm -lglfw -ldl
+LIBS = -lm -lglfw -ldl -lSDL2
 FLAGS = -Wall -Wextra -Wunused -Iinclude/
 
-OBJECTS = main.o obj.o bitmap.o glad.o render.o engine.o helper.o
+OBJECTS = main.o obj.o bitmap.o glad.o render.o engine.o helper.o audio.o
 TARGET = tetris.out
 
 all: FLAGS += -O3
@@ -31,6 +31,7 @@ bitmap.o : include/bitmap.h
 render.o: include/render.h
 engine.o : include/engine.h
 helper.o : include/helper.h
+audio.o : include/audio.h
 
 %.o : %.c
 	$(CC) -c $(FLAGS) $<

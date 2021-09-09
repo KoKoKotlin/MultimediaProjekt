@@ -368,8 +368,10 @@ void write_piece_to_arena(struct GameData* game_data)
 /*
     Helper functions that checks for filled rows, deletes them and adds to the score
     depending on the number of simultanious rows cleared and the current level.
+
+    returns the number of cleared lines
 */
-void check_filled_rows(struct GameData* game_data)
+size_t check_filled_rows(struct GameData* game_data)
 {
     // find the indecies of filled rows (which can be at most 4) from bottom to top
     int row_buffer[4] = { 0xFF, 0xFF, 0xFF, 0xFF };
@@ -386,7 +388,7 @@ void check_filled_rows(struct GameData* game_data)
     // triple:  300 pts
     // tetris: 1200 pts
     switch (buffer_index) {
-        case 0: return; // no rows cleared
+        case 0: return 0; // no rows cleared
         case 1: game_data->score += 40 * game_data->level;
                 break;
         case 2: game_data->score += 100 * game_data->level;
@@ -414,6 +416,8 @@ void check_filled_rows(struct GameData* game_data)
     // swap the buffers and free the old arena
     free(game_data->arena);
     game_data->arena = new_arena;
+
+    return buffer_index;
 }
 
 void move(struct GameData* game_data, enum Direction dir)
@@ -422,16 +426,19 @@ void move(struct GameData* game_data, enum Direction dir)
     if (check_collision_side(game_data)) game_data->position_x -= (dir == LEFT) ? -1 : 1;
 }
 
-void drop(struct GameData* game_data)
+size_t drop(struct GameData* game_data)
 {
     game_data->position_y++;
+    size_t rows = 0;
 
     if (check_collision_arena_pices(game_data)) {
         game_data->position_y--;
         write_piece_to_arena(game_data);
-        check_filled_rows(game_data);
+        rows = check_filled_rows(game_data);
         spawn_new_piece(game_data);
     }
+
+    return rows;
 }
 
 void generate_block_positions(const struct GameData* game_data, int* block_positions)

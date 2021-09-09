@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
+#include <SDL2/SDL.h>
 
 #include "render.h"
 #include "bitmap.h"
@@ -490,6 +491,12 @@ void init_gl(GLFWwindow* window)
     glEnable(GL_CULL_FACE);
 }
 
+void handle_background_sound(user_data_t* user_data)
+{
+    if (SDL_GetQueuedAudioSize(user_data->background_device) == 0)
+        queue_audio(user_data->background_device, user_data->wav_data[0]);
+}
+
 void update_gl(GLFWwindow* window)
 {
     user_data_t* user_data = glfwGetWindowUserPointer(window);
@@ -502,20 +509,15 @@ void update_gl(GLFWwindow* window)
     user_data->time_since_last_drop += delta_time;
 
     if (user_data->time_since_last_drop >= calc_drop_time(&user_data->gameData)) {
-        drop(&user_data->gameData);
+        size_t cleared_rows = drop(&user_data->gameData);
+
+        if (cleared_rows == 4) queue_audio(user_data->effect_device, user_data->wav_data[2]);
         user_data->time_since_last_drop = 0.0;
     }
 
-    // int block_positions[200] = { 0 };
-    // generate_block_positions(&user_data->gameData, block_positions);
-
-    // printf("\n\n");
-    // for (size_t y = 0; y < 20*10; y++) {
-    //     printf("%d ", block_positions[y]);
-    //     if (y % 10 == 9) printf("\n");
-    // }
-
     user_data->last_frame_time = frame_time;
+
+    handle_background_sound(user_data);
 }
 
 void draw_gl(GLFWwindow* window)

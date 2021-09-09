@@ -151,7 +151,7 @@ void move(struct GameData* game_data, enum Direction dir);
         * Filled rows will be removed and score will be added accordingly
         * The next piece will become the current piece and a new next piece is generated
 */
-void drop(struct GameData* game_data);
+size_t drop(struct GameData* game_data);
 
 /*
     Generates an array which contains all arena pieces and the current piece copied in to the

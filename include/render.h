@@ -8,6 +8,7 @@
 #include <GLFW/glfw3.h>
 
 #include "engine.h"
+#include "audio.h"
 
 typedef struct
 {
@@ -35,6 +36,12 @@ typedef struct
 
     // unniform for instanced rendering
     GLuint block_positions;
+
+    // for sound
+    SDL_AudioDeviceID background_device;
+    SDL_AudioDeviceID effect_device;
+    struct WavData** wav_data;
+
 } user_data_t;
 
 typedef struct
