@@ -392,13 +392,13 @@ size_t check_filled_rows(struct GameData* game_data)
     // tetris: 1200 pts
     switch (buffer_index) {
         case 0: return 0; // no rows cleared
-        case 1: game_data->score += 40 * game_data->level;
+        case 1: game_data->score += 40 * (game_data->level + 1);
                 break;
-        case 2: game_data->score += 100 * game_data->level;
+        case 2: game_data->score += 100 * (game_data->level + 1);
                 break;
-        case 3: game_data->score += 300 * game_data->level;
+        case 3: game_data->score += 300 * (game_data->level + 1);
                 break;
-        case 4: game_data->score += 1200 * game_data->level;
+        case 4: game_data->score += 1200 * (game_data->level + 1);
                 break;
     }
 
@@ -429,6 +429,11 @@ void move(struct GameData* game_data, enum Direction dir)
     if (check_collision_side(game_data)) game_data->position_x -= (dir == LEFT) ? -1 : 1;
 }
 
+void level_up(struct GameData* game_data)
+{
+    game_data->level = game_data->cleared_lines / 10;
+}
+
 size_t drop(struct GameData* game_data)
 {
     game_data->position_y++;
@@ -439,7 +444,9 @@ size_t drop(struct GameData* game_data)
 
         write_piece_to_arena(game_data);
         rows = check_filled_rows(game_data);
+        game_data->cleared_lines += rows;
         spawn_new_piece(game_data);
+        level_up(game_data);
     }
 
     return rows;

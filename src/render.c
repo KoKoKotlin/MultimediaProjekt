@@ -235,8 +235,9 @@ static void init_uniforms(user_data_t* user_data)
     user_data->background_sampler_uniform = glGetUniformLocation(user_data->shader_program_back, "background");
     gl_check_error("glGetUniformLocation [background_sampler_uniform]");
 
-    // glUniform1i(user_data->background_sampler_uniform, 0);
-    gl_check_error("glUniform1iv [tex]");
+    user_data->digit_pos_uniform = glGetUniformLocation(user_data->shader_program_font, "pos");
+    user_data->digit_tex_uniform = glGetUniformLocation(user_data->shader_program_font, "digit");
+    gl_check_error("glGetUniformLocation [digit_...]");
 }
 
 
@@ -421,9 +422,57 @@ void init_gl(GLFWwindow* window)
         compile_shader(GL_FRAGMENT_SHADER, "shader/fragment_back.glsl", "Fragment Backs Shader")
     );
 
+    create_shader_program(
+        &user_data->shader_program_font,
+        compile_shader(GL_VERTEX_SHADER, "shader/vertex_font.glsl", "Vertex Font Shader"),
+        compile_shader(GL_FRAGMENT_SHADER, "shader/fragment_font.glsl", "Fragment Font Shader")
+    );
+
     // Initialize our texture:
-    glGenTextures(1, user_data->textures);
+    glGenTextures(11, user_data->textures);
     init_texture(user_data->textures, GL_TEXTURE0, TEX_BACKGROUND_GRID);
+
+    char file_path[] = "textures/_.bmp";
+
+    for (size_t i = 0; i < 10; i++) {
+        sprintf(file_path, "textures/%ld.bmp", i);
+
+        GLuint texunit;
+        switch (i)
+        {
+            case 0:
+                texunit = GL_TEXTURE1;
+                break;
+            case 1:
+                texunit = GL_TEXTURE2;
+                break;
+            case 2:
+                texunit = GL_TEXTURE3;
+                break;
+            case 3:
+                texunit = GL_TEXTURE4;
+                break;
+            case 4:
+                texunit = GL_TEXTURE5;
+                break;
+            case 5:
+                texunit = GL_TEXTURE6;
+                break;
+            case 6:
+                texunit = GL_TEXTURE7;
+                break;
+            case 7:
+                texunit = GL_TEXTURE8;
+                break;
+            case 8:
+                texunit = GL_TEXTURE9;
+                break;
+            case 9:
+                texunit = GL_TEXTURE10;
+        }
+
+        init_texture(user_data->textures + i + 1, texunit, file_path);
+    }
 
     // Initialize our model:
     init_model(user_data);
@@ -496,6 +545,32 @@ void update_gl(GLFWwindow* window)
     handle_background_sound(user_data);
 }
 
+void draw_string(const user_data_t* user_data, const char* string, double pos_x, double pos_y)
+{
+    double offset = 0.15;
+    for (size_t i = 0; i < strlen(string); i++) {
+
+        // set position and texture for next char
+        float pos[2];
+        pos[0] = pos_x + offset * i;
+        pos[1] = pos_y;
+
+        glUseProgram(user_data->shader_program_font);
+
+
+        glUniform1i(user_data->digit_tex_uniform, (GLint)(string[i] - '0' + 1));
+        gl_check_error("glUniform1i Font");
+        glUniform2fv(user_data->digit_pos_uniform, 1, pos);
+        gl_check_error("glUniform2fv Font");
+
+        // draw single char
+        glBindVertexArray(user_data->vao[2]);
+        glBindBuffer(GL_ARRAY_BUFFER, user_data->vbo[2]);
+        glDrawArrays(GL_TRIANGLES, 0, user_data->vertex_data_count[2]);
+        gl_check_error("glDrawArrays Font");
+    }
+}
+
 void draw_gl(GLFWwindow* window)
 {
     user_data_t* user_data = glfwGetWindowUserPointer(window);
@@ -530,9 +605,21 @@ void draw_gl(GLFWwindow* window)
     glUseProgram(user_data->shader_program_blocks);
     glUniform1iv(user_data->block_positions, 200, block_positions);
 
+
     // Parameters: primitive type, start index, count
     glDrawArraysInstanced(GL_TRIANGLES, 0, user_data->vertex_data_count[0], 200);
     gl_check_error("glDrawArraysInstanced");
+
+    char score[7];
+    memset(score, 0, 7);
+    char level[3];
+    memset(level, 0, 3);
+
+    sprintf(score, "%06d", user_data->gameData.score);
+    sprintf(level, "%02d", user_data->gameData.level);
+
+    draw_string(user_data, score, 0.9, 0.05);
+    draw_string(user_data, level, 1.25, -0.43);
 }
 
 void teardown_gl(GLFWwindow* window)
@@ -554,6 +641,6 @@ void teardown_gl(GLFWwindow* window)
     gl_check_error("glDeleteBuffers");
 
     // Delete the texture:
-    glDeleteTextures(1, user_data->textures);
+    glDeleteTextures(11, user_data->textures);
     gl_check_error("glDeleteTextures");
 }

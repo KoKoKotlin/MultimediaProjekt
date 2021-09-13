@@ -16,10 +16,11 @@ typedef struct
     int window_width;
     int window_height;
 
-    // The current shader program:
+    // The current shader programs:
     GLuint shader_program_arena;
     GLuint shader_program_back;
     GLuint shader_program_blocks;
+    GLuint shader_program_font;
 
     // The vertex array object (blackbox ...):
     GLuint vao[3];
@@ -37,9 +38,11 @@ typedef struct
     double time_since_last_drop;
     struct GameData gameData;
 
-    // unniform for instanced rendering
-    GLuint block_positions;
-    GLuint background_sampler_uniform;
+    // uniform for instanced rendering
+    GLint block_positions;
+    GLint background_sampler_uniform;
+    GLint digit_pos_uniform;
+    GLint digit_tex_uniform;
 
     // for sound
     SDL_AudioDeviceID background_device;
