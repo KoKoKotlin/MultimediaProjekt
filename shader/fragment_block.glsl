@@ -8,12 +8,10 @@ in vec3 f_normal;
 
 out vec4 out_color;
 
-flat in int block_id;
+flat in int block_id_;
 
 void main()
 {
-    if (block_id == 0) discard;
-
     // Normalize the normal vector.
     // We cannot do that in the vertex shader (as we did earlier)
     // because the interpolation based on three normalized vectors

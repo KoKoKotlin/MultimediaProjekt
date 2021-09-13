@@ -21,15 +21,16 @@ typedef struct
     GLuint shader_program_back;
     GLuint shader_program_blocks;
     GLuint shader_program_font;
+    GLuint shader_program_single_block;
 
     // The vertex array object (blackbox ...):
-    GLuint vao[3];
+    GLuint vao[10];
 
     // The vertex buffer object (GPU mem for the vertex data):
-    GLuint vbo[3];
+    GLuint vbo[10];
 
     // The number of vertices to render:
-    int vertex_data_count[3];
+    int vertex_data_count[10];
 
     GLuint textures[1];
 
@@ -43,6 +44,8 @@ typedef struct
     GLint background_sampler_uniform;
     GLint digit_pos_uniform;
     GLint digit_tex_uniform;
+    GLint block_pos_uniform;
+    GLint block_id_uniform;
 
     // for sound
     SDL_AudioDeviceID background_device;

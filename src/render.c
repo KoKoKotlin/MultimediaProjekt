@@ -13,6 +13,15 @@
 #define MODEL_PATH_ARENA "models/arena.obj"
 #define MODEL_PATH_BACKGROUND "models/background.obj"
 
+#define MODEL_O "models/Block_O.obj"
+#define MODEL_L "models/Block_L.obj"
+#define MODEL_J "models/Block_J.obj"
+#define MODEL_T "models/Block_T.obj"
+#define MODEL_I "models/Block_I.obj"
+#define MODEL_Z "models/Block_Z.obj"
+#define MODEL_S "models/Block_S.obj"
+
+
 #define TEX_BACKGROUND_GRID "textures/grid.bmp"
 
 // #define TEX_PATH   "models/logo.bmp"
@@ -238,6 +247,10 @@ static void init_uniforms(user_data_t* user_data)
     user_data->digit_pos_uniform = glGetUniformLocation(user_data->shader_program_font, "pos");
     user_data->digit_tex_uniform = glGetUniformLocation(user_data->shader_program_font, "digit");
     gl_check_error("glGetUniformLocation [digit_...]");
+
+    user_data->block_pos_uniform = glGetUniformLocation(user_data->shader_program_single_block, "pos");
+    user_data->block_id_uniform  = glGetUniformLocation(user_data->shader_program_single_block, "block_id");
+    gl_check_error("glGetUniformLocation [block_...]");
 }
 
 
@@ -428,6 +441,12 @@ void init_gl(GLFWwindow* window)
         compile_shader(GL_FRAGMENT_SHADER, "shader/fragment_font.glsl", "Fragment Font Shader")
     );
 
+    create_shader_program(
+        &user_data->shader_program_single_block,
+        compile_shader(GL_VERTEX_SHADER, "shader/vertex_block.glsl", "Vertex Block Shader"),
+        compile_shader(GL_FRAGMENT_SHADER, "shader/fragment_block.glsl", "Fragment Block Shader")
+    );
+
     // Initialize our texture:
     glGenTextures(11, user_data->textures);
     init_texture(user_data->textures, GL_TEXTURE0, TEX_BACKGROUND_GRID);
@@ -483,11 +502,19 @@ void init_gl(GLFWwindow* window)
     // Initialize our vertex data:
     // init_vertex_data(user_data);
 
-    glGenVertexArrays(3, user_data->vao);
-    glGenBuffers(3, user_data->vbo);
+    glGenVertexArrays(10, user_data->vao);
+    glGenBuffers(10, user_data->vbo);
     load_model(MODEL_PATH_BLOCK,      user_data->vao[0], user_data->vbo[0], user_data->vertex_data_count + 0);
     load_model(MODEL_PATH_ARENA,      user_data->vao[1], user_data->vbo[1], user_data->vertex_data_count + 1);
     load_model(MODEL_PATH_BACKGROUND, user_data->vao[2], user_data->vbo[2], user_data->vertex_data_count + 2);
+    load_model(MODEL_O,               user_data->vao[3], user_data->vbo[3], user_data->vertex_data_count + 3);
+    load_model(MODEL_L,               user_data->vao[4], user_data->vbo[4], user_data->vertex_data_count + 4);
+    load_model(MODEL_J,               user_data->vao[5], user_data->vbo[5], user_data->vertex_data_count + 5);
+    load_model(MODEL_T,               user_data->vao[6], user_data->vbo[6], user_data->vertex_data_count + 6);
+    load_model(MODEL_I,               user_data->vao[7], user_data->vbo[7], user_data->vertex_data_count + 7);
+    load_model(MODEL_Z,               user_data->vao[8], user_data->vbo[8], user_data->vertex_data_count + 8);
+    load_model(MODEL_S,               user_data->vao[9], user_data->vbo[9], user_data->vertex_data_count + 9);
+
 
     // Obtain the internal size of the framebuffer:
     int fb_width, fb_height;
@@ -506,7 +533,7 @@ void init_gl(GLFWwindow* window)
     gl_check_error("glEnable [depth test]");
 
     // Enable backface culling:
-    // glEnable(GL_CULL_FACE);
+    glEnable(GL_CULL_FACE);
 }
 
 void handle_background_sound(user_data_t* user_data)
@@ -547,16 +574,12 @@ void update_gl(GLFWwindow* window)
 
 void draw_string(const user_data_t* user_data, const char* string, double pos_x, double pos_y)
 {
-    double offset = 0.15;
+    double offset = 0.12;
     for (size_t i = 0; i < strlen(string); i++) {
 
         // set position and texture for next char
-        float pos[2];
-        pos[0] = pos_x + offset * i;
-        pos[1] = pos_y;
-
+        GLfloat pos[] = { pos_x + offset * i, pos_y };
         glUseProgram(user_data->shader_program_font);
-
 
         glUniform1i(user_data->digit_tex_uniform, (GLint)(string[i] - '0' + 1));
         gl_check_error("glUniform1i Font");
@@ -569,6 +592,46 @@ void draw_string(const user_data_t* user_data, const char* string, double pos_x,
         glDrawArrays(GL_TRIANGLES, 0, user_data->vertex_data_count[2]);
         gl_check_error("glDrawArrays Font");
     }
+}
+
+void draw_text(const user_data_t* user_data)
+{
+    char score[7];
+    memset(score, 0, 7);
+    char level[3];
+    memset(level, 0, 3);
+    char cleared_lines[7];
+    memset(cleared_lines, 0, 7);
+
+    sprintf(score, "%06d", user_data->gameData.score);
+    sprintf(level, "%02d", user_data->gameData.level);
+    sprintf(cleared_lines, "%06d", user_data->gameData.cleared_lines);
+
+    draw_string(user_data, score, 0.835, 0.1);
+    draw_string(user_data, level, 1.1, -0.38);
+    draw_string(user_data, cleared_lines, 0.835, -0.85);
+}
+
+void draw_next_piece(const user_data_t* user_data, double pos_x, double pos_y)
+{
+    // set position and texture for next char
+    GLfloat pos[] = { pos_x, pos_y };
+    glUseProgram(user_data->shader_program_single_block);
+
+    int block_id = user_data->gameData.next_piece[0] + 1;
+    int model_index = block_id + 2;
+
+    glUniform1i(user_data->block_id_uniform, block_id);
+    gl_check_error("glUniform1i next_piece");
+    glUniform2fv(user_data->block_pos_uniform, 1, pos);
+    gl_check_error("glUniform2fv next_piece");
+
+    // draw single char
+    glBindVertexArray(user_data->vao[model_index]);
+    glBindBuffer(GL_ARRAY_BUFFER, user_data->vbo[model_index]);
+    glDrawArrays(GL_TRIANGLES, 0, user_data->vertex_data_count[model_index]);
+    gl_check_error("glDrawArrays next_piece");
+
 }
 
 void draw_gl(GLFWwindow* window)
@@ -605,21 +668,12 @@ void draw_gl(GLFWwindow* window)
     glUseProgram(user_data->shader_program_blocks);
     glUniform1iv(user_data->block_positions, 200, block_positions);
 
-
     // Parameters: primitive type, start index, count
     glDrawArraysInstanced(GL_TRIANGLES, 0, user_data->vertex_data_count[0], 200);
     gl_check_error("glDrawArraysInstanced");
 
-    char score[7];
-    memset(score, 0, 7);
-    char level[3];
-    memset(level, 0, 3);
-
-    sprintf(score, "%06d", user_data->gameData.score);
-    sprintf(level, "%02d", user_data->gameData.level);
-
-    draw_string(user_data, score, 0.9, 0.05);
-    draw_string(user_data, level, 1.25, -0.43);
+    draw_text(user_data);
+    draw_next_piece(user_data, 1.2, 0.75);
 }
 
 void teardown_gl(GLFWwindow* window)
@@ -627,17 +681,20 @@ void teardown_gl(GLFWwindow* window)
     printf("Tearing down ...\n");
     user_data_t* user_data = glfwGetWindowUserPointer(window);
 
-    // Delete the shader program:
+    // Delete the shader programs:
     glDeleteProgram(user_data->shader_program_blocks);
     glDeleteProgram(user_data->shader_program_back);
+    glDeleteProgram(user_data->shader_program_arena);
+    glDeleteProgram(user_data->shader_program_font);
+    glDeleteProgram(user_data->shader_program_single_block);
     gl_check_error("glDeleteProgram");
 
     // Delete the VAO:
-    glDeleteVertexArrays(3, user_data->vao);
+    glDeleteVertexArrays(10, user_data->vao);
     gl_check_error("glDeleteVertexArrays");
 
     // Delete the VBO:
-    glDeleteBuffers(3, user_data->vbo);
+    glDeleteBuffers(10, user_data->vbo);
     gl_check_error("glDeleteBuffers");
 
     // Delete the texture:
