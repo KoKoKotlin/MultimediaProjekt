@@ -254,7 +254,7 @@ static void init_uniforms(user_data_t* user_data)
 }
 
 
-static void load_model(char* model_path, GLuint vao, GLuint vbo, int* vertex_data_count)
+static void load_model(const char* model_path, GLuint vao, GLuint vbo, int* vertex_data_count)
 {
     glBindVertexArray(vao);
     gl_check_error("glBindVertexArray");
