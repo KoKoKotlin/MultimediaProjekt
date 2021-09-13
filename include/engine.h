@@ -10,6 +10,8 @@
 #include <errno.h>
 #include <math.h>
 
+#include "helper.h"
+
 #define ARENA_WIDTH  10
 #define ARENA_HEIGHT 20
 

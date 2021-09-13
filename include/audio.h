@@ -5,6 +5,8 @@
 #include <SDL2/SDL.h>
 #include <stdio.h>
 
+#include "error.h"
+
 struct WavData {
     SDL_AudioSpec wav_spec;
     Uint32 wav_length;
@@ -22,5 +24,7 @@ void queue_audio(SDL_AudioDeviceID deviceId, const struct WavData* data);
 
 void play(SDL_AudioDeviceID deviceId, const struct WavData* data, bool loop);
 void pause(SDL_AudioDeviceID deviceId);
+
+void queue_sound_if_emtpy(user_data_t* user_data);
 
 #endif

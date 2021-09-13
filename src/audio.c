@@ -3,10 +3,7 @@
 
 void init_tetris_audio()
 {
-    if (SDL_Init(SDL_INIT_AUDIO) < 0) {
-        fprintf(stderr, "SDL_Init(SDL_INIT_AUDIO) < 0\n");
-        exit(EXIT_FAILURE);
-    }
+    check_error(SDL_Init(SDL_INIT_AUDIO) >= 0, "SDL_Init(SDL_INIT_AUDIO) < 0\n");
 }
 
 struct WavData* load_wav_file(const char* path)
@@ -14,11 +11,7 @@ struct WavData* load_wav_file(const char* path)
     struct WavData* wav_data = calloc(1, sizeof(struct WavData));
 
     /* Load the WAV */
-    if (SDL_LoadWAV(path, &wav_data->wav_spec, &wav_data->wav_buffer, &wav_data->wav_length) == NULL) {
-        fprintf(stderr, "Could not open test.wav: %s\n", SDL_GetError());
-        exit(EXIT_FAILURE);
-    }
-
+    check_error(SDL_LoadWAV(path, &wav_data->wav_spec, &wav_data->wav_buffer, &wav_data->wav_length) != NULL, "Could not open wav file!");
     return wav_data;
 }
 
@@ -39,9 +32,10 @@ SDL_AudioDeviceID open_audio_device(const struct WavData* data)
     desired.channels = 2;
     desired.samples = 4096;
     SDL_AudioDeviceID deviceId = SDL_OpenAudioDevice(NULL, 0, &desired, &obtained, 0);
-
-    if (deviceId) SDL_PauseAudioDevice(deviceId, 0);
-    else fprintf(stderr, "Couldn't obtain audio device! %s\n", SDL_GetError());
+    
+    check_error(deviceId != 0, "Couldn't obtain audio device!");
+    
+    SDL_PauseAudioDevice(deviceId, 0);
 
     return deviceId;
 }
@@ -59,6 +53,11 @@ void pause(SDL_AudioDeviceID deviceId)
 void queue_audio(SDL_AudioDeviceID deviceId, const struct WavData* data)
 {
     int success = SDL_QueueAudio(deviceId, data->wav_buffer, data->wav_length);
-    if (success < 0)
-        fprintf(stderr, "Failed to queue audio! %s\n", SDL_GetError());
+    check_error(success >= 0, "Failed to queue audio!\n");
+}
+
+void queue_sound_if_emtpy(user_data_t* user_data)
+{
+    if (SDL_GetQueuedAudioSize(user_data->background_device) == 0)
+        queue_audio(user_data->background_device, user_data->wav_data[0]);
 }

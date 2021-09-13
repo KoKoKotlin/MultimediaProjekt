@@ -52,20 +52,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     }
 }
 
-void load_audio_files(struct WavData** data)
-{
-    data[0] = load_wav_file(TETRIS_BACKGROUND_MUSIC);
-    data[1] = load_wav_file(TETRIS_DEFEAT_SOUND);
-    data[2] = load_wav_file(TETRIS_FOR_JEFF);
-}
-
-void free_audio_files(struct WavData** data)
-{
-    for (size_t i = 0; i < NUMBER_OF_AUDIO_FILES; i++) {
-        free_wav_file(data[i]);
-    }
-}
-
 int main(void)
 {
     init_tetris_audio();

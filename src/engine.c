@@ -1,5 +1,4 @@
 #include "engine.h"
-#include "helper.h"
 
 /*
     Helper funtions for getting the width of the matrix of a piece depending on its shape.
