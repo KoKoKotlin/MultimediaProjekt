@@ -11,7 +11,7 @@
 
 #define MODEL_PATH_BLOCK "models/Block_basic.obj"
 #define MODEL_PATH_ARENA "models/arena.obj"
-#define MODEL_PATH_BACKGROUND "models/background_arena.obj"
+#define MODEL_PATH_BACKGROUND "models/background.obj"
 
 #define TEX_BACKGROUND_GRID "textures/grid.bmp"
 
@@ -186,10 +186,10 @@ static void create_shader_program(GLuint* shader_handle, GLuint vertex_shader, G
 }
 
 
-static void init_texture(GLuint* tex, const char* tex_path)
+static void init_texture(GLuint* tex, int tex_unit, const char* tex_path)
 {
     // Activate the first texture unit:
-    glActiveTexture(GL_TEXTURE0);
+    glActiveTexture(tex_unit);
     gl_check_error("glActiveTexture");
 
     // Bind it to the 2D binding point *of texture unit 0*:
@@ -204,10 +204,10 @@ static void init_texture(GLuint* tex, const char* tex_path)
     gl_check_error("glTexParameteri [wrap_v]");
 
     // Specify filtering:
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     gl_check_error("glTexParameteri [min_filter]");
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     gl_check_error("glTexParameteri [mag_filter]");
 
     // Load the bitmap:
@@ -231,11 +231,12 @@ static void init_uniforms(user_data_t* user_data)
     user_data->block_positions = glGetUniformLocation(user_data->shader_program_blocks, "block_positions");
     gl_check_error("glGetUniformLocation [block_position]");
 
-    user_data->background_sampler_uniform = glGetUniformLocation(user_data->shader_program_back, "tex");
-
     // Associate the sampler "tex" with texture unit 0:
+    user_data->background_sampler_uniform = glGetUniformLocation(user_data->shader_program_back, "background");
+    gl_check_error("glGetUniformLocation [background_sampler_uniform]");
 
-    gl_check_error("glUniform1iv [block_positions]");
+    // glUniform1i(user_data->background_sampler_uniform, 0);
+    gl_check_error("glUniform1iv [tex]");
 }
 
 
@@ -409,14 +410,20 @@ void init_gl(GLFWwindow* window)
     );
 
     create_shader_program(
+        &user_data->shader_program_arena,
+        compile_shader(GL_VERTEX_SHADER, "shader/vertex_arena.glsl", "Vertex Arena Shader"),
+        compile_shader(GL_FRAGMENT_SHADER, "shader/fragment_arena.glsl", "Fragment Arena Shader")
+    );
+
+    create_shader_program(
         &user_data->shader_program_back,
         compile_shader(GL_VERTEX_SHADER, "shader/vertex_back.glsl", "Vertex Backs Shader"),
         compile_shader(GL_FRAGMENT_SHADER, "shader/fragment_back.glsl", "Fragment Backs Shader")
     );
 
     // Initialize our texture:
-    glGenTextures(1, &user_data->textures[0]);
-    init_texture(&user_data->textures[0], TEX_BACKGROUND_GRID);
+    glGenTextures(1, user_data->textures);
+    init_texture(user_data->textures, GL_TEXTURE0, TEX_BACKGROUND_GRID);
 
     // Initialize our model:
     init_model(user_data);
@@ -450,7 +457,7 @@ void init_gl(GLFWwindow* window)
     gl_check_error("glEnable [depth test]");
 
     // Enable backface culling:
-    glEnable(GL_CULL_FACE);
+    // glEnable(GL_CULL_FACE);
 }
 
 void handle_background_sound(user_data_t* user_data)
@@ -497,22 +504,23 @@ void draw_gl(GLFWwindow* window)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     gl_check_error("glClear");
 
+    // draw the arena
+    glUseProgram(user_data->shader_program_arena);
+
+    glBindVertexArray(user_data->vao[1]);
+    glBindBuffer(GL_ARRAY_BUFFER, user_data->vbo[1]);
+    glDrawArrays(GL_TRIANGLES, 0, user_data->vertex_data_count[1]);
+    gl_check_error("glDrawArrays1");
+
+    // draw the background
     glUseProgram(user_data->shader_program_back);
-    // FIXME draw background plane
-    for (size_t i = 1; i < 3; i++) {
-        glBindVertexArray(user_data->vao[i]);
-        glBindBuffer(GL_ARRAY_BUFFER, user_data->vbo[i]);
 
-        // TODO: texture on background
-        if (i == 1) {
+    glBindVertexArray(user_data->vao[2]);
+    glBindBuffer(GL_ARRAY_BUFFER, user_data->vbo[2]);
+    glDrawArrays(GL_TRIANGLES, 0, user_data->vertex_data_count[2]);
+    gl_check_error("glDrawArrays2");
 
-        } else if (i == 2) {
-
-        }
-
-        glDrawArrays(GL_TRIANGLES, 0, user_data->vertex_data_count[i]);
-    }
-
+    // draw the pieces
     glBindVertexArray(user_data->vao[0]);
     glBindBuffer(GL_ARRAY_BUFFER, user_data->vbo[0]);
 

@@ -7,3 +7,4 @@
 - defeat screen
 - key map
 - pause mode
+- BUG: left/right movement in gameover gamestate

@@ -34,13 +34,13 @@ $(TARGET) : $(OBJ_FILES)
 $(BUILD_DIR) :
 	mkdir -p $@
 
-main.o : include/log.h include/obj.h
-obj.o : include/obj.h
-bitmap.o : include/bitmap.h
-render.o: include/render.h
-engine.o : include/engine.h
-helper.o : include/helper.h
-audio.o : include/audio.h
+$(BUILD_DIR)/main.o : include/log.h include/obj.h
+$(BUILD_DIR)/obj.o : include/obj.h
+$(BUILD_DIR)/bitmap.o : include/bitmap.h
+$(BUILD_DIR)/render.o: include/render.h
+$(BUILD_DIR)/engine.o : include/engine.h
+$(BUILD_DIR)/helper.o : include/helper.h
+$(BUILD_DIR)/audio.o : include/audio.h
 
 $(BUILD_DIR)/%.o : $(SRC_DIR)/%.c
 	$(CC) -o $@ -c $(FLAGS) $<

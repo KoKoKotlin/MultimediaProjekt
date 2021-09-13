@@ -18,8 +18,8 @@ flat out int block_id;
 #define PI 3.1415
 #define scaling_factor .1
 #define ARENA_WIDTH 10
-#define starting_x -5 * scaling_factor
-#define starting_y 10 * scaling_factor
+#define starting_x -5 * scaling_factor + .05
+#define starting_y 10 * scaling_factor - .05
 
 mat4 generate_frustum() {
     float near = 1.0;

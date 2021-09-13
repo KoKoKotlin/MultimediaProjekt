@@ -17,8 +17,9 @@ typedef struct
     int window_height;
 
     // The current shader program:
-    GLuint shader_program_blocks;
+    GLuint shader_program_arena;
     GLuint shader_program_back;
+    GLuint shader_program_blocks;
 
     // The vertex array object (blackbox ...):
     GLuint vao[3];

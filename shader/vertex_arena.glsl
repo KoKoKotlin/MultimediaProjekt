@@ -11,7 +11,7 @@ out vec3 f_pos;
 out vec3 f_normal;
 
 #define PI 3.1415
-#define scaling_factor 2
+#define scaling_factor .105
 
 mat4 generate_frustum() {
     float near = 1.0;
@@ -38,14 +38,14 @@ void main()
 
     mat4 rot_x = mat4(
         1, 0, 0, 0,
-        0, cos(PI), -sin(PI), 0,
-        0, sin(PI), cos(PI), 0,
+        0, cos(PI / 2), -sin(PI / 2), 0,
+        0, sin(PI / 2), cos(PI / 2), 0,
         0, 0, 0, 1
     );
 
     mat4 scale = mat4(
-        scaling_factor * .5, 0, 0, 0,
-        0, scaling_factor, 0, 0,
+        scaling_factor * .96, 0, 0, 0,
+        0, scaling_factor * 0.96, 0, 0,
         0, 0, scaling_factor, 0,
         0, 0, 0, 1
     );
