@@ -48,6 +48,7 @@ struct GameData {
 
     uint32_t score;
     uint32_t level;                 // level for piece velocity
+    uint32_t cleared_lines;
 
     int* piece_count;               // saves the number of times the piece have shown up
 
