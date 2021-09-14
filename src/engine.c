@@ -70,11 +70,8 @@ struct GameData init_gamedata(uint32_t initial_seed)
 
     srand(gameData.seed);
 
-    gameData.current_piece = generate_next_piece();
     gameData.next_piece = generate_next_piece();
-
-    align_x(&gameData);
-    align_y(&gameData);
+    spawn_new_piece(&gameData);
 
     return gameData;
 }
@@ -342,7 +339,7 @@ void rotate_piece(struct GameData* game_data, enum Direction dir) {
 
 void spawn_new_piece(struct GameData* game_data)
 {
-    free(game_data->current_piece);
+    if (game_data->current_piece != NULL) free(game_data->current_piece);
     game_data->current_piece = game_data->next_piece;
     game_data->next_piece = generate_next_piece();
 
@@ -351,6 +348,8 @@ void spawn_new_piece(struct GameData* game_data)
 
     align_y(game_data);
     align_x(game_data);
+
+    game_data->piece_count[game_data->current_piece[0]]++;
 
     if (check_collision_arena_pices(game_data)) game_data->is_defeat = true;
 }

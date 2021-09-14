@@ -38,8 +38,20 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	user_data_t* user_data = glfwGetWindowUserPointer(window);
 
     if (action == GLFW_PRESS) {
-        if (key == GLFW_KEY_A)          move(&user_data->gameData, LEFT);
-        else if (key == GLFW_KEY_D)     move(&user_data->gameData, RIGHT);
+        if (key == GLFW_KEY_A) {
+            if (!user_data->holding_left) move(&user_data->gameData, LEFT);
+            user_data->holding_left  = true;
+
+            // fix when pressed simultaneously
+            user_data->holding_right = false;
+        }
+        else if (key == GLFW_KEY_D) {
+            if (!user_data->holding_right) move(&user_data->gameData, RIGHT);
+            user_data->holding_right = true;
+
+            // fix when pressed simultaneously
+            user_data->holding_left  = false;
+        }
         else if (key == GLFW_KEY_RIGHT) rotate_piece(&user_data->gameData, RIGHT);
         else if (key == GLFW_KEY_LEFT)  rotate_piece(&user_data->gameData, LEFT);
         else if (key == GLFW_KEY_S)     user_data->gameData.fast_drop = true;
@@ -49,7 +61,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
             user_data->gameData.gameState = (user_data->gameData.gameState == PLAYING) ? PAUSE : PLAYING;
         }
     } else if (action == GLFW_RELEASE) {
-        if (key == GLFW_KEY_S)     user_data->gameData.fast_drop = false;
+        if (key == GLFW_KEY_S)      user_data->gameData.fast_drop = false;
+        else if (key == GLFW_KEY_A) user_data->holding_left  = false;
+        else if (key == GLFW_KEY_D) user_data->holding_right = false;
     }
 }
 

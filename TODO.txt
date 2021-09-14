@@ -1,8 +1,4 @@
 - rotate square sound
-- hold down key (left/right)
-- piece counter
-- show next piece
 - defeat screen
 - key map
 - BUG: left/right movement in gameover gamestate
-- count score up

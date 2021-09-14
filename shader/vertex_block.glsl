@@ -12,11 +12,12 @@ out vec3 f_normal;
 
 uniform int block_id;
 uniform vec2 pos;
+uniform float scale = 1.0;
 
 flat out int block_id_;
 
 #define PI 3.1415
-#define scaling_factor .1
+#define scaling_factor .1 * scale
 
 mat4 generate_frustum() {
     float near = 1.0;
@@ -51,13 +52,6 @@ void main()
 
     mat4 frustum = generate_frustum();
 
-    mat4 rot_x = mat4(
-        1, 0, 0, 0,
-        0, cos(3*PI/2), -sin(3*PI/2), 0,
-        0, sin(3*PI/2), cos(3*PI/2), 0,
-        0, 0, 0, 1
-    );
-
     mat4 scale = mat4(
         scaling_factor, 0, 0, 0,
         0, scaling_factor, 0, 0,
@@ -65,7 +59,7 @@ void main()
         0, 0, 0, 1
     );
 
-    vec3 pos = ((rot_x * scale * v_position) + trans).xyz;
+    vec3 pos = ((scale * v_position) + trans).xyz;
 
     gl_Position = frustum * vec4(pos, 1.0);
 

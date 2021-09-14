@@ -19,6 +19,7 @@
 #define START_POSITION_Y 0
 
 #define FAST_DROP_TIME 0.05
+#define MOVE_SIDE_WAYS_TIME 0.2
 
 #ifdef DEBUG
     #define BASE_TIME .2
@@ -174,5 +175,7 @@ static inline double calc_drop_time(const struct GameData* game_data)
 {
     return BASE_TIME - log((game_data->level + 1)) * TIME_OFFSET;
 }
+
+void spawn_new_piece(struct GameData* game_data);
 
 #endif

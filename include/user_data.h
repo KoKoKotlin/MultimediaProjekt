@@ -33,6 +33,11 @@ typedef struct
     // The model:
     double last_frame_time;
     double time_since_last_drop;
+    double time_since_last_side_move;
+
+    bool holding_right;
+    bool holding_left;
+
     struct GameData gameData;
 
     // uniform for instanced rendering
@@ -42,6 +47,7 @@ typedef struct
     GLint digit_tex_uniform;
     GLint block_pos_uniform;
     GLint block_id_uniform;
+    GLint block_scale_uniform;
 
     // for sound
     SDL_AudioDeviceID background_device;
