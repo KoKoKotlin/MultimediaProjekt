@@ -5,7 +5,12 @@
 #include <SDL2/SDL.h>
 #include <stdio.h>
 
+#include "user_data.h"
 #include "error.h"
+
+#define TETRIS_BACKGROUND_MUSIC "sfx/tetris_bg_music.wav"
+#define TETRIS_DEFEAT_SOUND "sfx/defeat.wav"
+#define TETRIS_FOR_JEFF "sfx/tetris_for_jeff.wav"
 
 struct WavData {
     SDL_AudioSpec wav_spec;
@@ -25,6 +30,6 @@ void queue_audio(SDL_AudioDeviceID deviceId, const struct WavData* data);
 void play(SDL_AudioDeviceID deviceId, const struct WavData* data, bool loop);
 void pause(SDL_AudioDeviceID deviceId);
 
-void queue_sound_if_emtpy(user_data_t* user_data);
+void queue_audio_if_empty(SDL_AudioDeviceID deviceId, struct WavData* wav_data);
 
 #endif

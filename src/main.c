@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "init.h"
 #include "render.h"
 #include "engine.h"
-#include "audio.h"
+#include "update.h"
 
 #define TETRIS_BACKGROUND_MUSIC "sfx/tetris_bg_music.wav"
 #define TETRIS_DEFEAT_SOUND "sfx/defeat.wav"
@@ -55,21 +56,12 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 int main(void)
 {
     init_tetris_audio();
-    struct WavData** wav_data = calloc(NUMBER_OF_AUDIO_FILES, sizeof(struct WavData*));
-    load_audio_files(wav_data);
-
-    SDL_AudioDeviceID deviceId = open_audio_device(wav_data[0]);
-    SDL_AudioDeviceID deviceId2 = open_audio_device(wav_data[1]);
 
     // Create our user data struct:
     user_data_t user_data =
     {
         .window_width = 800,
         .window_height = 600,
-
-        .background_device = deviceId,
-        .effect_device = deviceId2,
-        .wav_data = wav_data,
     };
 
     // Specify our error callback func:
@@ -136,10 +128,6 @@ int main(void)
 
     // Terminate GLFW:
     glfwTerminate();
-
-    free_audio_files(wav_data);
-    close_audio_device(deviceId);
-    close_audio_device(deviceId2);
 
     return 0;
 }

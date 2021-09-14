@@ -1,5 +1,7 @@
 #include "error.h"
 
+#include "glad/glad.h"
+
 void check_error(bool condition, const char* error_text)
 {
     if (!condition)
