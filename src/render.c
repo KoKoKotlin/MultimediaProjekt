@@ -101,16 +101,18 @@ void draw_piece_count(user_data_t* user_data) {
     }
 }
 
-void draw_image(const user_data_t* user_data, GLint texunit, GLfloat* pos, GLfloat* scale)
+void draw_image(const user_data_t* user_data, GLint texunit, GLfloat* pos, GLfloat* scale, GLfloat alpha)
 {
     glUseProgram(user_data->shader_program_image);
 
     glUniform1i(user_data->image_tex_uniform, texunit);
     gl_check_error("glUniform1i image");
     glUniform3fv(user_data->image_pos_uniform, 1, pos);
-    gl_check_error("glUniform2fv image");
+    gl_check_error("glUniform3fv image");
     glUniform2fv(user_data->image_scale_uniform, 1, scale);
     gl_check_error("glUniform2fv image");
+    glUniform1f(user_data->image_alpha_uniform, alpha);
+    gl_check_error("glUniform1f image");
 
     // draw plane with image texture
     glBindVertexArray(user_data->vao[2]);
@@ -127,43 +129,55 @@ void draw_gl(GLFWwindow* window)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     gl_check_error("glClear");
 
-    // draw the arena
-    glUseProgram(user_data->shader_program_arena);
+    if (user_data->gameData.gameState != GAME_OVER) {
+        // draw the arena
+        glUseProgram(user_data->shader_program_arena);
 
-    glBindVertexArray(user_data->vao[1]);
-    glBindBuffer(GL_ARRAY_BUFFER, user_data->vbo[1]);
-    glDrawArrays(GL_TRIANGLES, 0, user_data->vertex_data_count[1]);
-    gl_check_error("glDrawArrays1");
+        glBindVertexArray(user_data->vao[1]);
+        glBindBuffer(GL_ARRAY_BUFFER, user_data->vbo[1]);
+        glDrawArrays(GL_TRIANGLES, 0, user_data->vertex_data_count[1]);
+        gl_check_error("glDrawArrays1");
 
-    // draw the background
-    glUseProgram(user_data->shader_program_back);
+        // draw the background
+        glUseProgram(user_data->shader_program_back);
 
-    glBindVertexArray(user_data->vao[2]);
-    glBindBuffer(GL_ARRAY_BUFFER, user_data->vbo[2]);
-    glDrawArrays(GL_TRIANGLES, 0, user_data->vertex_data_count[2]);
-    gl_check_error("glDrawArrays2");
+        glBindVertexArray(user_data->vao[2]);
+        glBindBuffer(GL_ARRAY_BUFFER, user_data->vbo[2]);
+        glDrawArrays(GL_TRIANGLES, 0, user_data->vertex_data_count[2]);
+        gl_check_error("glDrawArrays2");
 
-    // draw the pieces
-    glBindVertexArray(user_data->vao[0]);
-    glBindBuffer(GL_ARRAY_BUFFER, user_data->vbo[0]);
+        // draw the pieces
+        glBindVertexArray(user_data->vao[0]);
+        glBindBuffer(GL_ARRAY_BUFFER, user_data->vbo[0]);
 
-    int block_positions[200] = { 0 };
-    generate_block_positions(&user_data->gameData, block_positions);
+        int block_positions[200] = { 0 };
+        generate_block_positions(&user_data->gameData, block_positions);
 
-    glUseProgram(user_data->shader_program_blocks);
-    glUniform1iv(user_data->block_positions, 200, block_positions);
+        glUseProgram(user_data->shader_program_blocks);
+        glUniform1iv(user_data->block_positions, 200, block_positions);
 
-    // Parameters: primitive type, start index, count
-    glDrawArraysInstanced(GL_TRIANGLES, 0, user_data->vertex_data_count[0], 200);
-    gl_check_error("glDrawArraysInstanced");
+        // Parameters: primitive type, start index, count
+        glDrawArraysInstanced(GL_TRIANGLES, 0, user_data->vertex_data_count[0], 200);
+        gl_check_error("glDrawArraysInstanced");
 
-    draw_text(user_data);
-    draw_next_piece(user_data);
-    draw_piece_count(user_data);
+        draw_text(user_data);
+        draw_next_piece(user_data);
+        draw_piece_count(user_data);
 
+        GLfloat key_map_pos[] = { 0.0, -1.037, 0.0 };
+        GLfloat key_map_scale[] = { 20.0, .6 };
 
-    GLfloat key_map_pos[] = { 0.0, -1.037 };
-    GLfloat key_map_scale[] = { 20.0, .6, 0.0 };
+        draw_image(user_data, 11, key_map_pos, key_map_scale, 1.0f);
+    }
+    if (user_data->gameData.gameState == GAME_OVER) {
+        GLfloat game_over_pos[] = { 0.0, 0.0, -0.01 };
+        GLfloat game_over_scale[] = { 16.0, 9.0 };
 
-    draw_image(user_data, 11, key_map_pos, key_map_scale);
+        draw_image(user_data, 12, game_over_pos, game_over_scale, 1.0f);
+
+        char score[7];
+        memset(score, 0, 7);
+        sprintf(score, "%06d", user_data->gameData.score);
+        draw_string(user_data, score, 0.1, 0.0);
+    }
 }

@@ -7,10 +7,14 @@ in vec3 f_normal;
 
 out vec4 out_color;
 
-uniform sampler2D digit;
+uniform float alpha;
+
+uniform sampler2D image;
 
 void main()
 {
     // Combine everything:
-    out_color = texture(digit, f_tex_coords) + vec4(0, 0, 0, 1);
+    vec4 color = texture(image, f_tex_coords) + vec4(0, 0, 0, 1);
+    color.a = alpha;
+    out_color = color;
 }

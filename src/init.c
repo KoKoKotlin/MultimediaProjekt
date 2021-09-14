@@ -226,7 +226,8 @@ static void init_uniforms(user_data_t* user_data)
 
     user_data->image_pos_uniform   = glGetUniformLocation(user_data->shader_program_image, "pos");
     user_data->image_scale_uniform = glGetUniformLocation(user_data->shader_program_image, "scale");
-    user_data->image_tex_uniform   = glGetUniformLocation(user_data->shader_program_image, "digit");
+    user_data->image_tex_uniform   = glGetUniformLocation(user_data->shader_program_image, "image");
+    user_data->image_alpha_uniform = glGetUniformLocation(user_data->shader_program_image, "alpha");
     gl_check_error("glGetUniformLocation [image_...]");
 }
 
@@ -428,11 +429,11 @@ void init_gl(GLFWwindow* window)
     create_shader_program(
         &user_data->shader_program_image,
         compile_shader(GL_VERTEX_SHADER, "shader/vertex_image.glsl", "Vertex Image Shader"),
-        compile_shader(GL_FRAGMENT_SHADER, "shader/fragment_font.glsl", "Fragment Font Shader")
+        compile_shader(GL_FRAGMENT_SHADER, "shader/fragment_image.glsl", "Fragment Image Shader")
     );
 
     // Initialize our texture:
-    glGenTextures(12, user_data->textures);
+    glGenTextures(13, user_data->textures);
     init_texture(user_data->textures, GL_TEXTURE0, TEX_BACKGROUND_GRID);
 
     char file_path[] = "textures/_.bmp";
@@ -478,6 +479,7 @@ void init_gl(GLFWwindow* window)
     }
 
     init_texture(user_data->textures + 11, GL_TEXTURE11, "textures/keymap.bmp");
+    init_texture(user_data->textures + 12, GL_TEXTURE12, "textures/gameover.bmp");
 
     // Initialize our model:
     init_model(user_data);
@@ -520,6 +522,12 @@ void init_gl(GLFWwindow* window)
 
     // Enable backface culling:
     glEnable(GL_CULL_FACE);
+    gl_check_error("glEnable [culling]");
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ZERO);
+    gl_check_error("glEnable [alpha]");
+
 }
 
 void free_audio_files(struct WavData** data)
@@ -557,6 +565,6 @@ void teardown_gl(GLFWwindow* window)
     gl_check_error("glDeleteBuffers");
 
     // Delete the texture:
-    glDeleteTextures(11, user_data->textures);
+    glDeleteTextures(13, user_data->textures);
     gl_check_error("glDeleteTextures");
 }

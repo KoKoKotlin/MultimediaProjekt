@@ -1,3 +1,1 @@
 - rotate square sound => get sound from sio
-- defeat screen
-- restart btn

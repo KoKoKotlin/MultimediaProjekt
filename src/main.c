@@ -78,6 +78,12 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
             user_data->gameData.gameState = (user_data->gameData.gameState == PLAYING) ? PAUSE : PLAYING;
         }
         else if (key == GLFW_KEY_ESCAPE) glfwSetWindowShouldClose(window, 1);
+        else if (key == GLFW_KEY_R) {
+            if (user_data->gameData.gameState == GAME_OVER) {
+                free_gamedata(&user_data->gameData);
+                user_data->gameData = init_gamedata(0);
+            }
+        }
     } else if (action == GLFW_RELEASE) {
         if (key == GLFW_KEY_S)      user_data->gameData.fast_drop = false;
         else if (key == GLFW_KEY_A) user_data->holding_left  = false;

@@ -13,5 +13,5 @@ uniform sampler2D background;
 void main()
 {
     // Combine everything:
-    out_color = texture(background, f_tex_coords); // vec4(1, 0, 0, 1);
+    out_color = texture(background, f_tex_coords)+ vec4(0, 0, 0, 1);  // vec4(1, 0, 0, 1);
 }
