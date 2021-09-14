@@ -56,7 +56,7 @@ void draw_next_piece(const user_data_t* user_data)
     glUniform2fv(user_data->block_pos_uniform, 1, pos);
     gl_check_error("glUniform2fv next_piece");
 
-    // draw single char
+    // draw piece model
     glBindVertexArray(user_data->vao[model_index]);
     glBindBuffer(GL_ARRAY_BUFFER, user_data->vbo[model_index]);
     glDrawArrays(GL_TRIANGLES, 0, user_data->vertex_data_count[model_index]);
@@ -101,6 +101,24 @@ void draw_piece_count(user_data_t* user_data) {
     }
 }
 
+void draw_image(const user_data_t* user_data, GLint texunit, GLfloat* pos, GLfloat* scale)
+{
+    glUseProgram(user_data->shader_program_image);
+
+    glUniform1i(user_data->image_tex_uniform, texunit);
+    gl_check_error("glUniform1i image");
+    glUniform2fv(user_data->image_pos_uniform, 1, pos);
+    gl_check_error("glUniform2fv image");
+    glUniform2fv(user_data->image_scale_uniform, 1, scale);
+    gl_check_error("glUniform2fv image");
+
+    // draw plane with image texture
+    glBindVertexArray(user_data->vao[2]);
+    glBindBuffer(GL_ARRAY_BUFFER, user_data->vbo[2]);
+    glDrawArrays(GL_TRIANGLES, 0, user_data->vertex_data_count[2]);
+    gl_check_error("glDrawArrays image");
+}
+
 void draw_gl(GLFWwindow* window)
 {
     user_data_t* user_data = glfwGetWindowUserPointer(window);
@@ -142,4 +160,10 @@ void draw_gl(GLFWwindow* window)
     draw_text(user_data);
     draw_next_piece(user_data);
     draw_piece_count(user_data);
+
+
+    GLfloat key_map_pos[] = { 0.0, -1.037 };
+    GLfloat key_map_scale[] = { 20.0, .6, 0.0 };
+
+    draw_image(user_data, 11, key_map_pos, key_map_scale);
 }

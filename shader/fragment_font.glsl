@@ -11,8 +11,6 @@ uniform sampler2D digit;
 
 void main()
 {
-    if (texture(digit, f_tex_coords).xyz == vec3(0, 0, 0)) discard;
-
     // Combine everything:
     out_color = texture(digit, f_tex_coords);
 }

@@ -206,8 +206,6 @@ static void init_texture(GLuint* tex, int tex_unit, const char* tex_path)
     free(pixels);
 }
 
-
-
 static void init_uniforms(user_data_t* user_data)
 {
     user_data->block_positions = glGetUniformLocation(user_data->shader_program_blocks, "block_positions");
@@ -225,6 +223,11 @@ static void init_uniforms(user_data_t* user_data)
     user_data->block_id_uniform    = glGetUniformLocation(user_data->shader_program_single_block, "block_id");
     user_data->block_scale_uniform = glGetUniformLocation(user_data->shader_program_single_block, "scale");
     gl_check_error("glGetUniformLocation [block_...]");
+
+    user_data->image_pos_uniform   = glGetUniformLocation(user_data->shader_program_image, "pos");
+    user_data->image_scale_uniform = glGetUniformLocation(user_data->shader_program_image, "scale");
+    user_data->image_tex_uniform   = glGetUniformLocation(user_data->shader_program_image, "digit");
+    gl_check_error("glGetUniformLocation [image_...]");
 }
 
 
@@ -422,8 +425,14 @@ void init_gl(GLFWwindow* window)
         compile_shader(GL_FRAGMENT_SHADER, "shader/fragment_block.glsl", "Fragment Block Shader")
     );
 
+    create_shader_program(
+        &user_data->shader_program_image,
+        compile_shader(GL_VERTEX_SHADER, "shader/vertex_image.glsl", "Vertex Image Shader"),
+        compile_shader(GL_FRAGMENT_SHADER, "shader/fragment_font.glsl", "Fragment Font Shader")
+    );
+
     // Initialize our texture:
-    glGenTextures(11, user_data->textures);
+    glGenTextures(12, user_data->textures);
     init_texture(user_data->textures, GL_TEXTURE0, TEX_BACKGROUND_GRID);
 
     char file_path[] = "textures/_.bmp";
@@ -467,6 +476,8 @@ void init_gl(GLFWwindow* window)
 
         init_texture(user_data->textures + i + 1, texunit, file_path);
     }
+
+    init_texture(user_data->textures + 11, GL_TEXTURE11, "textures/keymap.bmp");
 
     // Initialize our model:
     init_model(user_data);
@@ -534,6 +545,7 @@ void teardown_gl(GLFWwindow* window)
     glDeleteProgram(user_data->shader_program_arena);
     glDeleteProgram(user_data->shader_program_font);
     glDeleteProgram(user_data->shader_program_single_block);
+    glDeleteProgram(user_data->shader_program_image);
     gl_check_error("glDeleteProgram");
 
     // Delete the VAO:
