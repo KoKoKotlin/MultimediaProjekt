@@ -18,6 +18,7 @@ typedef struct
     GLuint shader_program_blocks;
     GLuint shader_program_font;
     GLuint shader_program_single_block;
+    GLuint shader_program_image;
 
     // The vertex array object (blackbox ...):
     GLuint vao[10];
@@ -48,6 +49,9 @@ typedef struct
     GLint block_pos_uniform;
     GLint block_id_uniform;
     GLint block_scale_uniform;
+    GLint image_pos_uniform;
+    GLint image_scale_uniform;
+    GLint image_tex_uniform;
 
     // for sound
     SDL_AudioDeviceID background_device;
