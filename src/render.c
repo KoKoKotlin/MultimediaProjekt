@@ -107,7 +107,7 @@ void draw_image(const user_data_t* user_data, GLint texunit, GLfloat* pos, GLflo
 
     glUniform1i(user_data->image_tex_uniform, texunit);
     gl_check_error("glUniform1i image");
-    glUniform2fv(user_data->image_pos_uniform, 1, pos);
+    glUniform3fv(user_data->image_pos_uniform, 1, pos);
     gl_check_error("glUniform2fv image");
     glUniform2fv(user_data->image_scale_uniform, 1, scale);
     gl_check_error("glUniform2fv image");
