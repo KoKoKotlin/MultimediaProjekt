@@ -40,11 +40,13 @@ void draw_text(const user_data_t* user_data)
     draw_string(user_data, cleared_lines, 0.835, -0.85);
 }
 
-void draw_next_piece(const user_data_t* user_data, double pos_x, double pos_y)
+void draw_next_piece(const user_data_t* user_data)
 {
-    // set position and texture for next char
-    GLfloat pos[] = { pos_x, pos_y };
+    // get position of the next piece according to its type
+    GLfloat pos[] = { 1.2, 0.75 };
+
     glUseProgram(user_data->shader_program_single_block);
+    glUniform1f(user_data->block_scale_uniform, 1.0f);
 
     int block_id = user_data->gameData.next_piece[0] + 1;
     int model_index = block_id + 2;
@@ -60,6 +62,43 @@ void draw_next_piece(const user_data_t* user_data, double pos_x, double pos_y)
     glDrawArrays(GL_TRIANGLES, 0, user_data->vertex_data_count[model_index]);
     gl_check_error("glDrawArrays next_piece");
 
+}
+
+void draw_piece_count(user_data_t* user_data) {
+    // position of the piece according to its type
+    GLfloat pos[7][2]   = { { -1.5, 0.75 },
+                          { -1.5, 0.50 },
+                          { -1.5, 0.20 },
+                          { -1.5, -0.05 },
+                          { -1.5, -0.33 },
+                          { -1.5, -0.60 },
+                          { -1.5, -0.80 },
+                          };
+
+    for (size_t i = 0; i < 7; i++) {
+        glUseProgram(user_data->shader_program_single_block);
+        glUniform1f(user_data->block_scale_uniform, 0.65f);
+
+        int block_id = i + 1;
+        int model_index = block_id + 2;
+
+        glUniform1i(user_data->block_id_uniform, block_id);
+        gl_check_error("glUniform1i next_piece");
+        glUniform2fv(user_data->block_pos_uniform, 1, pos[i]);
+        gl_check_error("glUniform2fv next_piece");
+
+        // draw single char
+        glBindVertexArray(user_data->vao[model_index]);
+        glBindBuffer(GL_ARRAY_BUFFER, user_data->vbo[model_index]);
+        glDrawArrays(GL_TRIANGLES, 0, user_data->vertex_data_count[model_index]);
+        gl_check_error("glDrawArrays next_piece");
+
+        char piece_count[4];
+        memset(piece_count, 0, 4);
+        sprintf(piece_count, "%03d", user_data->gameData.piece_count[i]);
+
+        draw_string(user_data, piece_count, pos[i][0] + 0.3, pos[i][1]);
+    }
 }
 
 void draw_gl(GLFWwindow* window)
@@ -101,5 +140,6 @@ void draw_gl(GLFWwindow* window)
     gl_check_error("glDrawArraysInstanced");
 
     draw_text(user_data);
-    draw_next_piece(user_data, 1.2, 0.75);
+    draw_next_piece(user_data);
+    draw_piece_count(user_data);
 }

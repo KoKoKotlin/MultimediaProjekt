@@ -221,8 +221,9 @@ static void init_uniforms(user_data_t* user_data)
     user_data->digit_tex_uniform = glGetUniformLocation(user_data->shader_program_font, "digit");
     gl_check_error("glGetUniformLocation [digit_...]");
 
-    user_data->block_pos_uniform = glGetUniformLocation(user_data->shader_program_single_block, "pos");
-    user_data->block_id_uniform  = glGetUniformLocation(user_data->shader_program_single_block, "block_id");
+    user_data->block_pos_uniform   = glGetUniformLocation(user_data->shader_program_single_block, "pos");
+    user_data->block_id_uniform    = glGetUniformLocation(user_data->shader_program_single_block, "block_id");
+    user_data->block_scale_uniform = glGetUniformLocation(user_data->shader_program_single_block, "scale");
     gl_check_error("glGetUniformLocation [block_...]");
 }
 
@@ -363,6 +364,10 @@ static void init_model(user_data_t* user_data)
     user_data->last_frame_time = glfwGetTime();
     user_data->time_since_last_drop = 0.0;
     user_data->gameData = init_gamedata(0);
+
+    user_data->holding_left = false;
+    user_data->holding_right = false;
+    user_data->time_since_last_side_move = 0.0;
 }
 
 void load_audio_files(struct WavData** data)
@@ -370,6 +375,7 @@ void load_audio_files(struct WavData** data)
     data[0] = load_wav_file(TETRIS_BACKGROUND_MUSIC);
     data[1] = load_wav_file(TETRIS_DEFEAT_SOUND);
     data[2] = load_wav_file(TETRIS_FOR_JEFF);
+    data[3] = load_wav_file(TETRIS_SIO_SOUND);
 }
 
 void init_gl(GLFWwindow* window)
