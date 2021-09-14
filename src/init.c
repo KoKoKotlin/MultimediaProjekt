@@ -375,6 +375,7 @@ void load_audio_files(struct WavData** data)
     data[0] = load_wav_file(TETRIS_BACKGROUND_MUSIC);
     data[1] = load_wav_file(TETRIS_DEFEAT_SOUND);
     data[2] = load_wav_file(TETRIS_FOR_JEFF);
+    data[3] = load_wav_file(TETRIS_SIO_SOUND);
 }
 
 void init_gl(GLFWwindow* window)

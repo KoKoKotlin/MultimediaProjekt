@@ -8,10 +8,6 @@
 #include "user_data.h"
 #include "error.h"
 
-#define TETRIS_BACKGROUND_MUSIC "sfx/tetris_bg_music.wav"
-#define TETRIS_DEFEAT_SOUND "sfx/defeat.wav"
-#define TETRIS_FOR_JEFF "sfx/tetris_for_jeff.wav"
-
 struct WavData {
     SDL_AudioSpec wav_spec;
     Uint32 wav_length;

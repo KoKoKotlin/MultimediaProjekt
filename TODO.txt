@@ -1,4 +1,3 @@
 - rotate square sound
 - defeat screen
 - key map
-- BUG: left/right movement in gameover gamestate

@@ -27,6 +27,11 @@
 #define MODEL_Z "models/Block_Z.obj"
 #define MODEL_S "models/Block_S.obj"
 
+#define TETRIS_BACKGROUND_MUSIC "sfx/tetris_bg_music.wav"
+#define TETRIS_DEFEAT_SOUND "sfx/defeat.wav"
+#define TETRIS_FOR_JEFF "sfx/tetris_for_jeff.wav"
+#define TETRIS_SIO_SOUND "sfx/tetris_sio_sound.wav"
+
 #define TEX_BACKGROUND_GRID "textures/grid.bmp"
 #define Y_ANGULAR_VELOCITY 2
 
@@ -36,11 +41,9 @@
 #define ATTRIB_NORMAL 2
 #define ATTRIB_TEX_COORDS 3
 
-#define NUMBER_OF_AUDIO_FILES 3
+#define NUMBER_OF_AUDIO_FILES 4
 
 void init_gl(GLFWwindow* window);
 void teardown_gl(GLFWwindow* window);
-
-
 
 #endif

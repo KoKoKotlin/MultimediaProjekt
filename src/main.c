@@ -32,6 +32,10 @@ void window_size_callback(GLFWwindow* window, int width, int height)
     user_data->window_height = height;
 }
 
+void play_sio_sound(const user_data_t* user_data) {
+    if (user_data->gameData.current_piece[0] == PIECE_O) queue_audio_if_empty(user_data->effect_device, user_data->wav_data[3]);
+}
+
 // eventhandler for the keyboard
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
@@ -40,7 +44,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     if (action == GLFW_PRESS) {
         if (key == GLFW_KEY_A) {
             if (user_data->gameData.gameState == GAME_OVER) return;
-
 
             if (!user_data->holding_left) move(&user_data->gameData, LEFT);
             user_data->holding_left  = true;
@@ -60,11 +63,13 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         else if (key == GLFW_KEY_RIGHT) {
             if (user_data->gameData.gameState == GAME_OVER) return;
             rotate_piece(&user_data->gameData, RIGHT);
+            play_sio_sound(user_data);
         }
         else if (key == GLFW_KEY_LEFT) {
             if (user_data->gameData.gameState == GAME_OVER) return;
 
             rotate_piece(&user_data->gameData, LEFT);
+            play_sio_sound(user_data);
         }
         else if (key == GLFW_KEY_S)     user_data->gameData.fast_drop = true;
         else if (key == GLFW_KEY_P)     {
