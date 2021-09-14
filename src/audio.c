@@ -1,4 +1,3 @@
-
 #include "audio.h"
 
 void init_tetris_audio()
@@ -56,8 +55,8 @@ void queue_audio(SDL_AudioDeviceID deviceId, const struct WavData* data)
     check_error(success >= 0, "Failed to queue audio!\n");
 }
 
-void queue_sound_if_emtpy(user_data_t* user_data)
+void queue_audio_if_empty(SDL_AudioDeviceID deviceId, struct WavData* wav_data)
 {
-    if (SDL_GetQueuedAudioSize(user_data->background_device) == 0)
-        queue_audio(user_data->background_device, user_data->wav_data[0]);
+    if (SDL_GetQueuedAudioSize(deviceId) == 0)
+        queue_audio(deviceId, wav_data);
 }

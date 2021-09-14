@@ -28,5 +28,4 @@ void update_gl(GLFWwindow* window)
     user_data->last_frame_time = frame_time;
 
     SDL_PauseAudioDevice(user_data->background_device, (user_data->gameData.gameState == PAUSE) ? 1 : 0);
-    queue_audio_if_empty(user_data);
 }

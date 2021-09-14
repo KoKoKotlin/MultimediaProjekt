@@ -377,7 +377,13 @@ void init_gl(GLFWwindow* window)
     user_data_t* user_data = glfwGetWindowUserPointer(window);
 
     // load the soundtracks
+    user_data->wav_data = calloc(sizeof(struct WavData*), NUMBER_OF_AUDIO_FILES);
     load_audio_files(user_data->wav_data);
+    SDL_AudioDeviceID deviceId = open_audio_device(user_data->wav_data[0]);
+    SDL_AudioDeviceID deviceId2 = open_audio_device(user_data->wav_data[1]);
+
+    user_data->background_device = deviceId;
+    user_data->effect_device = deviceId2;
 
     // Initialize our shader programs:
     create_shader_program(
@@ -511,7 +517,9 @@ void teardown_gl(GLFWwindow* window)
     printf("Tearing down ...\n");
     user_data_t* user_data = glfwGetWindowUserPointer(window);
 
-    // Free the soundtracks again
+    // Free the soundtracks again and close the audio devices
+    close_audio_device(user_data->background_device);
+    close_audio_device(user_data->effect_device);
     free_audio_files(user_data->wav_data);
 
     // Delete the shader programs:
