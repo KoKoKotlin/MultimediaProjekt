@@ -1,7 +1,12 @@
 SHELL = /bin/sh
 CC = gcc
-LIBS = -lm -lglfw -ldl -lSDL2
+LIBS = -lm -lglfw -ldl
 FLAGS = -Wall -Wextra -Wunused -Iinclude/
+
+ifeq "$(shell sdl2-config --version > /dev/null && echo 1 || echo 0 )" "1"
+  LIBS += -lSDL2
+  FLAGS += -DSOUND
+endif
 
 SRC_DIR = src
 SOURCE_FILES = $(wildcard $(SRC_DIR)/*.c)
@@ -33,6 +38,7 @@ $(TARGET) : $(OBJ_FILES)
 
 $(BUILD_DIR) :
 	mkdir -p $@
+
 
 $(BUILD_DIR)/main.o : include/log.h include/obj.h
 $(BUILD_DIR)/obj.o : include/obj.h

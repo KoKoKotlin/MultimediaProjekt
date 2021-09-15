@@ -6,12 +6,6 @@
 #include "engine.h"
 #include "update.h"
 
-#define TETRIS_BACKGROUND_MUSIC "sfx/tetris_bg_music.wav"
-#define TETRIS_DEFEAT_SOUND "sfx/defeat.wav"
-#define TETRIS_FOR_JEFF "sfx/tetris_for_jeff.wav"
-
-#define NUMBER_OF_AUDIO_FILES 3
-
 void error_callback(int error, const char* description)
 {
     fprintf(stderr, "Error: %s (%d)\n", description, error);

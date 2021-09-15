@@ -25,6 +25,7 @@ void queue_audio(SDL_AudioDeviceID deviceId, const struct WavData* data);
 
 void play(SDL_AudioDeviceID deviceId, const struct WavData* data, bool loop);
 void pause(SDL_AudioDeviceID deviceId);
+void unpause(SDL_AudioDeviceID deviceId);
 
 void queue_audio_if_empty(SDL_AudioDeviceID deviceId, struct WavData* wav_data);
 
