@@ -11,6 +11,11 @@ void check_error(bool condition, const char* error_text)
     }
 }
 
+void check_error_non_closing(bool condition, const char* error_text)
+{
+    if (!condition) fprintf(stderr, "%s\n", error_text);
+}
+
 void gl_check_error(const char* error_text)
 {
     GLenum error = glGetError();

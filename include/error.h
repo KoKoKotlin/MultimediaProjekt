@@ -6,6 +6,7 @@
 #include <stdbool.h>
 
 void check_error(bool condition, const char* error_text);
+void check_error_non_closing(bool condition, const char* error_text);
 void gl_check_error(const char* error_text);
 
 #endif

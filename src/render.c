@@ -119,7 +119,6 @@ void draw_piece_count(user_data_t* user_data) {
         glUniform2fv(user_data->block_pos_uniform, 1, pos[i]);
         gl_check_error("glUniform2fv next_piece");
 
-        // draw single char
         glBindVertexArray(user_data->vao[model_index]);
         glBindBuffer(GL_ARRAY_BUFFER, user_data->vbo[model_index]);
         glDrawArrays(GL_TRIANGLES, 0, user_data->vertex_data_count[model_index]);
