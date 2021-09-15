@@ -101,7 +101,7 @@ void draw_piece_count(user_data_t* user_data) {
     }
 }
 
-void draw_image(const user_data_t* user_data, GLint texunit, GLfloat* pos, GLfloat* scale, GLfloat alpha)
+void draw_image(const user_data_t* user_data, GLint texunit, GLfloat* pos, GLfloat* scale)
 {
     glUseProgram(user_data->shader_program_image);
 
@@ -111,8 +111,6 @@ void draw_image(const user_data_t* user_data, GLint texunit, GLfloat* pos, GLflo
     gl_check_error("glUniform3fv image");
     glUniform2fv(user_data->image_scale_uniform, 1, scale);
     gl_check_error("glUniform2fv image");
-    glUniform1f(user_data->image_alpha_uniform, alpha);
-    gl_check_error("glUniform1f image");
 
     // draw plane with image texture
     glBindVertexArray(user_data->vao[2]);
@@ -167,13 +165,14 @@ void draw_gl(GLFWwindow* window)
         GLfloat key_map_pos[] = { 0.0, -1.037, 0.0 };
         GLfloat key_map_scale[] = { 20.0, .6 };
 
-        draw_image(user_data, 11, key_map_pos, key_map_scale, 1.0f);
+        draw_image(user_data, 11, key_map_pos, key_map_scale);
     }
+
     if (user_data->gameData.gameState == GAME_OVER) {
         GLfloat game_over_pos[] = { 0.0, 0.0, -0.01 };
         GLfloat game_over_scale[] = { 16.0, 9.0 };
 
-        draw_image(user_data, 12, game_over_pos, game_over_scale, 1.0f);
+        draw_image(user_data, 12, game_over_pos, game_over_scale);
 
         char score[7];
         memset(score, 0, 7);

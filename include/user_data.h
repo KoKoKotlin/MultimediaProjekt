@@ -52,7 +52,6 @@ typedef struct
     GLint image_pos_uniform;
     GLint image_scale_uniform;
     GLint image_tex_uniform;
-    GLint image_alpha_uniform;
 
     // for sound
     SDL_AudioDeviceID background_device;

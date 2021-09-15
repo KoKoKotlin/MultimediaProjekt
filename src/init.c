@@ -212,11 +212,11 @@ static void init_uniforms(user_data_t* user_data)
     gl_check_error("glGetUniformLocation [block_position]");
 
     // Associate the sampler "tex" with texture unit 0:
-    user_data->background_sampler_uniform = glGetUniformLocation(user_data->shader_program_back, "background");
+    user_data->background_sampler_uniform = glGetUniformLocation(user_data->shader_program_back, "texture_");
     gl_check_error("glGetUniformLocation [background_sampler_uniform]");
 
     user_data->digit_pos_uniform = glGetUniformLocation(user_data->shader_program_font, "pos");
-    user_data->digit_tex_uniform = glGetUniformLocation(user_data->shader_program_font, "digit");
+    user_data->digit_tex_uniform = glGetUniformLocation(user_data->shader_program_font, "texture_");
     gl_check_error("glGetUniformLocation [digit_...]");
 
     user_data->block_pos_uniform   = glGetUniformLocation(user_data->shader_program_single_block, "pos");
@@ -226,8 +226,7 @@ static void init_uniforms(user_data_t* user_data)
 
     user_data->image_pos_uniform   = glGetUniformLocation(user_data->shader_program_image, "pos");
     user_data->image_scale_uniform = glGetUniformLocation(user_data->shader_program_image, "scale");
-    user_data->image_tex_uniform   = glGetUniformLocation(user_data->shader_program_image, "image");
-    user_data->image_alpha_uniform = glGetUniformLocation(user_data->shader_program_image, "alpha");
+    user_data->image_tex_uniform   = glGetUniformLocation(user_data->shader_program_image, "texture_");
     gl_check_error("glGetUniformLocation [image_...]");
 }
 
@@ -389,6 +388,8 @@ void init_gl(GLFWwindow* window)
     // load the soundtracks
     user_data->wav_data = calloc(sizeof(struct WavData*), NUMBER_OF_AUDIO_FILES);
     load_audio_files(user_data->wav_data);
+
+    // open 2 independend sound devices
     SDL_AudioDeviceID deviceId = open_audio_device(user_data->wav_data[0]);
     SDL_AudioDeviceID deviceId2 = open_audio_device(user_data->wav_data[1]);
 
@@ -411,13 +412,13 @@ void init_gl(GLFWwindow* window)
     create_shader_program(
         &user_data->shader_program_back,
         compile_shader(GL_VERTEX_SHADER, "shader/vertex_back.glsl", "Vertex Backs Shader"),
-        compile_shader(GL_FRAGMENT_SHADER, "shader/fragment_back.glsl", "Fragment Backs Shader")
+        compile_shader(GL_FRAGMENT_SHADER, "shader/fragment_texture.glsl", "Fragment Backs Shader")
     );
 
     create_shader_program(
         &user_data->shader_program_font,
         compile_shader(GL_VERTEX_SHADER, "shader/vertex_font.glsl", "Vertex Font Shader"),
-        compile_shader(GL_FRAGMENT_SHADER, "shader/fragment_font.glsl", "Fragment Font Shader")
+        compile_shader(GL_FRAGMENT_SHADER, "shader/fragment_texture.glsl", "Fragment Font Shader")
     );
 
     create_shader_program(
@@ -429,7 +430,7 @@ void init_gl(GLFWwindow* window)
     create_shader_program(
         &user_data->shader_program_image,
         compile_shader(GL_VERTEX_SHADER, "shader/vertex_image.glsl", "Vertex Image Shader"),
-        compile_shader(GL_FRAGMENT_SHADER, "shader/fragment_image.glsl", "Fragment Image Shader")
+        compile_shader(GL_FRAGMENT_SHADER, "shader/fragment_texture.glsl", "Fragment Image Shader")
     );
 
     // Initialize our texture:
@@ -523,11 +524,6 @@ void init_gl(GLFWwindow* window)
     // Enable backface culling:
     glEnable(GL_CULL_FACE);
     gl_check_error("glEnable [culling]");
-
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ZERO);
-    gl_check_error("glEnable [alpha]");
-
 }
 
 void free_audio_files(struct WavData** data)
