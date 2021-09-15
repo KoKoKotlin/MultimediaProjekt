@@ -22,8 +22,27 @@ void draw_string(const user_data_t* user_data, const char* string, double pos_x,
     }
 }
 
+void draw_image(const user_data_t* user_data, GLint texunit, GLfloat* pos, GLfloat* scale)
+{
+    glUseProgram(user_data->shader_program_image);
+
+    glUniform1i(user_data->image_tex_uniform, texunit);
+    gl_check_error("glUniform1i image");
+    glUniform3fv(user_data->image_pos_uniform, 1, pos);
+    gl_check_error("glUniform3fv image");
+    glUniform2fv(user_data->image_scale_uniform, 1, scale);
+    gl_check_error("glUniform2fv image");
+
+    // draw plane with image texture
+    glBindVertexArray(user_data->vao[2]);
+    glBindBuffer(GL_ARRAY_BUFFER, user_data->vbo[2]);
+    glDrawArrays(GL_TRIANGLES, 0, user_data->vertex_data_count[2]);
+    gl_check_error("glDrawArrays image");
+}
+
 void draw_text(const user_data_t* user_data)
 {
+    // create text buffers
     char score[7];
     memset(score, 0, 7);
     char level[3];
@@ -31,13 +50,26 @@ void draw_text(const user_data_t* user_data)
     char cleared_lines[7];
     memset(cleared_lines, 0, 7);
 
+    // fill the buffers
     sprintf(score, "%06d", user_data->gameData.score);
     sprintf(level, "%02d", user_data->gameData.level);
     sprintf(cleared_lines, "%06d", user_data->gameData.cleared_lines);
 
+    // draw the string data with the labels
     draw_string(user_data, score, 0.835, 0.1);
+    GLfloat score_pos[]   = { 0.95, 0.23, 0.0 };
+    GLfloat score_scale[] = { 2.5, 0.5 };
+    draw_image(user_data, TEX_LOC_SCORE, score_pos, score_scale);
+
     draw_string(user_data, level, 1.1, -0.38);
+    GLfloat level_pos[]   = { 0.95, -0.25, 0.0 };
+    GLfloat level_scale[] = { 2.5, 0.5 };
+    draw_image(user_data, TEX_LOC_LEVEL, level_pos, level_scale);
+
     draw_string(user_data, cleared_lines, 0.835, -0.85);
+    GLfloat cleared_lines_pos[]   = { 1.09, -0.73, 0.0 };
+    GLfloat cleared_lines_scale[] = { 5.0, 0.5 };
+    draw_image(user_data, TEX_LOC_CLEARED_LINES, cleared_lines_pos, cleared_lines_scale);
 }
 
 void draw_next_piece(const user_data_t* user_data)
@@ -101,24 +133,6 @@ void draw_piece_count(user_data_t* user_data) {
     }
 }
 
-void draw_image(const user_data_t* user_data, GLint texunit, GLfloat* pos, GLfloat* scale)
-{
-    glUseProgram(user_data->shader_program_image);
-
-    glUniform1i(user_data->image_tex_uniform, texunit);
-    gl_check_error("glUniform1i image");
-    glUniform3fv(user_data->image_pos_uniform, 1, pos);
-    gl_check_error("glUniform3fv image");
-    glUniform2fv(user_data->image_scale_uniform, 1, scale);
-    gl_check_error("glUniform2fv image");
-
-    // draw plane with image texture
-    glBindVertexArray(user_data->vao[2]);
-    glBindBuffer(GL_ARRAY_BUFFER, user_data->vbo[2]);
-    glDrawArrays(GL_TRIANGLES, 0, user_data->vertex_data_count[2]);
-    gl_check_error("glDrawArrays image");
-}
-
 void draw_gl(GLFWwindow* window)
 {
     user_data_t* user_data = glfwGetWindowUserPointer(window);
@@ -165,14 +179,14 @@ void draw_gl(GLFWwindow* window)
         GLfloat key_map_pos[] = { 0.0, -1.037, 0.0 };
         GLfloat key_map_scale[] = { 20.0, .6 };
 
-        draw_image(user_data, 11, key_map_pos, key_map_scale);
+        draw_image(user_data, TEX_LOC_KEYMAP, key_map_pos, key_map_scale);
     }
 
     if (user_data->gameData.gameState == GAME_OVER) {
         GLfloat game_over_pos[] = { 0.0, 0.0, -0.01 };
         GLfloat game_over_scale[] = { 16.0, 9.0 };
 
-        draw_image(user_data, 12, game_over_pos, game_over_scale);
+        draw_image(user_data, TEX_LOC_GAMEOVER, game_over_pos, game_over_scale);
 
         char score[7];
         memset(score, 0, 7);

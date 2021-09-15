@@ -168,7 +168,7 @@ static void create_shader_program(GLuint* shader_handle, GLuint vertex_shader, G
 }
 
 
-static void init_texture(GLuint* tex, int tex_unit, const char* tex_path)
+static void init_texture(GLuint* tex, GLint tex_unit, const char* tex_path)
 {
     // Activate the first texture unit:
     glActiveTexture(tex_unit);
@@ -211,7 +211,6 @@ static void init_uniforms(user_data_t* user_data)
     user_data->block_positions = glGetUniformLocation(user_data->shader_program_blocks, "block_positions");
     gl_check_error("glGetUniformLocation [block_position]");
 
-    // Associate the sampler "tex" with texture unit 0:
     user_data->background_sampler_uniform = glGetUniformLocation(user_data->shader_program_back, "texture_");
     gl_check_error("glGetUniformLocation [background_sampler_uniform]");
 
@@ -433,14 +432,13 @@ void init_gl(GLFWwindow* window)
         compile_shader(GL_FRAGMENT_SHADER, "shader/fragment_texture.glsl", "Fragment Image Shader")
     );
 
-    // Initialize our texture:
-    glGenTextures(13, user_data->textures);
+    // Initialize our textures:
+    glGenTextures(16, user_data->textures);
     init_texture(user_data->textures, GL_TEXTURE0, TEX_BACKGROUND_GRID);
 
-    char file_path[] = "textures/_.bmp";
-
     for (size_t i = 0; i < 10; i++) {
-        sprintf(file_path, "textures/%ld.bmp", i);
+        char file_path[] = TEX_DIGIT_FORMAT_PATH;
+        sprintf(file_path, TEX_DIGIT_FORMAT_PATH, i);
 
         GLuint texunit;
         switch (i)
@@ -479,8 +477,11 @@ void init_gl(GLFWwindow* window)
         init_texture(user_data->textures + i + 1, texunit, file_path);
     }
 
-    init_texture(user_data->textures + 11, GL_TEXTURE11, "textures/keymap.bmp");
-    init_texture(user_data->textures + 12, GL_TEXTURE12, "textures/gameover.bmp");
+    init_texture(user_data->textures + 11, GL_TEXTURE11, TEX_KEYMAP);
+    init_texture(user_data->textures + 12, GL_TEXTURE12, TEX_GAMEOVER);
+    init_texture(user_data->textures + 13, GL_TEXTURE13, TEX_CLEARED_LINES);
+    init_texture(user_data->textures + 14, GL_TEXTURE14, TEX_LEVEL);
+    init_texture(user_data->textures + 15, GL_TEXTURE15, TEX_SCORE);
 
     // Initialize our model:
     init_model(user_data);
@@ -488,9 +489,7 @@ void init_gl(GLFWwindow* window)
     // Initialize our uniforms:
     init_uniforms(user_data);
 
-    // Initialize our vertex data:
-    // init_vertex_data(user_data);
-
+    // Load our models from the object files:
     glGenVertexArrays(10, user_data->vao);
     glGenBuffers(10, user_data->vbo);
     load_model(MODEL_PATH_BLOCK,      user_data->vao[0], user_data->vbo[0], user_data->vertex_data_count + 0);
@@ -503,7 +502,6 @@ void init_gl(GLFWwindow* window)
     load_model(MODEL_I,               user_data->vao[7], user_data->vbo[7], user_data->vertex_data_count + 7);
     load_model(MODEL_Z,               user_data->vao[8], user_data->vbo[8], user_data->vertex_data_count + 8);
     load_model(MODEL_S,               user_data->vao[9], user_data->vbo[9], user_data->vertex_data_count + 9);
-
 
     // Obtain the internal size of the framebuffer:
     int fb_width, fb_height;
@@ -561,6 +559,6 @@ void teardown_gl(GLFWwindow* window)
     gl_check_error("glDeleteBuffers");
 
     // Delete the texture:
-    glDeleteTextures(13, user_data->textures);
+    glDeleteTextures(16, user_data->textures);
     gl_check_error("glDeleteTextures");
 }
