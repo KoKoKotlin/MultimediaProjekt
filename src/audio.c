@@ -7,6 +7,11 @@ void init_tetris_audio()
     check_error(SDL_Init(SDL_INIT_AUDIO) >= 0, "SDL_Init(SDL_INIT_AUDIO) < 0\n");
 }
 
+void teardown_tetris_audio()
+{
+    SDL_Quit();
+}
+
 struct WavData* load_wav_file(const char* path)
 {
     struct WavData* wav_data = calloc(1, sizeof(struct WavData));
@@ -84,6 +89,9 @@ void queue_audio_if_empty(SDL_AudioDeviceID deviceId, struct WavData* wav_data)
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
 void init_tetris_audio()
+{}
+
+void teardown_tetris_audio();
 {}
 
 struct WavData* load_wav_file(const char* path)

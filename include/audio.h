@@ -15,6 +15,8 @@ struct WavData {
 };
 
 void init_tetris_audio();
+void teardown_tetris_audio();
+
 struct WavData* load_wav_file(const char* path);
 void free_wav_file(struct WavData* wav_data);
 

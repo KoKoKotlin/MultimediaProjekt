@@ -247,6 +247,7 @@ static void load_model(const char* model_path, GLuint vao, GLuint vbo, int* vert
     strcat(error_msg, error_msg_start);
     strcat(error_msg, model_path);
     check_error(obj != NULL, error_msg);
+    free(error_msg);
 
     // Count the entries:
     int vertex_count = 0;
@@ -540,6 +541,8 @@ void teardown_gl(GLFWwindow* window)
     close_audio_device(user_data->background_device);
     close_audio_device(user_data->effect_device);
     free_audio_files(user_data->wav_data);
+    free(user_data->wav_data);
+    teardown_tetris_audio();
 
     // Delete the shader programs:
     glDeleteProgram(user_data->shader_program_blocks);
@@ -561,4 +564,6 @@ void teardown_gl(GLFWwindow* window)
     // Delete the texture:
     glDeleteTextures(16, user_data->textures);
     gl_check_error("glDeleteTextures");
+
+    free_gamedata(&user_data->gameData);
 }

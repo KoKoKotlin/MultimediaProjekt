@@ -79,8 +79,8 @@ struct GameData init_gamedata(uint32_t initial_seed)
 void free_gamedata(struct GameData *game_data)
 {
     free(game_data->arena);
-    free(game_data->current_piece);
-    free(game_data->next_piece);
+    if (game_data->current_piece != NULL) free(game_data->current_piece);
+    if (game_data->next_piece != NULL) free(game_data->next_piece);
     free(game_data->piece_count);
 }
 
@@ -276,11 +276,14 @@ bool check_collision_arena_pices(const struct GameData* game_data)
 {
     int size = get_piece_size(game_data->current_piece);
 
-    for (int y = 0; y < size; y++)
-        for (int x = 0; x < size; x++)
+    for (int y = 0; y < size; y++) {
+        for (int x = 0; x < size; x++) {
+            if (x + game_data->position_x >= ARENA_WIDTH) continue;
+
             if (game_data->current_piece[coords_to_array_index(x, y, size) + 1] != 0
             && (game_data->position_y + y >= ARENA_HEIGHT || game_data->arena[COORDS_TO_ARENA_INDEX(game_data->position_x + x, game_data->position_y + y)] != 0)) return true;
-
+        }
+    }
     return false;
 }
 
