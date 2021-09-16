@@ -360,10 +360,14 @@ void spawn_new_piece(struct GameData* game_data)
 void write_piece_to_arena(struct GameData* game_data)
 {
     int size = get_piece_size(game_data->current_piece);
-    for (int y = 0; y < size; y++)
-        for (int x = 0; x < size; x++)
+    for (int y = 0; y < size; y++) {
+        if (y + game_data->position_y >= ARENA_HEIGHT) continue;
+        for (int x = 0; x < size; x++) {
+            if (x + game_data->position_x >= ARENA_WIDTH) continue;
             game_data->arena[COORDS_TO_ARENA_INDEX(game_data->position_x + x, game_data->position_y + y)]
                 += game_data->current_piece[coords_to_array_index(x, y, size) + 1];
+        }
+    }
 }
 
 /*

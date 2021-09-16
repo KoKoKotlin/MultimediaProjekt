@@ -81,17 +81,19 @@ void queue_audio_if_empty(SDL_AudioDeviceID deviceId, struct WavData* wav_data)
 
 #else
 
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
 void init_tetris_audio()
 {}
 
 struct WavData* load_wav_file(const char* path)
-{}
+{ return NULL; }
 
 void free_wav_file(struct WavData* wav_data)
 {}
 
 SDL_AudioDeviceID open_audio_device(const struct WavData* data)
-{}
+{ return 0; }
 
 void close_audio_device(SDL_AudioDeviceID deviceId)
 {}
