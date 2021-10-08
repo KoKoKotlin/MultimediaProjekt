@@ -1,0 +1,257 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath, amssymb, amscd, amsthm, amsfonts}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{acronym}
+\usepackage{listings}
+\usepackage[margin=2cm]{geometry}
+\usepackage{endnotes}
+
+% for pseudocode
+\usepackage{algorithm}
+
+% change language to german
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{hyphenat}
+% ---------
+
+% for code style
+\usepackage{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+% ----------------------
+
+\usepackage{glossaries}
+
+\oddsidemargin 0pt
+\evensidemargin 0pt
+\marginparwidth 40pt
+\marginparsep 10pt
+\topmargin -20pt
+\headsep 10pt
+\textheight 8.7in
+\textwidth 6.65in
+\linespread{1.2}
+
+% for centering the title page
+\usepackage{titling}
+\renewcommand\maketitlehooka{\null\mbox{}\vfill}
+\renewcommand\maketitlehookd{\vfill\null}
+
+% usesul macros
+\newcommand{\lstin}[1]{\lstinline[language=C]{#1}}
+\newcommand{\cpl}{\textbf{C}$\;$}
+
+% for footnotes
+\renewcommand{\notesname}{Fußnoten}
+\let\footnote=\endnote
+
+% ------- glossary -------
+% to build the glossary when changed run the build make_glossaries.cmd file first
+\makeglossaries
+
+% TODO: sources for definitions
+\newglossaryentry{bm}
+{
+  name=Benchmark,
+  description={Test für die Zeitkomplexität und Speicherkomplextät von Software},
+}
+
+\newglossaryentry{dt}
+{
+  name=Datenstruktur,
+  description={Strukturen, die Daten effizient speichern und einen effizienten Zugriff auf diese erlauben \cite[S. VIII]{aad}},
+  plural={Datenstrukturen}
+}
+
+\newglossaryentry{sc}
+{
+  name=Quelltext,
+  description={Gesamtheit der Anweisungen eines Computerprogramms},
+  plural={Quelltexte}
+}
+
+\newglossaryentry{wc}
+{
+  name={Worst Case},
+  description={Konfiguration der Daten in einer Datenstruktur, bei der sie am schlechtesten arbeitet (z.B. besonders viel Zeit zur Datenverarbeitung benötigt oder besonders viel Speicher benötigt)},
+  plural={Worst Cases}
+}
+
+\newglossaryentry{gns}
+{
+  name={Generic},
+  description={TODO},
+  plural={Generics}
+}
+
+\newglossaryentry{hp}
+{
+  name={Heap},
+  description={TODO},
+  plural={Heaps}
+}
+
+\newglossaryentry{sts}
+{
+  name={Struct},
+  description={TODO},
+  plural={Structs}
+}
+
+\newglossaryentry{uns}
+{
+  name={Union},
+  description={TODO},
+  plural={Unions}
+}
+
+\newglossaryentry{mc}
+{
+  name={Macro},
+  description={TODO},
+  plural={Macros}
+}
+
+\newglossaryentry{st}
+{
+  name={Stack},
+  description={TODO},
+  plural={Stacks}
+}
+
+\newglossaryentry{sof}
+{
+  name={Stackoverflow},
+  description={TODO},
+  plural={Stackoverflows}
+}
+
+\newglossaryentry{rec}
+{
+  name={Rekursion},
+  description={Überbegriff für Programme oder Funktionen, die sich selbst aufrufen oder durch sich selbst definiert sind. \cite[S. 52]{aic} (z.B. \[
+n! := 
+  \begin{cases}
+      n \cdot (n - 1)! ,& \text{wenn} \; n \neq 0\\
+      1,              & \text{wenn} \; n = 0
+  \end{cases}, \; n \in \mathbb{N}
+\]
+)},
+  plural={Rekurionen}
+}
+
+\newglossaryentry{tv}
+{
+  name={Traversierung},
+  description={TODO},
+  plural={Traversierungen}
+}
+
+\newglossaryentry{psc}
+{
+  name={Pseudocode},
+  description={TODO},
+  plural={Pseudocodes}
+}
+
+\newglossaryentry{rcd}
+{
+  name={Rekursionstiefe},
+  description={TODO},
+}
+
+\newglossaryentry{arr}
+{
+  name={Array},
+  description={TODO},
+  plural={Arrays}
+}
+
+\newglossaryentry{wch}
+{
+  name={Worst-Case-Höhe},
+  description={TODO},
+}
+% ------- acronyms -------
+\newacronym{rbt}{RBT}{Red Black Tree}
+\newacronym{bt}{BT}{Binary Tree}
+
+
+% ------- glossary -------
+
+\title{\textbf{Seminararbeit Red-Black Trees}}
+\author{Herr Yannik Höll}
+\date{\today}
+
+\begin{document}
+
+\begin{titlingpage}
+    \maketitle
+\end{titlingpage}
+\pagebreak
+
+\tableofcontents
+\pagebreak
+
+\glsaddall
+\printglossary 
+\pagebreak
+
+\section{Einleitung}
+
+
+\bibliographystyle{alpha}
+\bibliography{references} % see references.bib for bibliography management
+
+\end{document}
+
+% for citation:
+% \cite{aad} for simple citation
+% \cite[S. 20]{aad} for citation with page number(s)
+
+% for acronyms and glossary ref:
+% https://en.wikibooks.org/wiki/LaTeX/Glossary
+% \gls{acro-name}
+
+% Listings Example:
+% \begin{lstlisting}[language=C]
+%         #include <stdio.h>
+%        
+%         int main(void)
+%         {
+%                 printf("Hello, World\n");
+%                 return EXIT_SUCCESS;
+%         }
+% \end{lstlisting}
+
+% TODO: 
+% Definitions
+% Reference for Stackoverflow recursion depth in defs and traversal
+% Pictures for tree and for tree array represantation

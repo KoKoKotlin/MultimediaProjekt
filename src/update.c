@@ -21,7 +21,6 @@ void update_gl(GLFWwindow* window)
                 (user_data->gameData.fast_drop && user_data->time_since_last_drop >= FAST_DROP_TIME)) {
                 size_t cleared_rows = drop(&user_data->gameData);
 
-                // FIXME: maybe bugged => doesn't play if 4 lines cleared
                 if (cleared_rows == 4) queue_audio_if_empty(user_data->effect_device, user_data->wav_data[2]);
                 user_data->time_since_last_drop = 0.0;
 
