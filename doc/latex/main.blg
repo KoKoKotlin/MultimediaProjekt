@@ -4,47 +4,58 @@ The top-level auxiliary file: main.aux
 Reallocating 'name_of_file' (item size: 1) to 6 items.
 The style file: alpha.bst
 Reallocating 'name_of_file' (item size: 1) to 11 items.
-I found no \citation commands---while reading file main.aux
 Database file #1: references.bib
-You've used 0 entries,
+Warning--entry type for "TetrisWiki" isn't style-file defined
+--line 41 of file references.bib
+Warning--entry type for "Tetromino" isn't style-file defined
+--line 48 of file references.bib
+Warning--entry type for "CS1" isn't style-file defined
+--line 54 of file references.bib
+Warning--entry type for "CS2" isn't style-file defined
+--line 62 of file references.bib
+Warning--to sort, need author or key in Tetromino
+Warning--to sort, need author or key in TetrisWiki
+Warning--to sort, need author or key in CS1
+Warning--to sort, need author or key in CS2
+You've used 4 entries,
             2543 wiz_defined-function locations,
-            558 strings with 4437 characters,
-and the built_in function-call counts, 24 in all, are:
-= -- 0
-> -- 0
+            573 strings with 4940 characters,
+and the built_in function-call counts, 854 in all, are:
+= -- 80
+> -- 4
 < -- 0
-+ -- 0
++ -- 1
 - -- 0
-* -- 2
-:= -- 10
-add.period$ -- 0
-call.type$ -- 0
-change.case$ -- 0
-chr.to.int$ -- 0
-cite$ -- 0
-duplicate$ -- 0
-empty$ -- 1
+* -- 42
+:= -- 96
+add.period$ -- 8
+call.type$ -- 4
+change.case$ -- 16
+chr.to.int$ -- 3
+cite$ -- 12
+duplicate$ -- 40
+empty$ -- 109
 format.name$ -- 0
-if$ -- 2
-int.to.chr$ -- 1
+if$ -- 198
+int.to.chr$ -- 2
 int.to.str$ -- 0
 missing$ -- 0
-newline$ -- 3
+newline$ -- 19
 num.names$ -- 0
-pop$ -- 0
+pop$ -- 52
 preamble$ -- 1
-purify$ -- 0
+purify$ -- 20
 quote$ -- 0
-skip$ -- 2
+skip$ -- 32
 stack$ -- 0
-substring$ -- 0
-swap$ -- 0
+substring$ -- 32
+swap$ -- 4
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 0
-warning$ -- 0
+type$ -- 32
+warning$ -- 4
 while$ -- 0
-width$ -- 0
-write$ -- 2
-(There was 1 error message)
+width$ -- 5
+write$ -- 38
+(There were 8 warnings)

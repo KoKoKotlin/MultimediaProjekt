@@ -6,6 +6,8 @@
 \usepackage{listings}
 \usepackage[margin=2cm]{geometry}
 \usepackage{endnotes}
+\usepackage{subfigure}
+\usepackage{wrapfig}
 
 % for pseudocode
 \usepackage{algorithm}
@@ -68,6 +70,7 @@
 % usesul macros
 \newcommand{\lstin}[1]{\lstinline[language=C]{#1}}
 \newcommand{\cpl}{\textbf{C}$\;$}
+\newcommand{\refabb}[1]{Abbildung \ref{#1}}
 
 % for footnotes
 \renewcommand{\notesname}{Fußnoten}
@@ -78,20 +81,22 @@
 \makeglossaries
 
 % TODO: sources for definitions
-\newglossaryentry{bm}
-{
-  name=Benchmark,
-  description={Test für die Zeitkomplexität und Speicherkomplextät von Software},
-}
-
 \newglossaryentry{opl}
 {
   name=OpenGL,
   description={TODO},
 }
-% ------- acronyms -------
-\newacronym{rbt}{RBT}{Red Black Tree}
 
+\newglossaryentry{tet}{
+  name={Tetromino},
+  description={TODO}
+}
+
+\newglossaryentry{geg}{
+  name={Gameengine},
+  description={TODO}
+}
+% ------- acronyms -------
 % ------- glossary -------
 
 \title{\textbf{Multimedia-Projektarbeit}}
@@ -108,6 +113,9 @@
 \tableofcontents
 \pagebreak
 
+\listoffigures
+\pagebreak
+
 \glsaddall
 \printglossary 
 \pagebreak
@@ -122,56 +130,251 @@ In der folgenden Dokumentation wird erläutert, wie die Implementierung des beka
 umgesetzt wurde und welche Herausforderungen gelöst werden mussten.
 
 
-\section{Theoretische Grundlagen}
-% Bibliotheken
-% Sprache
+\section{Theoretische Grundlagen} \label{tgl}
+
+\subsection{Tetris} \label{def-tet}
+Ziel des Spiels ist es, ein Spielfeld (Arena) mit \glspl{tet} gefüllt werden muss. Der Spieler sollte das möglichst kompakt machen, 
+damit volle Zeilen ohne Lücken entstehen. Die Implementierung dieses Projektes hält sich an die NES-Version von Tetris. 
+Deswegen ist das Spielfeld 20 Blöcke hoch und 10 breit (siehe \refabb{arena}). 
+
+\glspl{tet} gibt es in Tetris genau 7. Alle sind aus 4 zusammenhängenden Blöcken aufgebaut. 
+Man bezeichnet sie mit den Buchstaben, denen ihrer Form ähneln.\cite{Tetromino}
+\begin{figure}[h]
+  \centering
+  \subfigure[O]{\includegraphics[width=50px]{../images/o.png}} 
+  \subfigure[I]{\includegraphics[width=50px]{../images/i.png}}
+  \subfigure[S]{\includegraphics[width=50px]{../images/s.png}}
+  \subfigure[Z]{\includegraphics[width=50px]{../images/z.png}}
+  \subfigure[J]{\includegraphics[width=50px]{../images/j.png}}
+  \subfigure[L]{\includegraphics[width=50px]{../images/l.png}}
+  \subfigure[T]{\includegraphics[width=50px]{../images/t.png}}
+  \caption{\glspl{tet}}
+  \label{tet-abb}
+\end{figure}
+
+\begin{wrapfigure}{r}{120px}
+  \includegraphics[width=120px]{../images/arena.png}
+  \vspace{-20pt}
+  \caption{Spielfeld (Arena)}
+  \label{arena}
+\end{wrapfigure}
+
+Jedes mal wenn mindestens eine voll ist, wird diese entfernt und man erhält Punkte.
+Je mehr Zeilen man gleichzeit füllt, umso mehr Punkte erhält. Jedoch kann man maximal 4 auf einmal voll sein, weil das längste \gls{tet} 
+nur die Länge 4 hat (siehe \refabb{tet-abb}). Jedes mal, wenn 10 Zeilen entfernt wurden, erhöht sich das Level um 1.\cite{TetrisWiki}
+
+Der Spieler kontrolliert ein herunterfallendes Tetromino, welches er allerdings nur nach links oder rechts bewegen kann.
+Nach unten fällt es automatisch. Man kann den Fall beschleunigen aber nicht anhalten. 
+Der Fall ist diskret, d.h. das aktuelle \gls{tet} immer nur nach einer bestimmten Zeit einen Block nach unten fällt.
+Diese Zeit hängt vom Level ab und wird immer kürzer, umso höher es ist. Eine Begrenzung des Levels und somit der Fallgeschwindigkeit gibt es dabei nicht,
+aber irgendwann ist es für Menschen nicht mehr machbar.
+Die Objekte können auch rotiert werden, allerdings nur um 90 Grad Schritten. Somit haben die manche \glspl{tet} 4 Positionen, das O nur eine und I, S, Z nur 2.
+
+Die \glspl{tet} dürfen während sie bewegt werden, nicht mit anderen Objekten in dem Spielfeld kolliederen und sich auch nicht aus dem Grenzen bewegen.
+Wenn es eine Kollsion, nachdem das spielerkontrollierte Objekt gefallen ist, gibt, dann wird es in das Spielfeld platziert und fixiert. Es wird ein neues \gls{tet} 
+zufällig generiert, welches am oberen Rand des Spielfelds startet.
+
+Das Spiel endet, wenn ein Turm entstanden ist, der bis oben das Spielfeld füllt, sodass ein neues \gls{tet} sofort mit der Arena kollidiert.
+Nachdem man das Spiel verloren hat, muss man von vorn beginnen, das Level und die Punkte werden zurück auf 0 gesetzt.
+
+\subsection{Räumliche Transformationen}
+% räumliche Projektion, Rotation, Skalierung
+% Matritzen
+
+\subsection{HSV - Farbraum}
+% HSV - Farbraum
+
+% Farbraum
+Farbräume sind Modelle, mit denen man Farben durch Attribute definieren. 
+Beispielsweise kann man eine Farbe durch ihren Grün-, Rot- und Blauanteil beschreiben oder 
+durch die Sättigung, Helligkeit und Farbigkeit. Man kann solche Räume auch darstellen, indem man 
+die Attribute als Koordinaten auffasst und dann z.B. in einem 3 dimensionalen Koordinatensystem abbildet. 
+\cite{CS1}
+
+% HSV Farbraum
+In diesem Projekt kommt der HSV Farbraum zum Einsatz, welcher Helligkeit(V), Sättigung(S) und Farbigkeit(H).
+Die ersten beiden werden linear interpretiert und die Farbigkeit ist ein Winkel auf dem, der per Definition auf eine Farbe abgebildet wird.
+Die untere Abbildung verdeulicht diesen Zusammenhang noch einmal. 
+\cite{CS2}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=200px]{../images/hsv.png}
+  \caption{Darstellung HSV-Farbraum als Kegel}
+\end{figure}
 
 \section{Codedokumentation}
 
-\subsection{Grobstruktur}
+% Sprache (C, GLSL)
+% Bibliotheken (OPENGL, SDL2, bitmap, obj)
+
+\subsection{Implementierung} 
+
+\subsubsection{Gameengine}
+
+Das Herz des Programms ist die \gls{geg}, welche die Logik der Objekte im Spiel kontrolliert.
+Sie überprüft, ob Kollisionen stattfinden und berechnet z.B. die Punkte. 
+Außerdem sorgt unsere Implementierung für das Speichermanagment der Spielobjekte.
+Ihr gesamter Code befindet sich in \lstin{engine.c}.
+
+Alle wichtigen Informationen werden zentral im \lstin{struct GameData} gespeichert.
+
+Als erstes wird der Gamestate gespeichert, welcher den aktuellen Zustand des Spiels repräsentiert.
+Er ist als \lstin{enum GameState} definiert, welcher 3 Einträge hat. 
+\lstin{PLAYING} beschreibt den Hauptzustand, in dem der Spieler das fallende \gls{tet} bewegen kann und die Hintergrundmusik läuft.
+Der Gamestate \lstin{PAUSE} kann durch den Spieler durch Drücken der P Taste erreicht werden. 
+Darin werden alle Eingaben, die das aktuelle \gls{tet} bewegen ignoriert und die Hintergrundmusik ist stumm geschalten. Außerdem fällt kein Objekt.
+Man kann durch erneutes Drücken von P das Spiel wieder in den Zustand \lstin{PLAYING} versetzen. Das Spiel geht dort weiter, wo es pausiert wurde.
+\lstin{GAME_OVER} wird dann erreicht, wenn das Spiel verloren wurde (siehe \ref{def-tet}). 
+Nun wird nur noch eine Nachricht angezeigt, dass der Spieler verloren und wie viele Punkte er erzielen konnte. Man kann das Spiel nun mit ESC beenden oder mit R neustarten.
+Bei einem Neustart wird wieder in den \lstin{PLAYING}-Zustand übergagangen. Alle Zustandsinformationen werden resettet.
 
 \begin{lstlisting}[language=C]
 enum GameState {
-    PAUSE,      // Game paused while in menu
-    PLAYING,    // Main gamestate where the pieces are moving
-    GAME_OVER   // After losing the game, this gamestate is reached
+    PAUSE,
+    PLAYING,
+    GAME_OVER
 };
 
-struct GameData {
-    enum GameState gameState;
-
-    int* current_piece;             // current piece, no fixed size
-    int* next_piece;                // save the next piece for the display
-    int* arena;                     // width: 10, height: 20 -> 200 uints
-
-    int position_x;                 // position of the current piece inside the arena
-    int position_y;
-
-    bool fast_drop;                 // flag that determines whether the pieces move slow or fast downwards
-                                    // enabled when player presses the down button
-
-    uint32_t score;
-    uint32_t level;                 // level for piece velocity
-    uint32_t cleared_lines;
-
-    int* piece_count;               // saves the number of times the piece have shown up
-
-    double accumulated_time;        // current playing time
-
-    bool is_defeat;                 // detemins wheter the player has lost
-
-    uint32_t seed;                  // for playing a certain game
-};
-
+enum GameState gameState;
 \end{lstlisting}
+
+\refabb{state} zeigt eine Darstellung des Zustandsautomaten.
 
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.5\textwidth]{../state.png}
-  \caption{Zustandsdiagramm}
+  \caption{Zustandsautomat}
+  \label{state}
 \end{figure}
 
-\subsection{Implementierung}
+Die \glspl{tet} selbst sind als Matritzen definiert, die mithilfe vom eindimensionale Arrays dargestellt werden. Dabei stellt die 0 kein Block dar und 1-7 einen ausgefüllten Block.
+Diese Zahl ist bei jedem Block unterschiedlich, weil durch sie später die Farbe des \gls{tet} bestimmt wird. Sie wird dann als Winkel für die Farbe im HSV-Farbraum verwendet.
+
+Um dem Block an der Stelle $(x, y)$ zu erhalten, muss man diesen 2-dimensionalen Index eindeutig in einen 1-dimensionalen Arrayindex umwandeln. Dafür wurde folgende Formel verwendet:
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=200px]{../images/mem_layout.jpg}
+  \caption{Speicherlayout \gls{tet}}
+\end{figure}
+
+\begin{center}
+  \begin{math}
+    i_{array} = x + y \cdot w
+  \end{math}
+\end{center}
+
+Wobei $w$ die Breite der Matrix ist. (Die selbe Formel kann auch später für die Arena verwendet werden.)
+Dafür muss man allerdings die Breite auch kennen. Deswegen wird am Anfang jeder Tetrominomatrix die Art gespeichert. Diese wird ebenfalls durch \lstin{enum} dargestellt.
+
+\begin{lstlisting}[language=C]
+enum Piece { PIECE_O, PIECE_L, PIECE_J, PIECE_T, PIECE_I, PIECE_Z, PIECE_S };
+\end{lstlisting}
+
+\lstin{arena} ist ein Pointer auf ein Array, dass die aktuelle Arena (Spielfeld) speichert. Sie ist 200 ($20 \cdot 10$) Elemente groß.
+\begin{lstlisting}[language=C]
+int* arena;  
+\end{lstlisting}
+
+Weil das Transformieren zwischen 2D und 1D Indizes werden muss, wurde dafür Helferfunktionen definiert. Außerdem wurde noch eine Macro definiert, die direkt Indices für die Arena ausrechnen kann, ohne ihre Breit explizit anzugeben.
+
+\begin{lstlisting}[language=C]
+#define COORDS_TO_ARENA_INDEX(x, y) (coords_to_array_index((x), (y), ARENA_WIDTH))
+
+size_t coords_to_array_index(size_t x, size_t y, size_t width)
+{ return y * width + x; }
+\end{lstlisting}
+
+\begin{wrapfigure}{l}{120px}
+  \includegraphics[width=120px]{../images/position.jpg}
+  \vspace{-20pt}
+  \caption{Position in der Arena}
+  \vspace{-70pt}
+\end{wrapfigure}
+
+Diese beiden Integer speichern die aktuelle Arenaposition des \gls{tet}, dass durch den Nutzer kontrolliert wird.
+\begin{lstlisting}[language=C]
+int position_x;
+int position_y;
+\end{lstlisting}
+
+Das folgenede Listing zeigt wichtige Metadaten über das Spiel. \lstin{score} wird ausschließlich für das Nutzerinterface benötigt und speichert die Punkte, die der Spieler erzielt.
+Das \lstin{level} wird dem Spieler auch angezeigt, jedoch auch zur Berechnung der "Geschwingkeit" verwendet. 
+Zusätzlich wird noch die Anzahl der gefüllten Zeilen in \lstin{cleared_lines} gespeichert, was dann zur Berechnung des aktuellen Levels genutzt wird.
+Und \lstin{piece_count} ist ein Pointer auf ein Array, welches speichert, wie oft jedes Tetromino vorgekommen ist. Das wird rein visuell für das Nutzerinterface genutzt.
+
+\begin{lstlisting}[language=C]
+uint32_t score;
+uint32_t level;
+uint32_t cleared_lines;
+int* piece_count;
+\end{lstlisting}
+
+Die Flag \lstin{bool fast_drop} speichert, ob der Spieler gerade den Knopf gedrückt hält, damit die Fallgeschwindigkeit seht stark erhöht wird.
+Und \lstin{bool is_defeat} ist eine Flag, die im letzten Update im Zustand \lstin{PLAYING} gesetzt wird, um anzuzeigen, dass der Spieler verloren hat und der Gamestate auf \lstin{GAME_OVER} gesetzt wird.
+
+Es wird auch der \lstin{seed}, der zum initialisieren des Zufallsgenerators genutzt wurde, gespeichert. Diese wird allerdings nicht weiter im Program verwendet (siehe \ref{uif}).
+Das gleiche gilt für \lstin{accumulated_time};
+
+Nun gibt es eine Reihe an Funktionen, die es erlauben, das aktuelle \gls{tet} bzw. dessen zu manipulieren und überprüfen, dass es nicht in einen unerlaubten Zustand kommt.
+
+Dazu gehören als ersten die Funktionen, die nach Kollisionen mit den Wänden bzw. der Arena überprüfen. 
+Das wurde mit 2 Helferfunktionen implementiert, die jeweils einer der beiden Fälle übernehmen.
+Die Funktion \lstin{check_collision_arena_wall} evaluiert, ob der Spieler das aktuelle Objekt versucht aus der Arena herauszubewegen. 
+Dafür muss aufgrund der Darstellung als Array, die erste Spalte von links bzw. rechts gefunden, nicht nur nullen enthält.
+Dann wird zu \lstin{postion_x} der Index dieser Spalte hinzuaddiert und man erhält \lstin{non_zero_index_left}. Diese Zahl muss nun größer-gleich null sein, weil ansonsten die Begrenzung der Arena überschritten wurde.
+Das gleiche gilt für rechts, nur das dort überprüft wird, das \lstin{position_x} addiert mit der ersten Spalte mit einem Enitrag, der nicht null ist, kleiner als die Breite der Arena ist.
+Das untere Listing zeigt den Algorithmus beispielhaft für die Implementierung für die Kollisionabfrage mit der linken Wand. Für rechts ist so analog.
+\begin{lstlisting}[language=C]
+int size = get_piece_size(game_data->current_piece);
+int non_zero_index_left = 0;
+for (int x = 0; x < size; x++) {
+    for (int y = 0; y < size; y++) {
+        if (game_data->current_piece[coords_to_array_index(x, y, size) + 1] != 0) {
+            non_zero_index_left = x;
+            goto LOOP_END1;
+        }
+    }
+}
+LOOP_END1:;
+
+return non_zero_left_index < 0; 
+\end{lstlisting}
+
+Die Funktion gibt allerdings \lstin{true} aus, wenn es eine Kollision gab, deswegen wird auf kleiner als null überprüft.
+
+Desweitern gibt es \lstin{check_collision_arena_pieces}. Darin wird überprüft, ob das \lstin{current_piece} mit irgendeinem Objekt in der Arena kollidiert oder aus der Arena herausfällt.
+Hier wird einfach über alle Einträge \lstin{current_piece} iteriert und geschaut, ob sich an der Position, wo in \lstin{current_piece} keine Null steht auch in der Arena keine null ist. 
+Dann würde es zu einer Kollision kommen. Außerdem wird getestet, dass alle Einträge in aktuellen \gls{tet}, die eine $y$-Koordinate haben, die größer als die Höhe der Arena ist, null sind.
+Ansonsten würde es aus der Arena fallen.
+
+\begin{figure}[h]
+  \centering
+  \subfigure[Keine Wandkollisiom]{\includegraphics[height=100px]{../images/collision_wall_succ.png}}
+  \hspace{40px}
+  \subfigure[Wandkollision]{\includegraphics[height=100px]{../images/collision_wall_fail.png}}
+  \hspace{40px}
+  \subfigure[Kollision in der Arena]{\includegraphics[height=105px]{../images/collision_pieces.png}}
+  \caption{Kollisionsfälle}
+\end{figure}
+
+\subsubsection{Rendern}
+
+\subsubsection{Update}
+ 
+\subsection{Fehlerbehandlung}
+
+\subsection{Userinterface}
+
+\subsection{Nicht implementierte Features} \label{uif}
+
+% Start-Menü
+% Tutorial / Hilfe
+% Bestenlisten / Score speichern
+% Keybindings statisch
+% Farben nicht anpassen
+% Lauter/leiser/aus
+% custom seed
 
 \section{Projektdokumentation}
 
