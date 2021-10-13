@@ -1,4 +1,4 @@
-\documentclass[11pt]{article}
+   \documentclass[11pt]{article}
 \usepackage{amsmath, amssymb, amscd, amsthm, amsfonts}
 \usepackage{graphicx}
 \usepackage{hyperref}
@@ -8,6 +8,7 @@
 \usepackage{endnotes}
 \usepackage{subfigure}
 \usepackage{wrapfig}
+\usepackage{mathtools}
 
 % for pseudocode
 \usepackage{algorithm}
@@ -44,7 +45,9 @@
     showspaces=false,                
     showstringspaces=false,
     showtabs=false,                  
-    tabsize=2
+    tabsize=2,
+    language=C,
+    morekeywords={uniform, vec2, vec3}
 }
 
 \lstset{style=mystyle}
@@ -110,6 +113,15 @@
 \end{titlingpage}
 \pagebreak
 
+\vspace*{\fill}
+\begin{center}
+\textit{
+  Besondere Danksagung an 
+}  
+\end{center}
+\vspace*{\fill}
+\pagebreak
+
 \tableofcontents
 \pagebreak
 
@@ -159,7 +171,7 @@ Man bezeichnet sie mit den Buchstaben, denen ihrer Form ähneln.\cite{Tetromino}
   \label{arena}
 \end{wrapfigure}
 
-Jedes mal wenn mindestens eine voll ist, wird diese entfernt und man erhält Punkte.
+Jedes mal wenn mindestens eine Zeile voll ist, wird diese entfernt und man erhält Punkte.
 Je mehr Zeilen man gleichzeit füllt, umso mehr Punkte erhält. Jedoch kann man maximal 4 auf einmal voll sein, weil das längste \gls{tet} 
 nur die Länge 4 hat (siehe \refabb{tet-abb}). Jedes mal, wenn 10 Zeilen entfernt wurden, erhöht sich das Level um 1.\cite{TetrisWiki}
 
@@ -285,7 +297,7 @@ size_t coords_to_array_index(size_t x, size_t y, size_t width)
 { return y * width + x; }
 \end{lstlisting}
 
-\begin{wrapfigure}{l}{120px}
+\begin{wrapfigure}{l}{0px}
   \includegraphics[width=120px]{../images/position.jpg}
   \vspace{-20pt}
   \caption{Position in der Arena}
@@ -350,7 +362,7 @@ Ansonsten würde es aus der Arena fallen.
 
 \begin{figure}[h]
   \centering
-  \subfigure[Keine Wandkollisiom]{\includegraphics[height=100px]{../images/collision_wall_succ.png}}
+  \subfigure[Keine Wandkollision]{\includegraphics[height=100px]{../images/collision_wall_succ.png}}
   \hspace{40px}
   \subfigure[Wandkollision]{\includegraphics[height=100px]{../images/collision_wall_fail.png}}
   \hspace{40px}
@@ -358,13 +370,310 @@ Ansonsten würde es aus der Arena fallen.
   \caption{Kollisionsfälle}
 \end{figure}
 
+Die oben beschriebenen Helferfunktionen werden nun benötigt, wenn Objekte in der Arena bewegt werden sollen.
+Dabei gibt es die horizontale Bewegung, die nur durch den Nutzer durchgeführt werden kann und das Fallen, 
+das automatisch durch die Gameengine passiert.
+
+Für die Bewegung durch den Nutzer ist die Funktion \lstin{move} zuständig. 
+Die Funktion akzeptiert einen Pointer auf das aktuelle \lstin{struct GameData} Objekt und die Richtung, in die das aktuelle \gls{tet} bewegt werden soll.
+Dann wird die Bewegung durchgeführt, und falls eine Kollision erkannt wird, wieder rückgängig gemacht. 
+Diese Funktion wird dann durch den Eventhandler aufgerufen.
+\begin{lstlisting}
+void move(struct GameData* game_data, enum Direction dir)
+{
+    game_data->position_x += (dir == LEFT) ? -1 : 1;
+    if (check_collision_side(game_data)) game_data->position_x -= (dir == LEFT) ? -1 : 1;
+}  
+\end{lstlisting}
+
+Die Funktion, die das Fallen implementiert, heißt \lstin{drop}.
+Sie übernimmt nicht nur die Bewegung, sondern muss auch, falls eine Kollision passiert, das aktuelle \gls{tet}
+in die Arena schreiben, überprüfen, ob Zeilen gefüllt sind, die Punkte berechnen und dann gegebenenfalls ein neues \gls{tet} erstellen.
+
+Grundsätzlich wird nur die $y$-Koordinate um eins erhöht und dann für eine Kollision geprüft.
+Falls es eine gab, dann wird die $y$-Koordinate wieder dekrementiert und dann die oben beschriebenen Prozeduren durchgeführt, die alle als eigene Funktionen implementiert sind. 
+
+\begin{lstlisting}
+size_t drop(struct GameData* game_data)
+{
+    game_data->position_y++;
+    size_t rows = 0;
+
+    if (check_collision_arena_pieces(game_data)) {
+        game_data->position_y--;
+
+        write_piece_to_arena(game_data);
+        rows = check_filled_rows(game_data);
+        game_data->cleared_lines += rows;
+        spawn_new_piece(game_data);
+        level_up(game_data);
+    }
+
+    return rows;
+}
+\end{lstlisting}
+\vspace{10pt}
+
+\begin{wrapfigure}{r}{0px}
+  \includegraphics[width=220px]{../images/arena_copy.png}
+  \caption{Schematische Darstellung: Entfernen von vollen Zeilen}
+\end{wrapfigure}
+
+\lstin{write_piece_to_arena}, \lstin{spawn_new_piece} und \lstin{level_up} sind in ihrer Implementierung trivial und werden deswegen hier nicht genauer beschrieben.
+
+
+Interessanter ist hier die Funktion \lstin{check_filled_rows}, welche überprüft, ob es in der Arena volle Zeilen gibt, diese entfernt und dann die Punktzahl berechnet, welche der Spieler erhält. 
+
+Sie iteriert von unten nach oben durch alle Zeilen der \lstin{arena} und speichert diese dann in \lstin{row_buffer} zwischen.
+Danach werden die Punkte, die der Spieler erhält abhängig von der Anzahl der vollen Zeilen und dem aktuellen Level berechnet und direkt die Punktzahl in \lstin{game_data} erhöht.
+
+Danach wird eine neue Arena generiert, in die die Zeilen aus der alten Arena kopiert werden. 
+Dabei werden die Indizes beim Kopieren überprungen, die im \lstin{row_buffer}. Das hat den Effekt, 
+dass die vollen entfernt Zeilen werden und allen anderen Zeilen entsprechend nach unten bewegt werden.
+Am Ende wird der Pointer auf die Arena im \lstin{game_data} auf diese neue Arena gesetzt und der alte Speicher wird freigegeben.
+
+\vspace{10pt}
+\begin{lstlisting}
+int* new_arena = (int*)calloc(sizeof(int), ARENA_WIDTH * ARENA_HEIGHT);
+size_t current_row_index = ARENA_HEIGHT - 1;
+buffer_index = 0;
+for (int row = ARENA_HEIGHT - 1; row >= 0; row--) {
+    if (row == row_buffer[buffer_index]) {
+        buffer_index++;
+        continue;
+    }
+
+    memcpy(new_arena + ARENA_WIDTH * current_row_index, game_data->arena + ARENA_WIDTH * row, sizeof(int) * ARENA_WIDTH);
+    current_row_index--;
+}
+
+free(game_data->arena);
+game_data->arena = new_arena;
+\end{lstlisting}
+
+Und die letzte wichtige Aufgabe der Gameengine ist das Rotieren der \glspl{tet}. Das wurde durch simple Matrixoperationen implementiert.
+Um eine Matrix nach rechts zu rotieren, kann man sie transponieren und dann alle Zeilen umkeheren.
+Und um dann eine Linksrotation durchzuführen kann man auch stattdessen 3 Rechtsrotationen ausführen.
+
+
+\begin{figure}[h]
+  
+\begin{center}
+  
+$\begin{bmatrix}
+  1 & 2 & 3\\
+  4 & 5 & 6\\
+  7 & 8 & 9
+\end{bmatrix}$
+$\xRightarrow[]{\text{Transponieren}}$
+$\begin{bmatrix}
+  1 & 4 & 7\\
+  2 & 5 & 8\\
+  3 & 6 & 9
+\end{bmatrix}$
+$\xRightarrow[]{\text{Zeilen umkehren}}$
+$\begin{bmatrix}
+  7 & 4 & 1\\
+  8 & 5 & 2\\
+  9 & 6 & 3
+\end{bmatrix}$
+\end{center}
+
+\begin{center}
+  
+  $\begin{bmatrix}
+    1 & 2 & 3\\
+    4 & 5 & 6\\
+    7 & 8 & 9
+  \end{bmatrix}$
+  $\xRightarrow[]{\text{Rechtsrotation}}$
+  $\begin{bmatrix}
+    7 & 4 & 1\\
+    8 & 5 & 2\\
+    9 & 6 & 3
+  \end{bmatrix}$
+  $\xRightarrow[]{\text{Rechtsrotation}}$
+  $\begin{bmatrix}
+    9 & 8 & 7\\
+    6 & 5 & 4\\
+    3 & 2 & 1
+  \end{bmatrix}$
+  $\xRightarrow[]{\text{Rechtsrotation}}$
+  $\begin{bmatrix}
+    3 & 6 & 9\\
+    2 & 5 & 8\\
+    1 & 4 & 7
+  \end{bmatrix}$
+\end{center}
+
+\caption{Beispiel: Matrixrotationen}
+
+\end{figure}
+
+Um die Rechtsrotation effizienter zu Implementieren, kann man das Transponieren und Zeilen umkehren in einem Schritt erledigen.
+
+Transponieren $t: a_{i,j} \mapsto a_{j,i}$, Zeilen umkehren $r: a_{ij} \mapsto a_{n-i,j}$ und damit $r \circ t: a_{i,j} \mapsto a_{n-j,i}$ ($n$ ist die Breite der Matrix).
+Die obere Formel für $r \circ t$ wurde dann so im Code verwendet.
+Die rotierte Matrix wird dann in einen Buffer gespeichert, der dann am Ende mit der Eingabematrix aus.
+\begin{lstlisting}
+for (size_t j = 0; j < size; j++) {
+  for (size_t i = 0; i < size; i++) {
+      size_t from_index = coords_to_array_index(i, j, size) + 1;
+      size_t to_index   = coords_to_array_index(size - 1 -j, i, size) + 1;
+      buffer[to_index] = (*piece)[from_index];
+  }
+}
+\end{lstlisting}
+
 \subsubsection{Rendern}
 
+Das Rendern des Spiels auf dem Bildschirm wurde mithilfe von OpenGL implementiert. Das Fenster wird durch GLFW erzeugt.
+
+Grundsätzlich gibt es 2 verschiedene Arten von Objekten, die gerendert werden müssen. Einmal die 3-dimensionalen Models wie z.B. die Begrenzung der Arena oder die \glspl{tet}. 
+Andererseits die 2-dimensionalen Grafiken und die Texte.
+
+Für das Rendern der Texte und Bilder wurde ein Model erstellt, welches eine Ebene darstellt. Diese wird dann mithilfe von Shadern im Raum platziert und das Bild wird als Textur verwendet.
+Die Position des Bildes wird dann als Uniform in den Shadern gegeben. Zusätzlich kann man auch noch die Größe des Bildes angeben.
+Der Fragmentshader rendert dann einfach die Texture auf die Ebene.
+Beim Shader für die Schrift kann man allerdings nur die Position angeben.
+
+\begin{lstlisting}
+  uniform vec3 pos;
+  uniform vec2 scale;
+\end{lstlisting}
+  
+Dann wurden Helferfunktionen definiert, welche die Shader binden und die Funktionsaufrufe von OpenGL durchführen.
+Ihre Signaturen kann man im unteren Listing sehen.
+
+\begin{lstlisting}
+  void draw_image(const user_data_t* user_data, GLint texunit, GLfloat* pos, GLfloat* scale);
+  void draw_string(const user_data_t* user_data, const char* string, double pos_x, double pos_y);
+\end{lstlisting}
+
+Auf die Funktion \lstin{draw_string} sollte dabei nochmal etwas genauer eingegangen werden.
+Sie kann nur Zahlen rendern, weil alle anderen Schriften durch Texturen dargestellt wurden.
+Das geht bei den Zahlen leider nicht, weil diese im Userinterface veränderlich sind, 
+weil sich z.B. die Punktzahl oder die Anzahl der gefüllten Zeilen während des Spiels erhöhen.
+
+Das Rendern von Texten wurde nun so implementiert, dass für jede Ziffer von null bis neun eine Textur erstellt wurde.
+In der Funktion \lstin{draw_string} wird dann über die Ziffern der zu zeichnenden Zahl iteriert 
+und es werden nebeneinander die Bilder der entsprechenden Ziffern gerendert. 
+Das kommt dadurch Zustande, dass zur $x$-Koordinate der Startposition ein Zeichenabstand addiert wird.  
+Dabei ist der Zeichenabstand und die Schriftgröße konstant.
+Man muss nur die richtige Textur vor dem Aufruf von \lstin{glDrawArrays} auswählen.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=400px]{../images/font.jpg}
+  \caption{Render einer 6 stelligen Zahl (Schema)}
+\end{figure}
+
+\begin{lstlisting}
+  double offset = 0.12;
+  for (size_t i = 0; i < strlen(string); i++) {
+      GLfloat pos[] = { pos_x + offset * i, pos_y };
+      glUseProgram(user_data->shader_program_font);
+
+      glUniform1i(user_data->digit_tex_uniform, (GLint)(string[i] - '0' + 1));
+      glUniform2fv(user_data->digit_pos_uniform, 1, pos);
+
+      glBindVertexArray(user_data->vao[2]);
+      glBindBuffer(GL_ARRAY_BUFFER, user_data->vbo[2]);
+      glDrawArrays(GL_TRIANGLES, 0, user_data->vertex_data_count[2]);
+  }
+\end{lstlisting}
+
+Dann gibt es eine Reihe von Shadern, die die statischen Modelle rendern können.
+Sie unterscheiden sich hauptächlich dadurch, 
+dass die Position der verschiedenen Objekte in ihnen festgelegt ist. 
+Objekte die auf diese Weise gezeichnet werden sind die Abgrenzung der Arena, die Modelle der \glspl{tet} im Userinterface.
+Der Shader, der der die \glspl{tet} rendert, akzeptiert dabei wieder eine Position, weil sie sich in verschiedenen Positionen im Raum befinden.
+
+
+
+$\begin{bmatrix}
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 4 & 0\\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 4 & 4 & 4\\
+  0 & 0 & 1 & 1 & 2 & 2 & 2 & 2 & 1 & 1\\
+  0 & 0 & 1 & 1 & 2 & 2 & 2 & 2 & 1 & 1\\
+  0 & 1 & 1 & 2 & 2 & 2 & 2 & 3 & 3 & 3\\
+  0 & 1 & 1 & 2 & 1 & 1 & 2 & 6 & 6 & 3
+\end{bmatrix}$
+$\Rightarrow$
+$\begin{bmatrix}
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 4 & 0\\
+  0 & 0 & 0 & 0 & 0 & 0 & 0 & 4 & 4 & 4\\
+  0 & 0 & 1 & 1 & 2 & 2 & 2 & 2 & 1 & 1\\
+  0 & 0 & 1 & 1 & 2 & 2 & 2 & 2 & 1 & 1\\
+  0 & 1 & 1 & 2 & 2 & 2 & 2 & 3 & 3 & 3\\
+  0 & 1 & 1 & 2 & 1 & 1 & 2 & 6 & 6 & 3
+\end{bmatrix}$
+$\Rightarrow$
+
+
+
 \subsubsection{Update}
- 
+
+
+
+\subsubsection{Audio}
+
+Für das Abspielen der Hintergrundmusik und den Soundeffekten wurde die Bibliothek SDL2 verwendet.
+Damit die Musik unabhängig von den Effekten ist, wurden zwei verschiedene \lstin{audio_devices} geöffnet, die man sich als Audiokanäle vorstellen kann. 
+
+Man kann in diese Kanäle Audiodaten einreihen, weil sie wie eine Warteschlange funktioniert, die die Audiosamples nacheinander abspielt.
+
+Die Musik und Soundeffekte sind in WAV-Datein gespeichert, die durch SDL geladen werden und deren Daten dann im \lstin{struct WavData} gespeichert werden.
+\begin{lstlisting}
+struct WavData {
+    SDL_AudioSpec wav_spec;
+    Uint32 wav_length;
+    Uint8* wav_buffer;
+};
+\end{lstlisting}
+
+Zum Einreihen in die Audiokanäle wurden 2 Helferfunktionen implementiert. \lstin{queue_audio} fügt die Samples einfach in die Warteschlange ein, ohne zu überprüfen, ob sie leer ist.
+Und die Funktion \lstin{queue_audio_if_empty} überprüft erst, ob die Warteschlange bereits ist und ruft dann \lstin{queue_audio} auf.
+
+Das Abspielen der Hintergrundmusik wurde dann so implementiert, dass einfach nach jedem Update \lstin{queue_audio_if_empty} aufgerufen wird, 
+sodass die Musik wiederholt, falls das Lied vorbei ist.
+
+Beim Abspielen von Soundeffekten wird ebenfalls diese Funktion aufgerufen, sodass Soundeffekte verworfen werden, falls sie gleichzeitig abgespielt werden sollen.
+
 \subsection{Fehlerbehandlung}
 
 \subsection{Userinterface}
+% audio wann
 
 \subsection{Nicht implementierte Features} \label{uif}
 
@@ -385,6 +694,12 @@ Oben GL
 \subsection{Arbeitsaufteilung}
 
 \section{Benutzerhandbuch}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=400px]{../images/keyboard.jpg}
+  \caption{Tastaturlayout}
+\end{figure}
 
 \pagebreak
 \bibliographystyle{alpha}
