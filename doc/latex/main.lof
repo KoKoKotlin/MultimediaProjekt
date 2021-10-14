@@ -8,16 +8,16 @@
 \contentsline {subfigure}{\numberline {(f)}{\ignorespaces {L}}}{6}{figure.1}%
 \contentsline {subfigure}{\numberline {(g)}{\ignorespaces {T}}}{6}{figure.1}%
 \contentsline {figure}{\numberline {2}{\ignorespaces Spielfeld (Arena)}}{6}{figure.2}%
-\contentsline {figure}{\numberline {3}{\ignorespaces Darstellung HSV-Farbraum als Kegel}}{7}{figure.3}%
-\contentsline {figure}{\numberline {4}{\ignorespaces Zustandsautomat}}{9}{figure.4}%
+\contentsline {figure}{\numberline {3}{\ignorespaces Darstellung HSV-Farbraum als Kegel, \cite {picWiki}}}{7}{figure.3}%
+\contentsline {figure}{\numberline {4}{\ignorespaces Zustandsautomat}}{8}{figure.4}%
 \contentsline {figure}{\numberline {5}{\ignorespaces Speicherlayout \gls {tet}}}{9}{figure.5}%
-\contentsline {figure}{\numberline {6}{\ignorespaces Position in der Arena}}{9}{figure.6}%
+\contentsline {figure}{\numberline {6}{\ignorespaces Position in der Arena}}{10}{figure.6}%
 \contentsline {figure}{\numberline {7}{\ignorespaces Kollisionsfälle}}{11}{figure.7}%
 \contentsline {subfigure}{\numberline {(a)}{\ignorespaces {Keine Wandkollision}}}{11}{figure.7}%
 \contentsline {subfigure}{\numberline {(b)}{\ignorespaces {Wandkollision}}}{11}{figure.7}%
 \contentsline {subfigure}{\numberline {(c)}{\ignorespaces {Kollision in der Arena}}}{11}{figure.7}%
 \contentsline {figure}{\numberline {8}{\ignorespaces Schematische Darstellung: Entfernen von vollen Zeilen}}{12}{figure.8}%
-\contentsline {figure}{\numberline {9}{\ignorespaces Beispiel: Matrixrotationen}}{12}{figure.9}%
+\contentsline {figure}{\numberline {9}{\ignorespaces Beispiel: Matrixrotationen}}{13}{figure.9}%
 \contentsline {figure}{\numberline {10}{\ignorespaces Rendern einer 6 stelligen Zahl (Schema)}}{14}{figure.10}%
 \contentsline {figure}{\numberline {11}{\ignorespaces Renderprozess der Arena}}{15}{figure.11}%
 \contentsline {figure}{\numberline {12}{\ignorespaces Level-Geschwingkeits-Funktion}}{16}{figure.12}%

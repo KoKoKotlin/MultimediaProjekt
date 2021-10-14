@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (MiKTeX 21.8) (preloaded format=pdflatex 2021.10.8)  14 OCT 2021 15:16
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (MiKTeX 21.8) (preloaded format=pdflatex 2021.10.8)  14 OCT 2021 15:46
 entering extended mode
 **c:/Users/labru/Desktop/MultimediaProjekt/doc/latex/main.tex
 (c:/Users/labru/Desktop/MultimediaProjekt/doc/latex/main.tex
@@ -335,11 +335,34 @@ LaTeX Info: Thecontrolsequence`\]'isalreadyrobust on input line 130.
 \l_MT_below_shortintertext_sep=\dimen182
 \xmathstrut@box=\box55
 \xmathstrut@dim=\dimen183
+) (C:\Users\labru\AppData\Local\Programs\MiKTeX\tex/latex/blindtext\blindtext.sty
+Package: blindtext 2012/01/06 V2.0 blindtext-Package
+ (C:\Users\labru\AppData\Local\Programs\MiKTeX\tex/latex/tools\xspace.sty
+Package: xspace 2014/10/28 v1.13 Space after command names (DPC,MH)
+)
+\c@blindtext=\count301
+\c@Blindtext=\count302
+\c@blind@countparstart=\count303
+\blind@countxx=\count304
+\blindtext@numBlindtext=\count305
+\blind@countyy=\count306
+\c@blindlist=\count307
+\c@blindlistlevel=\count308
+\c@blindlist@level=\count309
+\blind@listitem=\count310
+\c@blind@listcount=\count311
+\c@blind@levelcount=\count312
+\blind@mathformula=\count313
+\blind@Mathformula=\count314
+\c@blind@randomcount=\count315
+\c@blind@randommax=\count316
+\c@blind@pangramcount=\count317
+\c@blind@pangrammax=\count318
 ) (C:\Users\labru\AppData\Local\Programs\MiKTeX\tex/latex/algorithms\algorithm.sty
 Package: algorithm 2009/08/24 v0.1 Document Style `algorithm' - floating environment
  (C:\Users\labru\AppData\Local\Programs\MiKTeX\tex/latex/float\float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count301
+\c@float@type=\count319
 \float@exts=\toks33
 \float@box=\box56
 \@float@everytoks=\toks34
@@ -348,22 +371,22 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 Package: ifthen 2020/11/24 v1.1c Standard LaTeX ifthen package (DPC)
 )
 \@float@every@algorithm=\toks35
-\c@algorithm=\count302
+\c@algorithm=\count320
 ) (C:\Users\labru\AppData\Local\Programs\MiKTeX\tex/latex/algorithmicx\algpseudocode.sty
 Package: algpseudocode 
  (C:\Users\labru\AppData\Local\Programs\MiKTeX\tex/latex/algorithmicx\algorithmicx.sty
 Package: algorithmicx 2005/04/27 v1.2 Algorithmicx
 
 Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
-\c@ALG@line=\count303
-\c@ALG@rem=\count304
-\c@ALG@nested=\count305
+\c@ALG@line=\count321
+\c@ALG@rem=\count322
+\c@ALG@nested=\count323
 \ALG@tlm=\skip66
 \ALG@thistlm=\skip67
-\c@ALG@Lnr=\count306
-\c@ALG@blocknr=\count307
-\c@ALG@storecount=\count308
-\c@ALG@tmpcounter=\count309
+\c@ALG@Lnr=\count324
+\c@ALG@blocknr=\count325
+\c@ALG@storecount=\count326
+\c@ALG@tmpcounter=\count327
 \ALG@tmplength=\skip68
 )
 Document Style - pseudocode environments for use with the `algorithmicx' style
@@ -377,13 +400,13 @@ Package: fontenc 2021/04/29 v2.0v Standard LaTeX package
 Package: babel 2021/07/22 3.63 The Babel package
  (C:\Users\labru\AppData\Local\Programs\MiKTeX\tex/generic/babel\babel.def
 File: babel.def 2021/07/22 3.63 Babel common definitions
-\babel@savecnt=\count310
+\babel@savecnt=\count328
 \U@D=\dimen184
 \l@unhyphenated=\language79
  (C:\Users\labru\AppData\Local\Programs\MiKTeX\tex/generic/babel\txtbabel.def)
 \bbl@readstream=\read2
 )
-\bbl@dirlevel=\count311
+\bbl@dirlevel=\count329
 
 *************************************
 * Local config file bblopts.cfg used
@@ -426,13 +449,13 @@ Package: xkeyval 2020/11/20 v2.8 package option processing (HA)
 \XKV@toks=\toks38
 \XKV@tempa@toks=\toks39
 )
-\XKV@depth=\count312
+\XKV@depth=\count330
 File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
 )) (C:\Users\labru\AppData\Local\Programs\MiKTeX\tex/latex/mfirstuc\mfirstuc.sty
 Package: mfirstuc 2017/11/14 v2.06 (NLCT)
  (C:\Users\labru\AppData\Local\Programs\MiKTeX\tex/latex/etoolbox\etoolbox.sty
 Package: etoolbox 2020/10/05 v2.5k e-TeX tools for LaTeX (JAW)
-\etb@tempcnta=\count313
+\etb@tempcnta=\count331
 )
 \@glsmfirst=\toks40
 \@glsmrest=\toks41
@@ -444,25 +467,25 @@ Package: xfor 2009/02/05 v1.05 (NLCT)
 Package: datatool-base 2019/09/27 v2.32 (NLCT)
  (C:\Users\labru\AppData\Local\Programs\MiKTeX\tex/latex/substr\substr.sty
 Package: substr 2009/10/20 v1.2 Handle substrings
-\c@su@anzahl=\count314
+\c@su@anzahl=\count332
 ) (C:\Users\labru\AppData\Local\Programs\MiKTeX\tex/latex/datatool\datatool-fp.sty
 Package: datatool-fp 2019/09/27 v2.32 (NLCT)
  (C:\Users\labru\AppData\Local\Programs\MiKTeX\tex/latex/fp\fp.sty
 Package: fp 1995/04/02
  `Fixed Point Package', Version 0.8, April 2, 1995 (C) Michael Mehlich (C:\Users\labru\AppData\Local\Programs\MiKTeX\tex/latex/fp\defpattern.sty
 Package: defpattern 1994/10/12
-\actioncount=\count315
+\actioncount=\count333
 ) (C:\Users\labru\AppData\Local\Programs\MiKTeX\tex/latex/fp\fp-basic.sty
 Package: fp-basic 1996/05/13
-\FP@xs=\count316
-\FP@xia=\count317
-\FP@xib=\count318
-\FP@xfa=\count319
-\FP@xfb=\count320
-\FP@rega=\count321
-\FP@regb=\count322
-\FP@regs=\count323
-\FP@times=\count324
+\FP@xs=\count334
+\FP@xia=\count335
+\FP@xib=\count336
+\FP@xfa=\count337
+\FP@xfb=\count338
+\FP@rega=\count339
+\FP@regb=\count340
+\FP@regs=\count341
+\FP@times=\count342
 ) (C:\Users\labru\AppData\Local\Programs\MiKTeX\tex/latex/fp\fp-addons.sty
 Package: fp-addons 1995/03/15
 ) (C:\Users\labru\AppData\Local\Programs\MiKTeX\tex/latex/fp\fp-snap.sty
@@ -475,7 +498,7 @@ Package: fp-trigo 1995/04/14
 Package: fp-pas 1994/08/29
 ) (C:\Users\labru\AppData\Local\Programs\MiKTeX\tex/latex/fp\fp-random.sty
 Package: fp-random 1995/02/23
-\FPseed=\count325
+\FPseed=\count343
 ) (C:\Users\labru\AppData\Local\Programs\MiKTeX\tex/latex/fp\fp-eqn.sty
 Package: fp-eqn 1995/04/03
 ) (C:\Users\labru\AppData\Local\Programs\MiKTeX\tex/latex/fp\fp-upn.sty
@@ -484,14 +507,14 @@ Package: fp-upn 1996/10/21
 Package: fp-eval 1995/04/03
 )))
 \@dtl@toks=\toks42
-\@dtl@tmpcount=\count326
+\@dtl@tmpcount=\count344
 \dtl@tmplength=\skip69
-\dtl@sortresult=\count327
-\@dtl@numgrpsepcount=\count328
-\@dtl@datatype=\count329
-\dtl@codeA=\count330
-\dtl@codeB=\count331
-\@dtl@foreach@level=\count332
+\dtl@sortresult=\count345
+\@dtl@numgrpsepcount=\count346
+\@dtl@datatype=\count347
+\dtl@codeA=\count348
+\dtl@codeB=\count349
+\@dtl@foreach@level=\count350
 ) (C:\Users\labru\AppData\Local\Programs\MiKTeX\tex/latex/glossaries/base\glossaries-compatible-307.sty
 Package: glossaries-compatible-307 2021/09/20 v4.47 (NLCT)
 ) (C:\Users\labru\AppData\Local\Programs\MiKTeX\tex/latex/tracklang\tracklang.sty
@@ -501,7 +524,7 @@ Package: translator 2021-05-31 v1.12d Easy translation of strings in LaTeX
 ) (C:\Users\labru\AppData\Local\Programs\MiKTeX\tex/latex/glossaries-german\glossaries-german.ldf
 File: glossaries-german.ldf 2014/11/23 v1.0
 )
-\gls@level=\count333
+\gls@level=\count351
 \@gls@tmpb=\toks43
 \gls@tmplen=\skip70
 \glskeylisttok=\toks44
@@ -521,17 +544,17 @@ Package: longtable 2021-05-07 v4.16 Multi-page Table package (DPC)
 \LTright=\skip73
 \LTpre=\skip74
 \LTpost=\skip75
-\LTchunksize=\count334
+\LTchunksize=\count352
 \LTcapwidth=\dimen185
 \LT@head=\box58
 \LT@firsthead=\box59
 \LT@foot=\box60
 \LT@lastfoot=\box61
 \LT@gbox=\box62
-\LT@cols=\count335
-\LT@rows=\count336
-\c@LT@tables=\count337
-\c@LT@chunks=\count338
+\LT@cols=\count353
+\LT@rows=\count354
+\c@LT@tables=\count355
+\c@LT@chunks=\count356
 \LT@p@ftn=\toks48
 )
 \glsdescwidth=\skip76
@@ -540,7 +563,7 @@ Package: longtable 2021-05-07 v4.16 Multi-page Table package (DPC)
 Package: glossary-super 2021/09/20 v4.47 (NLCT)
  (C:\Users\labru\AppData\Local\Programs\MiKTeX\tex/latex/supertabular\supertabular.sty
 Package: supertabular 2020/02/02 v4.1g the supertabular environment
-\c@tracingst=\count339
+\c@tracingst=\count357
 \ST@wd=\dimen186
 \ST@rightskip=\skip78
 \ST@leftskip=\skip79
@@ -568,44 +591,44 @@ Package: titling 2009/09/04 v2.1d maketitle typesetting
 \glo@main@file=\write5
 \openout5 = `main.glo'.
 
-Package glossaries Info: Writing glossary file main.glo on input line 84.
+Package glossaries Info: Writing glossary file main.glo on input line 85.
  (C:\Users\labru\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pdftex.def
 File: l3backend-pdftex.def 2021-08-04 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count340
+\l__color_backend_stack_int=\count358
 \l__pdf_internal_box=\box64
 ) (main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 109.
-LaTeX Font Info:    ... okay on input line 109.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 109.
-LaTeX Font Info:    ... okay on input line 109.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 109.
-LaTeX Font Info:    ... okay on input line 109.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 109.
-LaTeX Font Info:    ... okay on input line 109.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 109.
-LaTeX Font Info:    ... okay on input line 109.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 109.
-LaTeX Font Info:    ... okay on input line 109.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 109.
-LaTeX Font Info:    ... okay on input line 109.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 109.
-LaTeX Font Info:    ... okay on input line 109.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 109.
-LaTeX Font Info:    ... okay on input line 109.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 110.
+LaTeX Font Info:    ... okay on input line 110.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 110.
+LaTeX Font Info:    ... okay on input line 110.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 110.
+LaTeX Font Info:    ... okay on input line 110.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 110.
+LaTeX Font Info:    ... okay on input line 110.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 110.
+LaTeX Font Info:    ... okay on input line 110.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 110.
+LaTeX Font Info:    ... okay on input line 110.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 110.
+LaTeX Font Info:    ... okay on input line 110.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 110.
+LaTeX Font Info:    ... okay on input line 110.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 110.
+LaTeX Font Info:    ... okay on input line 110.
  (C:\Users\labru\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count341
+\scratchcounter=\count359
 \scratchdimen=\dimen196
 \scratchbox=\box65
-\nofMPsegments=\count342
-\nofMParguments=\count343
+\nofMPsegments=\count360
+\nofMParguments=\count361
 \everyMPshowfont=\toks49
-\MPscratchCnt=\count344
+\MPscratchCnt=\count362
 \MPscratchDim=\dimen197
-\MPnumerator=\count345
-\makeMPintoPDFobject=\count346
+\MPnumerator=\count363
+\makeMPintoPDFobject=\count364
 \everyMPtoPDFconversion=\toks50
 ) (C:\Users\labru\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
@@ -613,7 +636,7 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 48
  (C:\Users\labru\AppData\Local\Programs\MiKTeX\tex/latex/00miktex\epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 ))
-Package hyperref Info: Link coloring OFF on input line 109.
+Package hyperref Info: Link coloring OFF on input line 110.
  (C:\Users\labru\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\nameref.sty
 Package: nameref 2021-04-02 v2.47 Cross-referencing by name of section
  (C:\Users\labru\AppData\Local\Programs\MiKTeX\tex/latex/refcount\refcount.sty
@@ -621,16 +644,16 @@ Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
 ) (C:\Users\labru\AppData\Local\Programs\MiKTeX\tex/generic/gettitlestring\gettitlestring.sty
 Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
-\c@section@level=\count347
+\c@section@level=\count365
 )
-LaTeX Info: Redefining \ref on input line 109.
-LaTeX Info: Redefining \pageref on input line 109.
-LaTeX Info: Redefining \nameref on input line 109.
+LaTeX Info: Redefining \ref on input line 110.
+LaTeX Info: Redefining \pageref on input line 110.
+LaTeX Info: Redefining \nameref on input line 110.
  (main.out) (main.out)
 \@outlinefile=\write6
 \openout6 = `main.out'.
 
-\c@lstlisting=\count348
+\c@lstlisting=\count366
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -666,11 +689,11 @@ LaTeX Info: Redefining \nameref on input line 109.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-LaTeX Font Info:    Trying to load font information for U+msa on input line 112.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 113.
 (C:\Users\labru\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 112.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 113.
  (C:\Users\labru\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [1
@@ -680,7 +703,7 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 {C:/Users/labru/AppData/Local/MiKTeX/pdftex/config/pdftex.map}]pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.124 
+l.125 
        [1] (main.toc)
 \tf@toc=\write7
 \openout7 = `main.toc'.
@@ -692,233 +715,108 @@ l.124
  [3]
 No file main.gls.
 [4] [5]
-<../images/o.png, id=165, 399.74344pt x 402.75468pt>
+<../images/o.png, id=167, 399.74344pt x 402.75468pt>
 File: ../images/o.png Graphic file (type png)
 <use ../images/o.png>
-Package pdftex.def Info: ../images/o.png  used on input line 157.
+Package pdftex.def Info: ../images/o.png  used on input line 158.
 (pdftex.def)             Requested size: 50.18768pt x 50.56544pt.
-<../images/i.png, id=167, 405.76593pt x 404.26031pt>
+<../images/i.png, id=169, 405.76593pt x 404.26031pt>
 File: ../images/i.png Graphic file (type png)
 <use ../images/i.png>
-Package pdftex.def Info: ../images/i.png  used on input line 158.
+Package pdftex.def Info: ../images/i.png  used on input line 159.
 (pdftex.def)             Requested size: 50.18768pt x 49.99574pt.
-<../images/s.png, id=168, 400.49625pt x 402.00188pt>
+<../images/s.png, id=170, 400.49625pt x 402.00188pt>
 File: ../images/s.png Graphic file (type png)
 <use ../images/s.png>
-Package pdftex.def Info: ../images/s.png  used on input line 159.
+Package pdftex.def Info: ../images/s.png  used on input line 160.
 (pdftex.def)             Requested size: 50.18768pt x 50.37279pt.
-<../images/z.png, id=169, 403.5075pt x 402.75468pt>
+<../images/z.png, id=171, 403.5075pt x 402.75468pt>
 File: ../images/z.png Graphic file (type png)
 <use ../images/z.png>
-Package pdftex.def Info: ../images/z.png  used on input line 160.
+Package pdftex.def Info: ../images/z.png  used on input line 161.
 (pdftex.def)             Requested size: 50.18768pt x 50.09224pt.
-<../images/j.png, id=170, 401.24907pt x 401.24907pt>
+<../images/j.png, id=172, 401.24907pt x 401.24907pt>
 File: ../images/j.png Graphic file (type png)
 <use ../images/j.png>
-Package pdftex.def Info: ../images/j.png  used on input line 161.
+Package pdftex.def Info: ../images/j.png  used on input line 162.
 (pdftex.def)             Requested size: 50.18768pt x 50.18661pt.
-<../images/l.png, id=171, 399.74344pt x 402.00188pt>
+<../images/l.png, id=173, 399.74344pt x 402.00188pt>
 File: ../images/l.png Graphic file (type png)
 <use ../images/l.png>
-Package pdftex.def Info: ../images/l.png  used on input line 162.
+Package pdftex.def Info: ../images/l.png  used on input line 163.
 (pdftex.def)             Requested size: 50.18768pt x 50.47093pt.
-<../images/t.png, id=172, 401.24907pt x 402.75468pt>
+<../images/t.png, id=174, 401.24907pt x 402.75468pt>
 File: ../images/t.png Graphic file (type png)
 <use ../images/t.png>
-Package pdftex.def Info: ../images/t.png  used on input line 163.
+Package pdftex.def Info: ../images/t.png  used on input line 164.
 (pdftex.def)             Requested size: 50.18768pt x 50.37494pt.
-<../images/arena.png, id=174, 281.853pt x 468.5505pt>
+<../images/arena.png, id=176, 281.853pt x 468.5505pt>
 File: ../images/arena.png Graphic file (type png)
 <use ../images/arena.png>
-Package pdftex.def Info: ../images/arena.png  used on input line 169.
+Package pdftex.def Info: ../images/arena.png  used on input line 170.
 (pdftex.def)             Requested size: 120.45044pt x 200.23592pt.
 
-Underfull \hbox (badness 6461) in paragraph at lines 171--171
+Underfull \hbox (badness 6461) in paragraph at lines 172--172
 []\T1/cmr/m/n/10.95 Abbildung 2: []Spielfeld
  []
 
 [6pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.206 
+l.207 
       pdfTeX warning (ext4): destination with the same identifier (name{figure.2}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.206 
+l.207 
        <../images/o.png> <../images/i.png> <../images/s.png> <../images/z.png> <../images/j.png> <../images/l.png> <../images/t.png> <../images/arena.png>]
-<../images/hsv.png, id=209, 331.2375pt x 264.99pt>
+<../images/hsv.png, id=211, 331.2375pt x 264.99pt>
 File: ../images/hsv.png Graphic file (type png)
 <use ../images/hsv.png>
-Package pdftex.def Info: ../images/hsv.png  used on input line 214.
+Package pdftex.def Info: ../images/hsv.png  used on input line 215.
 (pdftex.def)             Requested size: 200.75073pt x 160.60045pt.
  [7pdfTeX warning (ext4): destination with the same identifier (name{figure.3}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.219 
+l.220 
        <../images/hsv.png>]
-LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 232.
+LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 233.
  (C:\Users\labru\AppData\Local\Programs\MiKTeX\tex/latex/base\t1cmtt.fd
 File: t1cmtt.fd 2019/12/16 v2.5j Standard LaTeX font definitions
 )
-<../state.png, id=222, 468.75125pt x 452.69125pt>
+<../state.png, id=225, 468.75125pt x 452.69125pt>
 File: ../state.png Graphic file (type png)
 <use ../state.png>
-Package pdftex.def Info: ../state.png  used on input line 260.
-(pdftex.def)             Requested size: 240.29752pt x 232.06447pt.
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-<../images/mem_layout.jpg, id=225, 525.76425pt x 296.307pt>
+Package pdftex.def Info: ../state.png  used on input line 261.
+(pdftex.def)             Requested size: 200.75073pt x 193.86598pt.
+ [8pdfTeX warning (ext4): destination with the same identifier (name{figure.4}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.268 
+       <../state.png (PNG copy)>]
+<../images/mem_layout.jpg, id=243, 525.76425pt x 296.307pt>
 File: ../images/mem_layout.jpg Graphic file (type jpg)
 <use ../images/mem_layout.jpg>
-Package pdftex.def Info: ../images/mem_layout.jpg  used on input line 272.
+Package pdftex.def Info: ../images/mem_layout.jpg  used on input line 273.
 (pdftex.def)             Requested size: 200.75073pt x 113.14038pt.
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[8]
-<../images/position.jpg, id=250, 295.1025pt x 579.96675pt>
+ [9pdfTeX warning (ext4): destination with the same identifier (name{figure.5}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.321 \end{lstlisting}
+                       <../images/mem_layout.jpg>]
+<../images/position.jpg, id=267, 295.1025pt x 579.96675pt>
 File: ../images/position.jpg Graphic file (type jpg)
 <use ../images/position.jpg>
-Package pdftex.def Info: ../images/position.jpg  used on input line 304.
-(pdftex.def)             Requested size: 120.45044pt x 236.7171pt.
+Package pdftex.def Info: ../images/position.jpg  used on input line 324.
+(pdftex.def)             Requested size: 100.37537pt x 197.26573pt.
 
+Underfull \hbox (badness 10000) in paragraph at lines 325--325
+[]\T1/cmr/m/n/10.95 Abbildung 6:
+ []
 
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 312.
 
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 312.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 312.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 312.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 312.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 313.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 313.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 313.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 313.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 313.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 314.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 316.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 316.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 317.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 317.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 318.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 318.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 319.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 319.
-
-[9pdfTeX warning (ext4): destination with the same identifier (name{figure.4}) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.320 
-      pdfTeX warning (ext4): destination with the same identifier (name{figure.5}) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.320 
-      pdfTeX warning (ext4): destination with the same identifier (name{figure.6}) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.320 
-       <../state.png (PNG copy)> <../images/mem_layout.jpg> <../images/position.jpg>]
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 322.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 322.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 322.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 322.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 322.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 323.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 323.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 323.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 323.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 323.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 324.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 324.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 324.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 324.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 324.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 325.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 325.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 325.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 325.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 325.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 325.
-
-
-Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 326.
+Underfull \hbox (badness 10000) in paragraph at lines 325--325
+[]\T1/cmr/m/n/10.95 Position in der
+ []
 
 
 Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 328.
@@ -956,35 +854,72 @@ Package wrapfig Warning: wrapfigure used inside a conflicting environment on inp
 
 Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 329.
 
-<../images/collision_wall_succ.png, id=268, 171.039pt x 186.09525pt>
+
+Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 331.
+
+
+Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 331.
+
+
+Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 332.
+
+
+Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 332.
+
+
+Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 338.
+
+
+Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 338.
+
+
+Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 340.
+
+
+Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 340.
+
+
+Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 340.
+
+
+Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 340.
+
+
+Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 341.
+
+
+Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 341.
+
+<../images/collision_wall_succ.png, id=271, 171.039pt x 186.09525pt>
 File: ../images/collision_wall_succ.png Graphic file (type png)
 <use ../images/collision_wall_succ.png>
 Package pdftex.def Info: ../images/collision_wall_succ.png  used on input line 368.
 (pdftex.def)             Requested size: 92.25267pt x 100.37537pt.
-<../images/collision_wall_fail.png, id=269, 165.61874pt x 176.45924pt>
+<../images/collision_wall_fail.png, id=272, 165.61874pt x 176.45924pt>
 File: ../images/collision_wall_fail.png Graphic file (type png)
 <use ../images/collision_wall_fail.png>
 Package pdftex.def Info: ../images/collision_wall_fail.png  used on input line 370.
 (pdftex.def)             Requested size: 94.2116pt x 100.37537pt.
-<../images/collision_pieces.png, id=270, 189.1065pt x 194.52675pt>
+<../images/collision_pieces.png, id=273, 189.1065pt x 194.52675pt>
 File: ../images/collision_pieces.png Graphic file (type png)
 <use ../images/collision_pieces.png>
 Package pdftex.def Info: ../images/collision_pieces.png  used on input line 372.
 (pdftex.def)             Requested size: 102.45647pt x 105.39413pt.
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[10]
-<../images/arena_copy.png, id=297, 674.52pt x 212.59425pt>
+[10pdfTeX warning (ext4): destination with the same identifier (name{figure.6}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.374 \end{figure}
+                   <../images/position.jpg>] [11pdfTeX warning (ext4): destination with the same identifier (name{figure.7}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.416 }
+        <../images/collision_wall_succ.png> <../images/collision_wall_fail.png> <../images/collision_pieces.png>]
+<../images/arena_copy.png, id=332, 674.52pt x 212.59425pt>
 File: ../images/arena_copy.png Graphic file (type png)
 <use ../images/arena_copy.png>
 Package pdftex.def Info: ../images/arena_copy.png  used on input line 421.
 (pdftex.def)             Requested size: 220.8258pt x 69.59836pt.
- [11pdfTeX warning (ext4): destination with the same identifier (name{figure.7}) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.425 \lstin{write_piece_to_arena}
-                                  , \lstin{spawn_new_piece} und \lstin{level... <../images/collision_wall_succ.png> <../images/collision_wall_fail.png> <../images/collision_pieces.png>]
+
 
 Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 425.
 
@@ -1032,16 +967,15 @@ Package wrapfig Warning: wrapfigure used inside a conflicting environment on inp
 
 Package wrapfig Warning: wrapfigure used inside a conflicting environment on input line 431.
 
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
 [12pdfTeX warning (ext4): destination with the same identifier (name{figure.8}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.518 T
-       ransponieren $t: a_{i,j} \mapsto a_{j,i}$, Zeilen umkehren $r: a_{ij}...pdfTeX warning (ext4): destination with the same identifier (name{figure.9}) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.518 T
-       ransponieren $t: a_{i,j} \mapsto a_{j,i}$, Zeilen umkehren $r: a_{ij}... <../images/arena_copy.png>]
-<../images/font.jpg, id=358, 1606.0pt x 451.6875pt>
+l.525  
+            size_t to_index   = coords_to_array_index(size - 1 -j, i, size) ... <../images/arena_copy.png>]
+<../images/font.jpg, id=364, 1606.0pt x 451.6875pt>
 File: ../images/font.jpg Graphic file (type jpg)
 <use ../images/font.jpg>
 Package pdftex.def Info: ../images/font.jpg  used on input line 570.
@@ -1050,12 +984,16 @@ Package pdftex.def Info: ../images/font.jpg  used on input line 570.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[13] [14pdfTeX warning (ext4): destination with the same identifier (name{figure.10}) has been already used, duplicate ignored
+[13pdfTeX warning (ext4): destination with the same identifier (name{figure.9}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.627 \end{lstlisting}
-                       <../images/font.jpg>]
-<../images/arena_halb.png, id=406, 507.0945pt x 162.00525pt>
+l.576  
+        for (size_t i = 0; i < strlen(string); i++) {] [14pdfTeX warning (ext4): destination with the same identifier (name{figure.10}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.622 
+       <../images/font.jpg>]
+<../images/arena_halb.png, id=407, 507.0945pt x 162.00525pt>
 File: ../images/arena_halb.png Graphic file (type png)
 <use ../images/arena_halb.png>
 Package pdftex.def Info: ../images/arena_halb.png  used on input line 631.
@@ -1063,9 +1001,9 @@ Package pdftex.def Info: ../images/arena_halb.png  used on input line 631.
  [15pdfTeX warning (ext4): destination with the same identifier (name{figure.11}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.673 \end{lstlisting}
-                       <../images/arena_halb.png>]
-<../plt/level_speed.png, id=423, 1279.78125pt x 526.96875pt>
+l.669 
+       <../images/arena_halb.png>]
+<../plt/level_speed.png, id=427, 1279.78125pt x 526.96875pt>
 File: ../plt/level_speed.png Graphic file (type png)
 <use ../plt/level_speed.png>
 Package pdftex.def Info: ../plt/level_speed.png  used on input line 685.
@@ -1099,33 +1037,33 @@ Package wrapfig Warning: wrapfigure used inside a conflicting environment on inp
 [16pdfTeX warning (ext4): destination with the same identifier (name{figure.12}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.731 
-       <../plt/level_speed.png>] [17] [18] [19] (C:\Users\labru\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstlang1.sty
+l.725 Z
+       usätzlich wurde dem Nutzer die Möglichkeit gegeben, die Tasten zum ... <../plt/level_speed.png>] [17] [18] [19] (C:\Users\labru\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstlang1.sty
 File: lstlang1.sty 2020/03/24 1.8d listings language file
 ) (C:\Users\labru\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstlang1.sty
 File: lstlang1.sty 2020/03/24 1.8d listings language file
 )
-<../images/keyboard.jpg, id=487, 1473.505pt x 573.14125pt>
+<../images/keyboard.jpg, id=491, 1473.505pt x 573.14125pt>
 File: ../images/keyboard.jpg Graphic file (type jpg)
 <use ../images/keyboard.jpg>
-Package pdftex.def Info: ../images/keyboard.jpg  used on input line 870.
+Package pdftex.def Info: ../images/keyboard.jpg  used on input line 874.
 (pdftex.def)             Requested size: 401.50146pt x 156.16696pt.
  [20pdfTeX warning (ext4): destination with the same identifier (name{figure.13}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.878 
+l.882 
        <../images/keyboard.jpg>] [21] (main.bbl) [22] (main.aux)
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: EEEC3261E14B5F7C7436A8647C56B75C;2513.
  ) 
 Here is how much of TeX's memory you used:
- 22252 strings out of 478927
- 356331 string characters out of 2852535
- 1059334 words of memory out of 3000000
- 39451 multiletter control sequences out of 15000+600000
+ 22443 strings out of 478927
+ 359628 string characters out of 2852535
+ 1039403 words of memory out of 3000000
+ 39635 multiletter control sequences out of 15000+600000
  419755 words of font info for 66 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 91i,12n,94p,1135b,2007s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 91i,12n,94p,1135b,1927s stack positions out of 5000i,500n,10000p,200000b,80000s
 pdfTeX warning (dest): name{glo:geg} has been referenced but does not exist, replaced by a fixed one
 
 pdfTeX warning (dest): name{glo:opl} has been referenced but does not exist, replaced by a fixed one
@@ -1133,9 +1071,9 @@ pdfTeX warning (dest): name{glo:opl} has been referenced but does not exist, rep
 pdfTeX warning (dest): name{glo:tet} has been referenced but does not exist, replaced by a fixed one
 
  <C:\Users\labru\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ectt1095.pk> <C:\Users\labru\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1095.pk> <C:\Users\labru\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm0800.pk> <C:\Users\labru\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm0600.pk> <C:\Users\labru\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ectt0900.pk> <C:\Users\labru\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm0900.pk> <C:\Users\labru\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1200.pk> <C:\Users\labru\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1095.pk> <C:\Users\labru\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1440.pk> <C:\Users\labru\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1095.pk> <C:\Users\labru\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecti1095.pk> <C:\Users\labru\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1200.pk> <C:\Users\labru\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1728.pk><C:/Users/labru/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/labru/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/labru/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/labru/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/labru/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/labru/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy8.pfb>
-Output written on main.pdf (23 pages, 901207 bytes).
+Output written on main.pdf (23 pages, 907564 bytes).
 PDF statistics:
- 1071 PDF objects out of 1200 (max. 8388607)
- 235 named destinations out of 1000 (max. 500000)
+ 1090 PDF objects out of 1200 (max. 8388607)
+ 236 named destinations out of 1000 (max. 500000)
  253 words of extra memory for PDF output out of 10000 (max. 10000000)
 

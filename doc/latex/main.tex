@@ -9,6 +9,7 @@
 \usepackage{subfigure}
 \usepackage{wrapfig}
 \usepackage{mathtools}
+\usepackage{blindtext}
 
 % for pseudocode
 \usepackage{algorithm}
@@ -116,8 +117,8 @@
 \vspace*{\fill}
 \begin{center}
 \textit{
-  Besondere Danksagung an 
-}  
+  Besondere Danksagung an den Penny, Freddy Fresh und Meisterpizza.
+}
 \end{center}
 \vspace*{\fill}
 \pagebreak
@@ -212,7 +213,7 @@ Die untere Abbildung verdeulicht diesen Zusammenhang noch einmal.
 \begin{figure}[h]
   \centering
   \includegraphics[width=200px]{../images/hsv.png}
-  \caption{Darstellung HSV-Farbraum als Kegel}
+  \caption{Darstellung HSV-Farbraum als Kegel, \cite{picWiki}}
 \end{figure}
 
 \pagebreak
@@ -257,7 +258,7 @@ enum GameState gameState;
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.5\textwidth]{../state.png}
+  \includegraphics[width=200px]{../state.png}
   \caption{Zustandsautomat}
   \label{state}
 \end{figure}
@@ -287,6 +288,7 @@ enum Piece { PIECE_O, PIECE_L, PIECE_J, PIECE_T, PIECE_I, PIECE_Z, PIECE_S };
 \end{lstlisting}
 
 \lstin{arena} ist ein Pointer auf ein Array, dass die aktuelle Arena (Spielfeld) speichert. Sie ist 200 ($20 \cdot 10$) Elemente groß.
+Abbildung \ref{arena} zeigt einen Screenshot der Arena aus dem Spiel.
 \begin{lstlisting}[language=C]
 int* arena;  
 \end{lstlisting}
@@ -299,13 +301,6 @@ Weil das Transformieren zwischen 2D und 1D Indizes werden muss, wurde dafür Hel
 size_t coords_to_array_index(size_t x, size_t y, size_t width)
 { return y * width + x; }
 \end{lstlisting}
-
-\begin{wrapfigure}{l}{0px}
-  \includegraphics[width=120px]{../images/position.jpg}
-  \vspace{-20pt}
-  \caption{Position in der Arena}
-  \vspace{-70pt}
-\end{wrapfigure}
 
 Diese beiden Integer speichern die aktuelle Arenaposition des \gls{tet}, dass durch den Nutzer kontrolliert wird.
 \begin{lstlisting}[language=C]
@@ -324,6 +319,11 @@ uint32_t level;
 uint32_t cleared_lines;
 int* piece_count;
 \end{lstlisting}
+
+\begin{wrapfigure}{l}{0pt}
+  \includegraphics[width=100px]{../images/position.jpg}
+  \caption{Position in der Arena}
+\end{wrapfigure}
 
 Die Flag \lstin{bool fast_drop} speichert, ob der Spieler gerade den Knopf gedrückt hält, damit die Fallgeschwindigkeit seht stark erhöht wird.
 Und \lstin{bool is_defeat} ist eine Flag, die im letzten Update im Zustand \lstin{PLAYING} gesetzt wird, um anzuzeigen, dass der Spieler verloren hat und der Gamestate auf \lstin{GAME_OVER} gesetzt wird.
@@ -833,6 +833,10 @@ sondern direkt in ein höheres Level einsteigen können.
 \end{itemize}
 
 \subsection{Arbeitsaufteilung}
+
+Viele Aufgaben wurden zusammen in der Gruppe erledigt. 
+Die Arbeitslast wurde je nach Qualifikations verschieden verteilt. 
+Einige haben sich mehr um die praktische Programmieren gekümmert, andere um die Präsentation, Organisatorisches, das Testen der Software und die kulinarische Versorgung (PR-Abteilung).
 
 \pagebreak
 
