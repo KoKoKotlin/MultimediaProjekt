@@ -1,0 +1,24 @@
+\begin{thebibliography}{Tetb}
+
+\bibitem[CS1]{CS1}
+What is a color space?
+\newblock \url{
+  https://www5.in.tum.de/lehre/vorlesungen/graphik/info/csc/COL_4.htm#topic3},
+  zuletzt besucht 11.10.2021.
+
+\bibitem[CS2]{CS2}
+Hsl and hsv (hue saturation and ligthness / value.
+\newblock \url{
+  https://www5.in.tum.de/lehre/vorlesungen/graphik/info/csc/COL_23.htm#topic22
+  }, zuletzt besucht 11.10.2021.
+
+\bibitem[Teta]{TetrisWiki}
+Tetris (nes, nintendo).
+\newblock \url{https://tetris.wiki/Tetris_(NES,_Nintendo)}, zuletzt besucht
+  11.10.2021.
+
+\bibitem[Tetb]{Tetromino}
+Tetromino.
+\newblock \url{https://tetris.wiki/Tetromino}, zuletzt besucht 11.10.2021.
+
+\end{thebibliography}

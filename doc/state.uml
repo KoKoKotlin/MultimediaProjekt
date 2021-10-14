@@ -1,0 +1,14 @@
+@startuml
+
+[*] --> PLAYING
+PLAYING ---> PAUSE : Eingabe P
+PLAYING ---> GAME_OVER : Spiel verloren
+
+PAUSE ---> PLAYING : Eingabe P
+GAME_OVER --> PLAYING : Eingabe R
+
+PLAYING --> [*] : Eingabe ESC
+PAUSE --> [*] : Eingabe ESC
+GAME_OVER --> [*] : Eingabe ESC
+
+@enduml

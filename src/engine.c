@@ -236,8 +236,8 @@ void array_index_to_coords(size_t index, size_t width, size_t* x, size_t* y)
 }
 
 size_t coords_to_array_index(size_t x, size_t y, size_t width)
-{
-    return y * width + x;
+{ 
+    return y * width + x; 
 }
 
 bool check_collision_arena_wall(const struct GameData* game_data)
@@ -271,7 +271,12 @@ LOOP_END2:;
     return non_zero_index_left + game_data->position_x < 0 || non_zero_index_right + game_data->position_x >= ARENA_WIDTH;
 }
 
+<<<<<<< HEAD
 bool check_collision_arena_pices(const struct GameData* game_data)
+=======
+// TODO: if problems move bottom check to separate function
+bool check_collision_arena_pieces(const struct GameData* game_data)
+>>>>>>> a2c94a70dd45c0214838b6d4439607a5639a9636
 {
     int size = get_piece_size(game_data->current_piece);
 
@@ -289,7 +294,7 @@ bool check_collision_arena_pices(const struct GameData* game_data)
 bool check_collision_side(const struct GameData* game_data)
 {
     // combine checks for piece and arena collision when moving side-to-side
-    return check_collision_arena_wall(game_data) || check_collision_arena_pices(game_data);
+    return check_collision_arena_wall(game_data) || check_collision_arena_pieces(game_data);
 }
 
 /*
@@ -333,7 +338,7 @@ void rotate_piece(struct GameData* game_data, enum Direction dir) {
     else if (dir == LEFT) rotate_piece_left(&game_data->current_piece);
 
     // if a collision occurs rotate back
-    if (check_collision_arena_pices(game_data) || check_collision_arena_wall(game_data)) {
+    if (check_collision_arena_pieces(game_data) || check_collision_arena_wall(game_data)) {
         if (dir == LEFT)     rotate_piece_right(&game_data->current_piece);
         else if (dir == RIGHT) rotate_piece_left(&game_data->current_piece);
     }
@@ -353,7 +358,7 @@ void spawn_new_piece(struct GameData* game_data)
 
     game_data->piece_count[game_data->current_piece[0]]++;
 
-    if (check_collision_arena_pices(game_data)) game_data->is_defeat = true;
+    if (check_collision_arena_pieces(game_data)) game_data->is_defeat = true;
 }
 
 /*
@@ -443,7 +448,7 @@ size_t drop(struct GameData* game_data)
     game_data->position_y++;
     size_t rows = 0;
 
-    if (check_collision_arena_pices(game_data)) {
+    if (check_collision_arena_pieces(game_data)) {
         game_data->position_y--;
 
         write_piece_to_arena(game_data);
