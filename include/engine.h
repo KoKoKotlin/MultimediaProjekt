@@ -26,7 +26,7 @@
 #else
     #define BASE_TIME   1.0
 #endif
-#define TIME_OFFSET .05
+#define TIME_OFFSET .285
 
 #define COORDS_TO_ARENA_INDEX(x, y) (coords_to_array_index((x), (y), ARENA_WIDTH))
 
