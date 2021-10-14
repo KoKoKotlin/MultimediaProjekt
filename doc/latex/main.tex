@@ -141,6 +141,7 @@ dem recht trivialen Spiel doch im Nachhinein gesehen sehr viele aufwendige Funkt
 In der folgenden Dokumentation wird erläutert, wie die Implementierung des bekannten Spiels in \gls{opl} 
 umgesetzt wurde und welche Herausforderungen gelöst werden mussten.
 
+\pagebreak
 
 \section{Theoretische Grundlagen} \label{tgl}
 
@@ -214,6 +215,8 @@ Die untere Abbildung verdeulicht diesen Zusammenhang noch einmal.
   \caption{Darstellung HSV-Farbraum als Kegel}
 \end{figure}
 
+\pagebreak
+
 \section{Codedokumentation}
 
 % Sprache (C, GLSL)
@@ -221,7 +224,7 @@ Die untere Abbildung verdeulicht diesen Zusammenhang noch einmal.
 
 \subsection{Implementierung} 
 
-\subsubsection{Gameengine}
+\subsubsection{Gameengine} \label{gem}
 
 Das Herz des Programms ist die \gls{geg}, welche die Logik der Objekte im Spiel kontrolliert.
 Sie überprüft, ob Kollisionen stattfinden und berechnet z.B. die Punkte. 
@@ -565,7 +568,7 @@ Man muss nur die richtige Textur vor dem Aufruf von \lstin{glDrawArrays} auswäh
 \begin{figure}[h]
   \centering
   \includegraphics[width=400px]{../images/font.jpg}
-  \caption{Render einer 6 stelligen Zahl (Schema)}
+  \caption{Rendern einer 6 stelligen Zahl (Schema)}
 \end{figure}
 
 \begin{lstlisting}
@@ -588,63 +591,178 @@ Sie unterscheiden sich hauptächlich dadurch,
 dass die Position der verschiedenen Objekte in ihnen festgelegt ist. 
 Objekte die auf diese Weise gezeichnet werden sind die Abgrenzung der Arena, die Modelle der \glspl{tet} im Userinterface.
 Der Shader, der der die \glspl{tet} rendert, akzeptiert dabei wieder eine Position, weil sie sich in verschiedenen Positionen im Raum befinden.
+Alle 3-dimensionalen Modelle werden perspektivisch dargestellt. Die räumliche Transformation von 3-d auf 2-d ist durch ein Frustum implementiert.
+Außerdem wird danach noch ein Phong-Shading hinzugefügt.
 
+Am komplizietersten werden die Tetrominos und die Arena selbst gerendert. 
+Man hätte die Modelle einzeln in die Arena rendern können. 
+Dieser Ansatz wäre jedoch sehr umständlich gewesen, weil man die enzelnen Modelle 
+hätte rotieren müssen und teilweise hätte auseinander nehmen müssen, 
+wenn sie teilweise durch das Entfernen der Zeilen auseinander genommen werden müssten.
 
+Ein besserer Ansatz ist es, die Blöcke, aus denen die \glspl{tet} einzeln zu rendern.
+Dafür wurde ein Modell für einen einzelnen Block erstellt. 
+Da die Arena maximal 200 Blöcke enthalten kann, wurde sich in der Implementierung dafür entschieden, 
+mithilfe von \lstin{glDrawArraysInstanced} nach jedem Update alle 200 Blöcke zu rendern. 
+Im dafür zuständigen Vertexshader erhält man in der Variable \lstin{gl_InstanceID} 
+den Index für den Block, der in diesem Aufruf des Shaders gerednet werden soll.
 
-$\begin{bmatrix}
-  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 4 & 0\\
-  0 & 0 & 0 & 0 & 0 & 0 & 0 & 4 & 4 & 4\\
-  0 & 0 & 1 & 1 & 2 & 2 & 2 & 2 & 1 & 1\\
-  0 & 0 & 1 & 1 & 2 & 2 & 2 & 2 & 1 & 1\\
-  0 & 1 & 1 & 2 & 2 & 2 & 2 & 3 & 3 & 3\\
-  0 & 1 & 1 & 2 & 1 & 1 & 2 & 6 & 6 & 3
-\end{bmatrix}$
-$\Rightarrow$
-$\begin{bmatrix}
-  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
-  0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 4 & 0\\
-  0 & 0 & 0 & 0 & 0 & 0 & 0 & 4 & 4 & 4\\
-  0 & 0 & 1 & 1 & 2 & 2 & 2 & 2 & 1 & 1\\
-  0 & 0 & 1 & 1 & 2 & 2 & 2 & 2 & 1 & 1\\
-  0 & 1 & 1 & 2 & 2 & 2 & 2 & 3 & 3 & 3\\
-  0 & 1 & 1 & 2 & 1 & 1 & 2 & 6 & 6 & 3
-\end{bmatrix}$
-$\Rightarrow$
+Somit kann man jetzt im Shader die Position von ihm berechnen:
+\begin{lstlisting}
+int x = gl_InstanceID % ARENA_WIDTH;
+int y = gl_InstanceID / ARENA_WIDTH;
+\end{lstlisting}
+Das sind die $x$ und $y$-Koordinaten im Raster der Arena, die dann noch in Koordinaten im OpenGL Koordinatensystem umgerechnet werden.
+Der Shader bekommt als \lstin{uniform} die gesamte Arena als Input.
+So kann der Shader die Block-ID herausfinden, die er gerade rendert. Diese wird dann als Winkel für den HSV-Farbraum genommen, 
+damit jedes Tetromino eine eigene Farbe bekommt.
+Allerdings würde auf diese Weise das nutzerkontrollierte \gls{tet} nicht mit gezeichnet. 
+Deswegen wurde noch eine Helferfunktion \lstin{generate_block_positions} definiert, welche die Arena und das nutzerkontrollierte \gls{tet} 
+in einen Buffer kopiert und dieser wird dann dem Shader übergeben.
 
+\begin{lstlisting}
+uniform int block_positions[200];
 
+block_id = block_positions[gl_InstanceID];
+\end{lstlisting}
+
+\begin{figure}
+  $\begin{bmatrix}
+    0 & 0 & 0 & 0 & 0\\
+    0 & 0 & 0 & 0 & 0\\
+    0 & 0 & 0 & 0 & 0\\
+    0 & 0 & 0 & 0 & 0
+  \end{bmatrix}$
+  $\Rightarrow$
+  $\begin{bmatrix}
+    0 & 0 & 0 & 0 & 0\\
+    0 & 0 & 0 & 0 & 0\\
+    0 & 0 & 0 & 0 & 0\\
+    0 & 0 & 0 & 0 & 0
+  \end{bmatrix}$
+  $\Rightarrow$
+  
+  \includegraphics[width=200px]{../images/arena_halb.png}
+  \caption{Renderprozess der Arena}
+\end{figure}
+
+Die Ausnahme stellt die Block-ID null dar. Sie ist ein Sentinel-Wert, der dem Fragment-Shader sagt, 
+dass das aktuelle Fragment verworfen werden. Das wird dadurch realisiert, dass die ID vom Vertex zum Fragment Shader weitergegeben wird.
+Der Fragmentshader überprüft dann, ob diese null ist und wenn ja wird \lstin{discard} aufgerufen.
+
+Nun ist es so, dass auch die bestimmten Objekte abhängig vom Gamestate gezeigt werden oder nicht.
+Wenn sich das Spiel im Zustand \lstin{PLAYING} oder \lstin{PAUSE} befindet, dann wird das gesamte Userinterface und die Arena mit den ganzen Blöcken gerendert.
+Wenn sich das Programm allerdings im Zustand \lstin{GAME_OVER} ist, 
+dann wird nur eine Textur mit der Nachricht, dass der Spieler verloren hat angezeigt und die erreichte Punktzahl. 
 
 \subsubsection{Update}
 
+Das Updaten und Rendern des Programm sind in der Implementierung 
+auf Grund der Einfachheit der Logik und des Userinterfaces nicht getrennt. D.h. es gibt einen zentralen Mainloop, der zuerst die Funktion aufruft, 
+die das gesamte Programm updated und anschließend rendert. Außerdem wird nach Events geprüft, die dann durch einen Eventhandler abgearbeitet werden.
 
+Der Loop wird dann abgebrochen, wenn das Programm das Signal erhält, dass sich das Fenster schließen soll. 
+Danach werden dann auch alle gelandenen Ressourcen (wie. z.B. Texturen, Musik, Modelle) wieder aus dem Speicher gelöscht.
+
+\begin{lstlisting}
+while (!glfwWindowShouldClose(window))
+{
+    update_gl(window);
+    draw_gl(window);
+    glfwSwapBuffers(window);
+    glfwPollEvents();
+}
+\end{lstlisting}
+
+\lstin{update_gl} selbst sorgt dafür, dass die Funktionen, die im Abschnitt \ref{gem} besprochen wurden, 
+in der richtigen Reihenfolge und zur richtigen Zeit ausgeführt werden. Außerdem wird sich um das Managment der Gamestates und das Abspielen der Soundeffekte und der Hintergrundmusik gekümmert.
+
+Das Timing wurde so implementiert, dass in jedem Update die aktuelle Zeit abgefragt wird. 
+Die Zeit vom letzten Update wird zwischengespeichert. So kann man mit der aktuellen \lstin{frame_time} 
+und der letzten die Zeit ausrechnen, die seit dem letzten Update vergangen ist.
+
+\begin{lstlisting}
+double frame_time = glfwGetTime();
+double delta_time = frame_time - user_data->last_frame_time;
+\end{lstlisting}
+
+Diese \lstin{delta_time} kann man nun nutzen, um alle möglichen Funktionen in bestimmten Zeitintervallen auszuführen.
+
+Das Fallen des \gls{tet} soll z.B. nur nach einer bestimmten Zeitspanne stattfinden, 
+die sich mit steigendem Level erhöht, damit das Spiel schwerer wird. Das wurde so implementiert, 
+dass \lstin{delta_time} in \lstin{time_since_last_drop} aufsummiert wird. Dann wird bei jedem Update überprüft, 
+ob diese Summe größer ein bestimmtes Threshhold wird, dann wird \lstin{drop} ausgeführt. 
+Dieses Threshhold ist nicht konstant, sondern eine Funktion vom aktuellen Level, die durch \lstin{calc_drop_time} berechnet wird.
+
+\begin{wrapfigure}{r}{0pt}
+  \centering
+  \includegraphics[width=200px]{../plt/level_speed.png}
+  \caption{Level-Geschwingkeits-Funktion}
+\end{wrapfigure}
+
+\begin{center}
+$t(l) = B - log(l + 1) * T$
+\end{center}
+
+$B$ und $T$ sind hier Konstanten, die durch probieren ermittelt wurden. Der Logarithmus wurde verwendet, 
+damit die Zeit am Anfang schneller abfällt und sich dann immer langsamer der Nullstelle annähert. 
+Das gibt den Leveln eine obere Begrenzung, weil die $t(33.2) \approx 0$, und das Spiel auch schon davor für einen menschlichen Spieler zu schnell wird.  
+Der Nutzer kann allerdings durch Drücken von S das Zeitintervall sehr stark verkürzen, sodass das \gls{tet} sehr schnell wird.
+Dafür wird die aufsummierte Zeit mit \lstin{FAST_DROP_TIME} abgeglichen, was eine sehr kleine Konstante ist.
+Das wurde so realisiert, dass überprüft wird, ob die \lstin{fast_drop}-Flag \lstin{true} ist. Die ganze Bediengung kann im unteren Listing betrachtet werden.
+
+\begin{lstlisting}
+  (!user_data->gameData.fast_drop && (user_data->time_since_last_drop >= calc_drop_time(&user_data->gameData))) ||
+  (user_data->gameData.fast_drop && user_data->time_since_last_drop >= FAST_DROP_TIME)
+\end{lstlisting}
+
+Wie man sehen kann, gibt \lstin{drop} die Anzahl der gefüllten Zeilen aus. Wenn es 4 sind, wird ein spezieller Soundeffekt abgespielt.
+Danach wird die aufsummierte Zeit wieder auf null gesetzt, damit der ganze Update-Zyklus von neuem beginnen kann.
+Am Ende wird noch überprüft, ob die \lstin{is_defeat}-Flag von der Gameengine gesetzt wurde, 
+was signalisiert, dass der Spieler verloren hat. In diesem Fall wird der Gamestate auf \lstin{GAME_OVER} 
+gesetzt und auch hier wird dann der entsprechende Soundeffekt abgespielt. 
+
+\begin{lstlisting}
+if (...) {
+    size_t cleared_rows = drop(&user_data->gameData);
+
+    if (cleared_rows == 4) queue_audio_if_empty(user_data->effect_device, user_data->wav_data[2]);
+    user_data->time_since_last_drop = 0.0;
+
+    if (user_data->gameData.is_defeat) {
+        queue_audio_if_empty(user_data->effect_device, user_data->wav_data[1]);
+        user_data->gameData.gameState = GAME_OVER;
+    }
+}
+\end{lstlisting}
+
+Zusätzlich wurde dem Nutzer die Möglichkeit gegeben, die Tasten zum Bewegen der \glspl{tet} gedrückt zu halten.
+Dafür wurde ähnlich wie oben wieder eine Variable erstellt, die \lstin{delta_time} 
+aufsummiert und überprüft, ob ein konstater Wert überschritten wurde. 
+Dann kann mithilfe der Flags \lstin{holding_left} bzw. \lstin{holding_right} festgestellt werden, 
+in welche Richtung sich bewegt werden soll. So wird die Bewegung innerhalb 
+eines bestimmten Zeitintervalls periodisch ausgeführt und der Spieler musst die Tasten A und D nicht andauern drücken.
+
+\begin{lstlisting}
+  if (user_data->time_since_last_side_move >= MOVE_SIDE_WAYS_TIME) {
+      enum Direction dir;
+      if (user_data->holding_left)  dir = LEFT;
+      if (user_data->holding_right) dir = RIGHT;
+      move(&user_data->gameData, dir);
+      user_data->time_since_last_side_move -= MOVE_SIDE_WAYS_TIME;
+  }
+\end{lstlisting}
+  
+Die beiden gerade beschriebenen Prozeduren werden nur ausgeführt, wenn sich das Programm um Zustand \lstin{PLAYING} befindet.
+In den anderen beiden Zuständen finden keine Updates statt. Außerdem wird im Zustand \lstin{PAUSE} noch die Hintergrundmusik pausiert.
+
+\begin{lstlisting}
+  (user_data->gameData.gameState == PAUSE) ? pause(user_data->background_device) : unpause(user_data->background_device);
+\end{lstlisting}
+
+Zusätzlich gibt es noch einen Eventhandler, der die Eingabeevents von der Tastatur behandelt. Dieser wurde mithilfe von GLFW implementiert.
+Grundsätzlich wird nur überprüft, welche Taste der Nutzer gedrückt hat und dann wird entsprechend nach Gamestate gehandelt.
+Der Code ist so trivial, dass er hier nicht weiter besprochen wird.
 
 \subsubsection{Audio}
 
@@ -670,36 +788,107 @@ sodass die Musik wiederholt, falls das Lied vorbei ist.
 
 Beim Abspielen von Soundeffekten wird ebenfalls diese Funktion aufgerufen, sodass Soundeffekte verworfen werden, falls sie gleichzeitig abgespielt werden sollen.
 
-\subsection{Fehlerbehandlung}
-
 \subsection{Userinterface}
-% audio wann
+Das Userinterface ist sehr einfach gehalten. Alle Nutzereingaben erfolgen über die Tastatur. 
+Das Tastaturlayout wird genauer im Kapitel \ref{geb} geschrieben.
+
+Auf der linken Seite des Bildschirms wird eine Liste mit den \glspl{tet} angezeigt, die die absoluten Häufigkeiten angibt, 
+wie oft man welche Form erhalten hat. 
+Zentral im Fenster kann man die Arena sehen, die den Hauptinhalt des Spiels darstellt. Darunter befindet sich ein kleiner Schriftzug, der eine Beschreibung des Tastaturlayouts beschreibt.
+
+Rechts wird dann untereinander angezeigt, welches \gls{tet} als nächstes vorkommt, die Punktzahl des Spieler, welches Level bis jetzt erreicht wurde und wieviele Zeilen bis jetzt gefüllt wurden.
+Falls der Nutzer das Spiel verliert, wird mittig auf dem Bildschirm dann ein Text angezeigt, der dem Spieler anzeigt, dass das Spiel vorbei ist, seine Punktzahl und wie
+er das Programm beenden kann oder eine neue Runde starten.
 
 \subsection{Nicht implementierte Features} \label{uif}
 
-% Start-Menü
-% Tutorial / Hilfe
-% Bestenlisten / Score speichern
-% Keybindings statisch
-% Farben nicht anpassen
-% Lauter/leiser/aus
-% custom seed
+Auffällig ist, dass es kein Hauptmenü gibt, sondern der Spieler sofort ins Spiel geworfen wird. 
+In so einem Menü könnte man dann auch noch verschiedene Einstellungsmöglichkeiten unterbringen, z.B., 
+dass man die Musik- und Effektlautstärtke anpassen kann, die Tastenbelegung ändern kann und das Farbschema anpassen kann.
+Außerdem könnte man einen Menüpunkt "Bestenliste" implementieren, der dann die Highscores verschiedener Spieler in einem Extrafenster anzeigen lässt.
+Dazu müsste auch ein Speichersystem erstellen, welches die Punktzahlen in einer lokalen Datei oder z.B. auf einem Webserver speichert.
+
+Man kann auch im Code einige Stellen finden, in dem der \lstin{seed} des Zufallsgenerators gespeichert wird. Es war ursprünglich geplant, 
+dass es die Möglichkeit gibt, diesen per Hand zu setzten. Das wurde jedoch auch noch nicht implementiert.
+
+Und man könnte auch noch ein kleines Tutorial oder eine Spielanleitung einfügen, falls der Spieler nicht mit den Regeln von Tetris vertraut ist.
+
+Für fortgeschrittene Spieler wäre aus denkbar, dass man das Startlevel benutzerdefiniertbar macht, sodass diese nicht immer bei Level null anfangen müssen,
+sondern direkt in ein höheres Level einsteigen können.
+\pagebreak
 
 \section{Projektdokumentation}
 
-\subsection{Tools \& Entwicklungsumgebung}
-Github-umgebung
-Oben GL
+\subsection{Tools \& Bibliotheken}
+
+\textbf{Genutzte Tools:}
+\begin{itemize}
+  \item Versionskontrolle: Github \& git
+  \item Codeeditor: VS Code
+  \item Textverarbeitung: \LaTeX
+  \item Zustandsdiagramme: plantUml
+  \item Diagramme: gnuplot
+  \item Abbildungen: Powerpoint
+  \item 3-D Modellierung: Blender
+  \item Compiler: gcc
+  \item Debugger: gdb, valgrind
+  \item Buildtools: make
+  \item Bildverarbeitung: Krita
+\end{itemize}
+
+\noindent \textbf{Genutzte Programm-Bibliotheken:}
+\begin{itemize}
+  \item OpenGL
+  \item SDL2
+  \item glad
+  \item GLFW
+  \item Bitmap-Bibliothek
+  \item Obj-Bibliothek
+\end{itemize}
 
 \subsection{Arbeitsaufteilung}
 
 \section{Benutzerhandbuch}
 
+\subsection{Installation}
+
+\begin{lstlisting}[language=bash]
+$ git clone 
+$ cd MultimediaProjekt
+$ make all
+$ ./teris.out
+\end{lstlisting}
+
+Das Programm kann mit der Makefile momentan nur für Linux kompiliert werden. Getstet wurde es auf Ubuntu 20.04. 
+Dafür muss OpenGL und GLFW installiert sein. SDL2 ist optional. Falls diese Bibliothek fehlt, 
+dann wird ohne sie kompiliert und es gibt keine Musik und keine Soundeffekt.
+
+Zudem braucht man eine Tastatur, um das Programm zu bedienen.
+
+\subsection{Gebrauchsanleitung} \label{geb}
+Zum Starten des Spiels klickt man zweimal schnell auf „Tetris.out“ und damit startet das Spiel automatisch.  
+Es beginnt damit, dass nun die zufällig generierten „\glspl {tet}“ in die Arena reinfallen. Jetzt ist die Aufgabe des Spielenden, die „\glspl {tet}“ so zu platzieren, dass diese vollen Reihen möglichst ohne Lücken erzeugen. 
+
+
+Es löhnt sich, mehr Zahlen auf einmal wegzuschaffen, denn die Punktzahl nicht linear mit der Anzahl von Reihen skaliert.  Z. B. beim Level null, wenn vier Reihen auf einmal weggemacht werden, kriegt der Spielende 1200 Punkte. Mach der Spielende vier Zahlen nacheinander, erreicht er nur 160 Punkte (40 Punkte je eine Reihe). 
+Die Anzahl der Punkte, die erhalten wird, hängt auch vom Level ab (nach jeweils 10 gelöschten Zeilen erhöht sich das Level um eins und damit die Geschwindigkeit, mit der „\glspl {tet}“ fallen).
+
+Das Spiel endet, sobald eine Figur nicht mehr auf das Spielfeld passt und ein Teil davon außerhalb des Spielfelds liegt. Die Punkte hören auf zu zählen, die Figuren bewegen sich nicht, und es erscheint ein Fenster, das dem Benutzer mitteilt, dass das Spiel beendet ist und er eine bestimmte Anzahl von Punkten erreicht hat.
+
 \begin{figure}[h]
   \centering
   \includegraphics[width=400px]{../images/keyboard.jpg}
   \caption{Tastaturlayout}
+  \label{tat}
 \end{figure}
+
+Um die „\glspl {tet}“ zu steuern, wurden die verschiedenen Befehle vorgesehen. Die Tasten, die dazu benutzt werden, sind in der Abbildung \ref{tat} dargestellt.
+
+
+Die blauen markierten Tasten („A“ und „D“) werden verwendet, um „\glspl {tet}“ nach links und rechts zu bewegen. Wenn die Taste "A" ("D") lange gedrückt gehalten wird, bewegt sich das „\gls {tet}“ sofort an den linken (rechten) Rand des Spielfelds. Für die Rotation der „\glspl {tet}“ sind die Falltasten „links“ (Rotation nach links) und „rechts“ (Rotation nach rechts) bestimmt.  Um das Spiel zu pausieren, muss die Taste "P" gedrückt werden. Nachdem die Taste „P“ nochmal betätigt wird, setzt sich das Spiel fort. Zum Beenden des Spiels kann entweder die Taste „Esc“ oder der Kreutz genutzt werden.  Wenn man die Taste "R" drückt, wird das Spiel neu gestartet.  
+
+Außerdem könnte die Größe vom Spielfenster angepasst werden.  
+
 
 \pagebreak
 \bibliographystyle{alpha}
