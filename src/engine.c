@@ -271,12 +271,8 @@ LOOP_END2:;
     return non_zero_index_left + game_data->position_x < 0 || non_zero_index_right + game_data->position_x >= ARENA_WIDTH;
 }
 
-<<<<<<< HEAD
-bool check_collision_arena_pices(const struct GameData* game_data)
-=======
 // TODO: if problems move bottom check to separate function
 bool check_collision_arena_pieces(const struct GameData* game_data)
->>>>>>> a2c94a70dd45c0214838b6d4439607a5639a9636
 {
     int size = get_piece_size(game_data->current_piece);
 
