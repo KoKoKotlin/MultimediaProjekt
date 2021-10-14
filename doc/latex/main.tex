@@ -627,22 +627,8 @@ block_id = block_positions[gl_InstanceID];
 \end{lstlisting}
 
 \begin{figure}
-  $\begin{bmatrix}
-    0 & 0 & 0 & 0 & 0\\
-    0 & 0 & 0 & 0 & 0\\
-    0 & 0 & 0 & 0 & 0\\
-    0 & 0 & 0 & 0 & 0
-  \end{bmatrix}$
-  $\Rightarrow$
-  $\begin{bmatrix}
-    0 & 0 & 0 & 0 & 0\\
-    0 & 0 & 0 & 0 & 0\\
-    0 & 0 & 0 & 0 & 0\\
-    0 & 0 & 0 & 0 & 0
-  \end{bmatrix}$
-  $\Rightarrow$
-  
-  \includegraphics[width=200px]{../images/arena_halb.png}
+  \centering
+  \includegraphics[width=400px]{../images/arena_halb.png}  
   \caption{Renderprozess der Arena}
 \end{figure}
 
@@ -701,7 +687,7 @@ Dieses Threshhold ist nicht konstant, sondern eine Funktion vom aktuellen Level,
 \end{wrapfigure}
 
 \begin{center}
-$t(l) = B - log(l + 1) * T$
+$t(l) = B - log(l + 1) \cdot T$
 \end{center}
 
 $B$ und $T$ sind hier Konstanten, die durch probieren ermittelt wurden. Der Logarithmus wurde verwendet, 
@@ -848,6 +834,8 @@ sondern direkt in ein höheres Level einsteigen können.
 
 \subsection{Arbeitsaufteilung}
 
+\pagebreak
+
 \section{Benutzerhandbuch}
 
 \subsection{Installation}
@@ -875,6 +863,8 @@ Die Anzahl der Punkte, die erhalten wird, hängt auch vom Level ab (nach jeweils
 
 Das Spiel endet, sobald eine Figur nicht mehr auf das Spielfeld passt und ein Teil davon außerhalb des Spielfelds liegt. Die Punkte hören auf zu zählen, die Figuren bewegen sich nicht, und es erscheint ein Fenster, das dem Benutzer mitteilt, dass das Spiel beendet ist und er eine bestimmte Anzahl von Punkten erreicht hat.
 
+Um die „\glspl {tet}“ zu steuern, wurden die verschiedenen Befehle vorgesehen. Die Tasten, die dazu benutzt werden, sind in der Abbildung \ref{tat} dargestellt.
+
 \begin{figure}[h]
   \centering
   \includegraphics[width=400px]{../images/keyboard.jpg}
@@ -882,7 +872,6 @@ Das Spiel endet, sobald eine Figur nicht mehr auf das Spielfeld passt und ein Te
   \label{tat}
 \end{figure}
 
-Um die „\glspl {tet}“ zu steuern, wurden die verschiedenen Befehle vorgesehen. Die Tasten, die dazu benutzt werden, sind in der Abbildung \ref{tat} dargestellt.
 
 
 Die blauen markierten Tasten („A“ und „D“) werden verwendet, um „\glspl {tet}“ nach links und rechts zu bewegen. Wenn die Taste "A" ("D") lange gedrückt gehalten wird, bewegt sich das „\gls {tet}“ sofort an den linken (rechten) Rand des Spielfelds. Für die Rotation der „\glspl {tet}“ sind die Falltasten „links“ (Rotation nach links) und „rechts“ (Rotation nach rechts) bestimmt.  Um das Spiel zu pausieren, muss die Taste "P" gedrückt werden. Nachdem die Taste „P“ nochmal betätigt wird, setzt sich das Spiel fort. Zum Beenden des Spiels kann entweder die Taste „Esc“ oder der Kreutz genutzt werden.  Wenn man die Taste "R" drückt, wird das Spiel neu gestartet.  
