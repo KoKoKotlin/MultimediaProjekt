@@ -195,6 +195,25 @@ Nachdem man das Spiel verloren hat, muss man von vorn beginnen, das Level und di
 % räumliche Projektion, Rotation, Skalierung
 % Matritzen
 
+Die räumliche Projektion von Objekten in OpenGL kann über die Vertex-Shader erzeugt werden. Diese Shader dienen der räumlichen Darstellung, der Zuweisung der Farbwerte,
+wie auch der Texturwerte. Rotationen und Skalierungen von Objekten werden dabei durch Matrixoperationen bewerkstelligt.\\
+Um ein Objekt für den Betrachter räumlich erscheinen zu lassen nutzt man in der Regel ein sogenanntes Frustum, oder auch "viewing frustum". Es beschreibt das Sichtfeld, 
+welches man sich als Kegelstumpf vorstellen kann. Dabei ist die Deckfläche, die sogenannte "Nearplane", die Ebene, welche am nächsten am Betrachter liegt. Analog gibt es 
+eine "Farplane", welche die grundfläche des Kegelstumpfes und damit die am weitesten entfernte Ebene des Betrachtungsraumes darstellt.
+Zusätzlich gibt es Grenzwerte für den rechten, linken, oberen und unteren Rand dieses Raumes.
+Im Fall dieser Implementierung wurden die Werte so gewählt, dass eine Abbildung im Maßstab 16:9 entsteht. Das Frustum wurde dann in einer 4x4-Matrix gespeichert.
+
+\begin{lstlisting}[language=C]
+  float near = 1.0;
+  float far = 12.0;
+  float left = -1;
+  float right = 1;
+  float top = 9.0 / 16.0;
+  float bottom = -9.0 / 16.0;
+
+\end{lstlisting}
+Transformationen innerhalb des so beschriebenen Sichtfeldes werden duch Matrixmultiplikationen mit dem Frustum bewerkstelligt.
+
 \subsection{HSV - Farbraum}
 % HSV - Farbraum
 
