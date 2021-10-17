@@ -1,7 +1,9 @@
-This is BibTeX, Version 0.99d (TeX Live 2019/Debian)
+This is BibTeX, Version 0.99d
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: main.aux
+Reallocating 'name_of_file' (item size: 1) to 6 items.
 The style file: alpha.bst
+Reallocating 'name_of_file' (item size: 1) to 11 items.
 Database file #1: references.bib
 Warning--entry type for "TetrisWiki" isn't style-file defined
 --line 1 of file references.bib
@@ -13,50 +15,53 @@ Warning--entry type for "CS2" isn't style-file defined
 --line 22 of file references.bib
 Warning--entry type for "picWiki" isn't style-file defined
 --line 30 of file references.bib
+Warning--entry type for "delphigl" isn't style-file defined
+--line 38 of file references.bib
 Warning--to sort, need author or key in picWiki
 Warning--to sort, need author or key in Tetromino
 Warning--to sort, need author or key in TetrisWiki
+Warning--to sort, need author or key in delphigl
 Warning--to sort, need author or key in CS1
 Warning--to sort, need author or key in CS2
-You've used 5 entries,
+You've used 6 entries,
             2543 wiz_defined-function locations,
-            576 strings with 5054 characters,
-and the built_in function-call counts, 1049 in all, are:
-= -- 97
-> -- 5
+            578 strings with 5141 characters,
+and the built_in function-call counts, 1244 in all, are:
+= -- 114
+> -- 6
 < -- 0
 + -- 1
 - -- 0
-* -- 52
-:= -- 114
-add.period$ -- 9
-call.type$ -- 5
-change.case$ -- 19
-chr.to.int$ -- 4
-cite$ -- 15
-duplicate$ -- 50
-empty$ -- 136
+* -- 62
+:= -- 132
+add.period$ -- 10
+call.type$ -- 6
+change.case$ -- 22
+chr.to.int$ -- 5
+cite$ -- 18
+duplicate$ -- 60
+empty$ -- 163
 format.name$ -- 0
-if$ -- 244
+if$ -- 290
 int.to.chr$ -- 2
 int.to.str$ -- 0
 missing$ -- 0
-newline$ -- 22
+newline$ -- 25
 num.names$ -- 0
-pop$ -- 66
+pop$ -- 80
 preamble$ -- 1
-purify$ -- 25
+purify$ -- 30
 quote$ -- 0
-skip$ -- 41
+skip$ -- 50
 stack$ -- 0
-substring$ -- 40
-swap$ -- 5
+substring$ -- 48
+swap$ -- 6
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 40
-warning$ -- 5
+type$ -- 48
+warning$ -- 6
 while$ -- 0
-width$ -- 6
-write$ -- 45
-(There were 10 warnings)
+width$ -- 7
+write$ -- 52
+(There were 12 warnings)
