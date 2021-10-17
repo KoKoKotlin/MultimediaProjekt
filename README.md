@@ -1,4 +1,7 @@
-Tetris in OpenGL
+# Tetris in OpenGL
+
+# Links: 
+- Projektdokumentation: https://github.com/KoKoKotlin/MultimediaProjekt/blob/master/doc/latex/main.pdf
 
 ## dependencies:
     - SDL2
