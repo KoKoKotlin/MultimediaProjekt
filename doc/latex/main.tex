@@ -88,18 +88,19 @@
 \newglossaryentry{opl}
 {
   name=OpenGL,
-  description={TODO},
+  description={Open Graphics Library. Programm-Bilbiothek, die für das Zeichnen von Bildern und 3D-Objekten auf den Bildschirm zuständig ist.},
 }
 
-\newglossaryentry{tet}{
+\newglossaryentry{tet} {
   name={Tetromino},
-  description={TODO}
+  description={Ein Tetromino ist ein zusammenhängender geometrischer Körper, der aus 4 Würfeln besteht. \cite{Tetromino}}
 }
 
 \newglossaryentry{geg}{
   name={Gameengine},
-  description={TODO}
+  description={Programmteil, der die Logik des Spiels steuert}
 }
+
 % ------- acronyms -------
 % ------- glossary -------
 
@@ -174,18 +175,18 @@ Man bezeichnet sie mit den Buchstaben, denen ihrer Form ähneln.\cite{Tetromino}
 \end{wrapfigure}
 
 Jedes mal wenn mindestens eine Zeile voll ist, wird diese entfernt und man erhält Punkte.
-Je mehr Zeilen man gleichzeit füllt, umso mehr Punkte erhält. Jedoch kann man maximal 4 auf einmal voll sein, weil das längste \gls{tet} 
-nur die Länge 4 hat (siehe \refabb{tet-abb}). Jedes mal, wenn 10 Zeilen entfernt wurden, erhöht sich das Level um 1.\cite{TetrisWiki}
+Je mehr Zeilen man gleichzeit füllt, umso mehr Punkte erhält. Jedoch können maximal 4 auf einmal voll sein, weil das Längste \gls{tet} 
+nur die Länge 4 hat (siehe \refabb{tet-abb}). Jedes mal, wenn 10 Zeilen entfernt wurden, erhöht sich das Level um 1. \cite{TetrisWiki}
 
 Der Spieler kontrolliert ein herunterfallendes Tetromino, welches er allerdings nur nach links oder rechts bewegen kann.
 Nach unten fällt es automatisch. Man kann den Fall beschleunigen aber nicht anhalten. 
 Der Fall ist diskret, d.h. das aktuelle \gls{tet} immer nur nach einer bestimmten Zeit einen Block nach unten fällt.
 Diese Zeit hängt vom Level ab und wird immer kürzer, umso höher es ist. Eine Begrenzung des Levels und somit der Fallgeschwindigkeit gibt es dabei nicht,
 aber irgendwann ist es für Menschen nicht mehr machbar.
-Die Objekte können auch rotiert werden, allerdings nur um 90 Grad Schritten. Somit haben die manche \glspl{tet} 4 Positionen, das O nur eine und I, S, Z nur 2.
+Die Objekte können auch rotiert werden, allerdings nur um 90 Grad Schritten. Somit haben manche \glspl{tet} 4 Ausrichtungen, das O nur eine und I, S, Z nur 2.
 
-Die \glspl{tet} dürfen während sie bewegt werden, nicht mit anderen Objekten in dem Spielfeld kolliederen und sich auch nicht aus dem Grenzen bewegen.
-Wenn es eine Kollsion, nachdem das spielerkontrollierte Objekt gefallen ist, gibt, dann wird es in das Spielfeld platziert und fixiert. Es wird ein neues \gls{tet} 
+Die \glspl{tet}, dürfen während sie bewegt werden, nicht mit anderen Objekten in dem Spielfeld kollidieren und sich auch nicht aus den Grenzen bewegen.
+Wenn es eine Kollsion, nachdem das spielerkontrollierte Objekt gefallen ist gibt, dann wird es in das Spielfeld platziert und fixiert. Es wird ein neues \gls{tet} 
 zufällig generiert, welches am oberen Rand des Spielfelds startet.
 
 Das Spiel endet, wenn ein Turm entstanden ist, der bis oben das Spielfeld füllt, sodass ein neues \gls{tet} sofort mit der Arena kollidiert.
@@ -196,7 +197,7 @@ Nachdem man das Spiel verloren hat, muss man von vorn beginnen, das Level und di
 % Matritzen
 
 Die räumliche Projektion von Objekten in OpenGL kann über die Vertex-Shader erzeugt werden. Diese Shader dienen der räumlichen Darstellung, der Zuweisung der Farbwerte,
-wie auch der Texturwerte. Rotationen und Skalierungen von Objekten werden dabei durch Matrixoperationen bewerkstelligt.\\
+wie auch der Texturwerte. Rotationen und Skalierungen von Objekten werden dabei durch Matrixoperationen bewerkstelligt. \\
 Um ein Objekt für den Betrachter räumlich erscheinen zu lassen nutzt man in der Regel ein sogenanntes Frustum, oder auch "viewing frustum". Es beschreibt das Sichtfeld, 
 welches man sich als Kegelstumpf vorstellen kann. Dabei ist die Deckfläche, die sogenannte "Nearplane", die Ebene, welche am nächsten am Betrachter liegt. Analog gibt es 
 eine "Farplane", welche die grundfläche des Kegelstumpfes und damit die am weitesten entfernte Ebene des Betrachtungsraumes darstellt.
@@ -313,7 +314,8 @@ Abbildung \ref{arena} zeigt einen Screenshot der Arena aus dem Spiel.
 int* arena;  
 \end{lstlisting}
 
-Weil das Transformieren zwischen 2D und 1D Indizes werden muss, wurde dafür Helferfunktionen definiert. Außerdem wurde noch eine Macro definiert, die direkt Indices für die Arena ausrechnen kann, ohne ihre Breit explizit anzugeben.
+Weil das Transformieren zwischen 2D und 1D Indizes häufig durchgeführt werden muss, wurde dafür Helferfunktionen definiert. 
+Außerdem wurde noch eine Macro definiert, die direkt Indices für die Arena ausrechnen kann, ohne ihre Breit explizit anzugeben.
 
 \begin{lstlisting}[language=C]
 #define COORDS_TO_ARENA_INDEX(x, y) (coords_to_array_index((x), (y), ARENA_WIDTH))
@@ -348,14 +350,14 @@ int* piece_count;
 Die Flag \lstin{bool fast_drop} speichert, ob der Spieler gerade den Knopf gedrückt hält, damit die Fallgeschwindigkeit seht stark erhöht wird.
 Und \lstin{bool is_defeat} ist eine Flag, die im letzten Update im Zustand \lstin{PLAYING} gesetzt wird, um anzuzeigen, dass der Spieler verloren hat und der Gamestate auf \lstin{GAME_OVER} gesetzt wird.
 
-Es wird auch der \lstin{seed}, der zum initialisieren des Zufallsgenerators genutzt wurde, gespeichert. Diese wird allerdings nicht weiter im Program verwendet (siehe \ref{uif}).
+Es wird auch der \lstin{seed}, der zum initialisieren des Zufallsgenerators genutzt wurde, gespeichert. Diese wird allerdings nicht weiter im Programm verwendet (siehe \ref{uif}).
 Das gleiche gilt für \lstin{accumulated_time};
 
 Nun gibt es eine Reihe an Funktionen, die es erlauben, das aktuelle \gls{tet} bzw. dessen zu manipulieren und überprüfen, dass es nicht in einen unerlaubten Zustand kommt.
 
 Dazu gehören als ersten die Funktionen, die nach Kollisionen mit den Wänden bzw. der Arena überprüfen. 
 Das wurde mit 2 Helferfunktionen implementiert, die jeweils einer der beiden Fälle übernehmen.
-Die Funktion \lstin{check_collision_arena_wall} evaluiert, ob der Spieler das aktuelle Objekt versucht aus der Arena herauszubewegen. 
+Die Funktion \lstin{check_collision_arena_wall} evaluiert, ob der Spieler versucht das aktuelle Objekt aus der Arena herauszubewegen. 
 Dafür muss aufgrund der Darstellung als Array, die erste Spalte von links bzw. rechts gefunden, nicht nur nullen enthält.
 Dann wird zu \lstin{postion_x} der Index dieser Spalte hinzuaddiert und man erhält \lstin{non_zero_index_left}. Diese Zahl muss nun größer-gleich null sein, weil ansonsten die Begrenzung der Arena überschritten wurde.
 Das gleiche gilt für rechts, nur das dort überprüft wird, das \lstin{position_x} addiert mit der ersten Spalte mit einem Enitrag, der nicht null ist, kleiner als die Breite der Arena ist.
@@ -609,9 +611,9 @@ Man muss nur die richtige Textur vor dem Aufruf von \lstin{glDrawArrays} auswäh
 Dann gibt es eine Reihe von Shadern, die die statischen Modelle rendern können.
 Sie unterscheiden sich hauptächlich dadurch, 
 dass die Position der verschiedenen Objekte in ihnen festgelegt ist. 
-Objekte die auf diese Weise gezeichnet werden sind die Abgrenzung der Arena, die Modelle der \glspl{tet} im Userinterface.
+Objekte, die auf diese Weise gezeichnet werden, sind die Abgrenzung der Arena und die Modelle der \glspl{tet} im Userinterface.
 Der Shader, der der die \glspl{tet} rendert, akzeptiert dabei wieder eine Position, weil sie sich in verschiedenen Positionen im Raum befinden.
-Alle 3-dimensionalen Modelle werden perspektivisch dargestellt. Die räumliche Transformation von 3-d auf 2-d ist durch ein Frustum implementiert.
+Alle 3-dimensionalen Modelle werden perspektivisch dargestellt. Die räumliche Transformation von 3D auf 2D ist durch ein Frustum implementiert.
 Außerdem wird danach noch ein Phong-Shading hinzugefügt.
 
 Am komplizietersten werden die Tetrominos und die Arena selbst gerendert. 
@@ -658,8 +660,8 @@ Der Fragmentshader überprüft dann, ob diese null ist und wenn ja wird \lstin{d
 
 Nun ist es so, dass auch die bestimmten Objekte abhängig vom Gamestate gezeigt werden oder nicht.
 Wenn sich das Spiel im Zustand \lstin{PLAYING} oder \lstin{PAUSE} befindet, dann wird das gesamte Userinterface und die Arena mit den ganzen Blöcken gerendert.
-Wenn sich das Programm allerdings im Zustand \lstin{GAME_OVER} ist, 
-dann wird nur eine Textur mit der Nachricht, dass der Spieler verloren hat angezeigt und die erreichte Punktzahl. 
+Wenn das Programm allerdings im Zustand \lstin{GAME_OVER} ist, 
+dann wird nur eine Textur mit der Nachricht, dass der Spieler verloren hat und die erreichte Punktzahl, angezeigt. 
 
 \subsubsection{Update}
 
@@ -811,7 +813,7 @@ er das Programm beenden kann oder eine neue Runde starten.
 Auffällig ist, dass es kein Hauptmenü gibt, sondern der Spieler sofort ins Spiel geworfen wird. 
 In so einem Menü könnte man dann auch noch verschiedene Einstellungsmöglichkeiten unterbringen, z.B., 
 dass man die Musik- und Effektlautstärtke anpassen kann, die Tastenbelegung ändern kann und das Farbschema anpassen kann.
-Außerdem könnte man einen Menüpunkt "Bestenliste" implementieren, der dann die Highscores verschiedener Spieler in einem Extrafenster anzeigen lässt.
+Außerdem könnte man einen Menüpunkt Bestenliste implementieren, der dann die Highscores verschiedener Spieler in einem Extrafenster anzeigen lässt.
 Dazu müsste auch ein Speichersystem erstellen, welches die Punktzahlen in einer lokalen Datei oder z.B. auf einem Webserver speichert.
 
 Man kann auch im Code einige Stellen finden, in dem der \lstin{seed} des Zufallsgenerators gespeichert wird. Es war ursprünglich geplant, 
@@ -855,8 +857,8 @@ sondern direkt in ein höheres Level einsteigen können.
 \subsection{Arbeitsaufteilung}
 
 Viele Aufgaben wurden zusammen in der Gruppe erledigt. 
-Die Arbeitslast wurde je nach Qualifikations verschieden verteilt. 
-Einige haben sich mehr um die praktische Programmieren gekümmert, andere um die Präsentation, Organisatorisches, das Testen der Software und die kulinarische Versorgung (PR-Abteilung).
+Die Arbeitslast wurde je nach Qualifikation verschieden verteilt. 
+Einige haben sich mehr um die praktische Programmierung gekümmert, andere um die Präsentation, Organisatorisches, das Testen der Software und die kulinarische Versorgung.
 
 \pagebreak
 
@@ -881,13 +883,12 @@ Zudem braucht man eine Tastatur, um das Programm zu bedienen.
 Zum Starten des Spiels klickt man zweimal schnell auf „Tetris.out“ und damit startet das Spiel automatisch.  
 Es beginnt damit, dass nun die zufällig generierten „\glspl {tet}“ in die Arena reinfallen. Jetzt ist die Aufgabe des Spielenden, die „\glspl {tet}“ so zu platzieren, dass diese vollen Reihen möglichst ohne Lücken erzeugen. 
 
-
-Es löhnt sich, mehr Zahlen auf einmal wegzuschaffen, denn die Punktzahl nicht linear mit der Anzahl von Reihen skaliert.  Z. B. beim Level null, wenn vier Reihen auf einmal weggemacht werden, kriegt der Spielende 1200 Punkte. Mach der Spielende vier Zahlen nacheinander, erreicht er nur 160 Punkte (40 Punkte je eine Reihe). 
+Es lohnt sich, mehr Zeilen auf einmal zu füllen, denn die Punktzahl skaliert nicht linear mit der Anzahl von Zeilen. Z.B. wenn beim Level null vier Reihen auf einmal gecleart werden, kriegt der Spielende 1200 Punkte. Füllt der Spielende vier Zeilen nacheinander, erreicht er nur 160 Punkte (40 Punkte je eine Reihe). 
 Die Anzahl der Punkte, die erhalten wird, hängt auch vom Level ab (nach jeweils 10 gelöschten Zeilen erhöht sich das Level um eins und damit die Geschwindigkeit, mit der „\glspl {tet}“ fallen).
 
-Das Spiel endet, sobald eine Figur nicht mehr auf das Spielfeld passt und ein Teil davon außerhalb des Spielfelds liegt. Die Punkte hören auf zu zählen, die Figuren bewegen sich nicht, und es erscheint ein Fenster, das dem Benutzer mitteilt, dass das Spiel beendet ist und er eine bestimmte Anzahl von Punkten erreicht hat.
+Das Spiel endet, sobald eine \gls{tet} nicht mehr auf das Spielfeld passt und ein Teil davon außerhalb des Spielfelds liegt. Die Objekte bewegen sich nicht mehr, und es erscheint ein Fenster, das dem Benutzer mitteilt, dass das Spiel beendet ist und er eine bestimmte Anzahl von Punkten erreicht hat.
 
-Um die „\glspl {tet}“ zu steuern, wurden die verschiedenen Befehle vorgesehen. Die Tasten, die dazu benutzt werden, sind in der Abbildung \ref{tat} dargestellt.
+Um die „\glspl {tet}“ zu steuern, wurden verschiedenen Befehle vorgesehen. Die Tasten, die dazu benutzt werden, sind in der Abbildung \ref{tat} dargestellt.
 
 \begin{figure}[h]
   \centering
@@ -896,12 +897,21 @@ Um die „\glspl {tet}“ zu steuern, wurden die verschiedenen Befehle vorgesehe
   \label{tat}
 \end{figure}
 
-
-
-Die blauen markierten Tasten („A“ und „D“) werden verwendet, um „\glspl {tet}“ nach links und rechts zu bewegen. Wenn die Taste "A" ("D") lange gedrückt gehalten wird, bewegt sich das „\gls {tet}“ sofort an den linken (rechten) Rand des Spielfelds. Für die Rotation der „\glspl {tet}“ sind die Falltasten „links“ (Rotation nach links) und „rechts“ (Rotation nach rechts) bestimmt.  Um das Spiel zu pausieren, muss die Taste "P" gedrückt werden. Nachdem die Taste „P“ nochmal betätigt wird, setzt sich das Spiel fort. Zum Beenden des Spiels kann entweder die Taste „Esc“ oder der Kreutz genutzt werden.  Wenn man die Taste "R" drückt, wird das Spiel neu gestartet.  
+Die blauen markierten Tasten („A“ und „D“) werden verwendet, um „\glspl {tet}“ nach links und rechts zu bewegen. 
+Wenn die Taste A oder D lange gedrückt gehalten wird, bewegt sich das „\gls {tet}“ stetig an den linken (rechten) Rand des Spielfelds. 
+Für die Rotation der „\glspl {tet}“ sind die Pfeiltasten „links“ (Rotation nach links) und „rechts“ (Rotation nach rechts) bestimmt. 
+Um das Spiel zu pausieren, muss die Taste P gedrückt werden. 
+Nachdem die Taste P nochmal betätigt wird, setzt sich das Spiel fort. 
+Zum Beenden des Spiels kann man auf die Taste Esc drücken. 
+Wenn man die Taste R drückt, wird das Spiel neu gestartet.  
 
 Außerdem könnte die Größe vom Spielfenster angepasst werden.  
 
+\pagebreak
+
+\vspace*{\fill}
+\includegraphics[width=400px]{test.png}
+\vspace*{\fill}
 
 \pagebreak
 \bibliographystyle{alpha}
